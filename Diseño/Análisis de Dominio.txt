@@ -1,0 +1,24 @@
+Revisión:
+
+- Académico, documento, publicación, firma, repositorio, certificado, usuario, sesión, registro(correo).
+
+Final:
+
+- Usuario, académico, documento, certificado.
+
+Usuario:
+
+- nombreUsuario.
+- contraseña.
+
+Académico:
+
+- nombreAcademico.
+- foto.
+- correo.
+
+Documento:
+
+- nombre.
+- ruta.
+- fecha.
