@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Menú principal</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <style>
+        .logo {
+            max-height: 70px;
+            max-width: 70px;
+        }
+        .uv {
+            max-height: 60px;
+        }
+        .fuente{
+            font-family: Raleway, sans-serif;
+        }
+        .opcion{
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        .opcion:hover{
+            background-color: gainsboro;
+        }
+        .opcion:active{
+            background-color: lightGray;
+        }
+        .bajo{
+            bottom: 0px;
+            position: absolute;
+            width: 100%;
+        }
+        .icono{
+            max-width: 25px;
+            max-height: 25px;
+            margin-right: 5px;
+        }
+        .cabecera{
+            margin-top: 8px;
+            margin-left: 8px;
+        }
+        .menu{
+            background-color: whitesmoke;
+            width: 208px;
+            height: 100%;
+            position: fixed;
+            float: left;
+        }
+        .opciones{
+            margin-top: 20%;
+        }
+        .body{
+            margin: 0px 0px 0px 0px;
+        }
+        @media screen and (max-width: 300px) {
+            .uv{
+                display: none;
+            }
+            .logo{
+                max-width: 35px;
+                max-height: 35px;
+            }
+            .fuente{
+                display: none;
+            }
+            .menu{
+                width: 35px;
+            }
+            .opcion{
+                padding-left: 5px;
+            }
+            .cabecera{
+                margin-left: 0px;
+            }
+        }
+    </style>
+</head>
+<body class="body">
+    <div id="menu" class="menu">
+        <div id="cabecera" class="cabecera">
+            <img src="recursosGraficos/logouv.png" class="uv" />
+            <img src="recursosGraficos/Imagen1.png" class="logo" />
+        </div>
+        <div id="opciones" class="opciones">
+            <div class="opcion">
+                <img src="recursosGraficos/home.png" class="icono"/>
+                <label class="fuente">Mi repositorio</label>
+            </div>
+            <div class="opcion">
+                <img src="recursosGraficos/share.png" class="icono"/>
+                <label class="fuente">Compartidos</label>
+            </div>
+            <div class="opcion">
+                <img src="recursosGraficos/new.png" class="icono"/>
+                <label class="fuente">Nuevo</label>
+            </div>
+            <div class="opcion">
+                <img src="recursosGraficos/profile.png" class="icono"/>
+                <label class="fuente">Perfil</label>
+            </div>
+        </div>
+        <div id="salir" class="bajo">
+            <div class="opcion">
+                <img src="recursosGraficos/logoSalir.png" class="icono"/>
+                <label class="fuente">Salir</label>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
