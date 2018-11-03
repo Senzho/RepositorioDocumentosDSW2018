@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>header</title>
+	<style type="text/css">
+		body{
+			font-family: sans-serif;
+		}
+		#divGeneral{
+			width: 100%;
+			margin: auto;
+		}
+		#imagenUsuario{
+			width: 5em;
+			height: 5em;
+		}
+		#divDatosUsuario{
+			float: right;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		#divNombreUsuario > div> label {
+			justify-content: center;
+			font-size: 1.6em;					
+		}
+		#divTituloArchivo{
+			float: left;
+		}
+		#divLinea{
+			clear: both;
+			border-bottom: 3px solid rgb(0,176,240);
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div id="divGeneral">
+			<div id="divTituloArchivo">
+				<h1>Calificaciones segundo parcial</h1>
+			</div>
+			<div id="divDatosUsuario">
+				<div id="divImagenUsuario">
+					<img src="recursosGraficos/usuario.png" id="imagenUsuario">
+				</div>
+				<div id="divNombreUsuario">
+					<div><label>Juan Carlos</label></div>
+					<div><label>Perez Arriaga</label></div>
+				</div>
+			</div>
+		</div>
+		<div id="divLinea"></div>
+	</header>
+</body>
+</html>
