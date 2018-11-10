@@ -37,4 +37,10 @@ class Usuario_Model extends CI_Model
 	{
 
 	}
+	/*Elimina los datos de sesión del usuario.
+	*/
+	public function cerrar_sesion()
+	{
+
+	}
 }

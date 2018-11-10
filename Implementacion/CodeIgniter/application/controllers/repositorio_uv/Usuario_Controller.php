@@ -13,6 +13,7 @@ class Usuario_Controller extends CI_Controller
 		'cuenta_mod': página de actualización de la cuenta.
 			Consulta id de usuario en caché, si no se encuentra, redirije
 			a la vista de 'login'.
+		'confirmacion': página de confirmación de registro.
 	*/
 	public function vista($pagina = 'login')
 	{
@@ -49,6 +50,14 @@ class Usuario_Controller extends CI_Controller
 		Actualiza el registro, y en caso de no lograrlo, carga la misma vista con un mensaje.
 	*/
 	public function editar_usuario()
+	{
+
+	}
+	/*Confirma el código de registro.
+		Recibe un código de registro.
+		Redirige a la misma vista de 'repositorio'.
+	*/
+	public function confirmar_registro()
 	{
 
 	}
