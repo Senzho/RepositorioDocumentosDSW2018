@@ -5,66 +5,11 @@
     <meta charset="utf-8" />
     <title>Mi Repositorio</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <style>
-        .body{
-            margin: 0px 0px 0px 0px;
-        }
-        .panel{
-        	left: 208px;
-        	top: 100px;
-        	position: fixed;
-        	float: right;
-        	right: 0px;
-        	bottom: 0px;
-            overflow-y: scroll;
-        }
-        .contenedor{
-        	display: grid | inline-grid;
-        	grid-template-columns: 25% 25% 25% 25%;
-        	grid-template-rows: 50% 50%;
-        }
-        .documento{
-        	background-color: whitesmoke;
-        	border-radius: 10px;
-        	width: 110px;
-        	height: 170px;
-        	display: inline-block;
-        }
-        .documento:hover{
-            background-color: gainsboro;
-        }
-        .documento:active{
-            background-color: lightGray;
-        }
-        .icono{
-        	max-width: 90px;
-        	padding-top: 5px;
-        }
-        .seccionIcono{
-        	text-align: center;
-        }
-        .fuente{
-            font-family: Raleway, sans-serif;
-        }
-        .nombre{
-        	font-size: 0.8em;
-        	padding-right: 3px;
-        	padding-left: 3px;
-        }
-        .fecha{
-        	font-size: 0.6em;
-        	padding-right: 3px;
-        	padding-left: 3px;
-        }
-        @media screen and (max-width: 300px) {
-            .panel{
-                left: 35px;
-            }
-        }
-    </style>
+    <link href="estilos_repositorio.css" rel="stylesheet" type="text/css">
+    <link href="media_gen.css" rel="stylesheet" type="text/css">
 </head>
 <body class="body">
-    <div id="panel" class="panel">
+    <div id="panel" class="panelScroll">
     	<div id="contenedor" class="contenedor">
     		<div class="documento">
     			<div class="seccionIcono">

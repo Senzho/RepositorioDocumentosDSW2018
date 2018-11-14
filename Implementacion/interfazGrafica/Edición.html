@@ -5,106 +5,17 @@
     <meta charset="utf-8" />
     <title>Edición</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
-    <style>
-        .body{
-            margin: 0px 0px 0px 0px;
-        }
-        .panel{
-        	margin-left: 208px;
-        	margin-top: 100px;
-        	position: fixed;
-        	float: right;
-        	width: 100%;
-        	height: 100%;
-        }
-        .fuente{
-            font-family: Raleway, sans-serif;
-        }
-        .edicion{
-        	position: fixed;
-        	top: 100px;
-        	bottom: 0px;
-        	left: 208px;
-        	right: 200px;
-        }
-        .chat{
-        	position: fixed;
-        	top: 100px;
-        	bottom: 0px;
-        	right: 0px;
-        	width: 200px;
-        }
-        .botonMin{
-        	border-radius: 5px;
-            border-style: none;
-            width: 60px;
-            height: 30px;
-        }
-        .boton {
-            border-radius: 5px;
-            border-style: none;
-            width: 110px;
-            height: 30px;
-        }
-        .botonOk{
-        	background-color: cadetblue;
-        }
-        .botonOk:hover{
-            background-color: cornflowerblue;
-        }
-        .botonOk:active {
-            background-color: deepskyblue;
-        }
-        .botonCancel{
-        	background-color: firebrick;
-        }
-        .botonCancel:hover{
-            background-color: brown;
-        }
-        .botonCancel:active {
-            background-color: red;
-        }
-        .botones{
-        	bottom: 10px;
-            position: fixed;
-            right: 210px;
-            text-align: right;
-        }
-        .documento{
-        	top: 100px;
-        	right: 210px;
-        	left: 208px;
-        	bottom: 50px;
-        	position: fixed;
-        }
-        .campo{
-        	width: 130px;
-        }
-        .enviar{
-        	position: fixed;
-        	right: 0px;
-        	bottom: 10px;
-        	width: 200px;
-        	text-align: right;
-        }
-        .mensajes{
-        	position: fixed;
-        	top: 100px;
-        	right: 10px;
-        	width: 190px;
-        	bottom: 50px;
-        }
-    </style>
+    <link href="estilos_repositorio.css" rel="stylesheet" type="text/css">
 </head>
 <body class="body">
     <div id="panel" class="panel">
     	<div id="edicion" class="edicion">
-    		<div class="documento">
+    		<div class="areaDocumento">
     			Aqui va el documento
     		</div>
     		<div id="botones" class="botones">
-    			<input type="button" value="Guadar" class="boton botonOk fuente"/>
-				<input type="button" value="Cancelar" class="boton botonCancel fuente"/>
+    			<input type="button" value="Guadar" class="boton botonOk fuente botonMed"/>
+				<input type="button" value="Cancelar" class="boton botonCancel fuente botonMed"/>
     		</div>
     	</div>
     	<div id="chat" class="chat">
@@ -112,8 +23,8 @@
     			Aquí va el chat
     		</div>
     		<div id="enviar" class="enviar">
-    			<input type="text" placeholder="Escribe aqui" class="fuente campo" />
-    			<input type="button" value="Enviar" class="botonMin botonOk fuente"/>
+    			<input type="text" placeholder="Escribe aqui" class="fuente campoTexto campoTextoMin" />
+    			<input type="button" value="Enviar" class="botonMin botonOk boton fuente"/>
     		</div>
     	</div>
     </div>
