@@ -1,9 +1,9 @@
 <?php
 
-class Usuario_Model extends CI_Model
+class Usuario_Modelo extends CI_Model
 {
 	public function __construct(){
-		$this->load->database('respositorio_uv');
+		//$this->load->database('respositorio_uv');
 	}
 	/*Obtiene un Académico.
 		Recibe el id del usuario.
@@ -17,9 +17,19 @@ class Usuario_Model extends CI_Model
 		Recibe el usuario y contraseña (hash).
 		Regresa un Académico.
 	*/
-	public function obtener_usuario($nombre, $contraseña)
+	public function iniciar_sesion($nombre, $contraseña)
 	{
-
+		$academico;
+		$query = $this->db->get_where('academicos', array('nombre' => $nombre, 'contraseña' => $contraseña));
+		if ($query->num_rows() > 0){
+			$fila = $query->row();
+			$academico = array('id' => $fila->id,
+				'nombre' => $fila->nombreAcademico,
+				'correo' => $fila->correo);
+		}else{
+			$academico = array('id' => 0);
+		}
+		return $academico;
 	}
 	/*Registra un Academico.
 		Recibe un Academico.

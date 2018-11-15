@@ -5,7 +5,8 @@ class Usuario_Controller extends CI_Controller
 	public function __construct()
 	{
         parent::__construct();
-        $this->load->model('respositorio_uv/Usuario_Model');
+        $this->load->model('repositorio_uv/Usuario_Modelo');
+        $this->load->helper('url');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		'login': pagina de inicio de sesión.
@@ -17,7 +18,10 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function vista($pagina = 'login')
 	{
-		
+		if ($pagina === 'login')
+		{
+			$this->load->view('pages/repositorio_uv/Login');
+		}
 	}
 	/*Crea la sesión del usuario.
 		Recibe un usuario y contraseña (hash) por POST. Redirecciona al
@@ -26,7 +30,15 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function iniciar_sesion()
 	{
-		
+		$usuario = $this->input->post('usuario');
+		$contraseña = $this->input->post('contraseña');
+		$academico = $this->Usuario_Modelo->iniciar_sesion($usuario, $contraseña);
+		if ($academico['id'] > 0)
+		{
+			
+		}else{
+
+		}
 	}
 	/*Termina la sesión del usuario.
 		Redirije a la vista de 'login'.

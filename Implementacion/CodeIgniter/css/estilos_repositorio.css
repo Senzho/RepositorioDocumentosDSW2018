@@ -1,0 +1,208 @@
+.body{
+	margin: 0px 0px 0px 0px;
+}
+.boton{
+	border-radius: 5px;
+	border-style: none;
+	height: 30px;
+}
+.botonCancel{
+	background-color: firebrick;
+}
+.botonCancel:hover{
+	 background-color: brown;
+}
+.botonCancel:active {
+    background-color: red;
+}
+.botonMed{
+	width: 110px;
+}
+.botonMin{
+	width: 60px;
+}
+.botonOk{
+	background-color: cadetblue;
+}
+.botonOk:hover{
+	background-color: cornflowerblue;
+}
+.botonOk:active{
+	background-color: deepskyblue;
+}
+.botonReg{
+	width: 225px;
+}
+.fuente{
+	font-family: Raleway, sans-serif;
+}
+.h{
+	margin-bottom: 35px;
+}
+.link{
+	font-size: 0.7em;
+	margin-top: 25px;
+}
+.logo{
+	max-height: 70px;
+	max-width: 70px;
+}
+.uv{
+	max-height: 60px;
+}
+
+/*Login*/
+
+.campoTexto{
+	font-size: 1em;
+	height: 25px;
+}
+.campoTextoMed{
+	width: 220px;
+}
+.campoTextoMin{
+	width: 130px;
+}
+.divTexto{
+	margin-bottom: 10px;
+}
+
+/*Edición*/
+
+.botones{
+	bottom: 10px;
+    position: fixed;
+    right: 210px;
+    text-align: right;
+}
+.chat{
+	bottom: 0px;
+	position: fixed;
+	right: 0px;
+	top: 100px;
+	width: 200px;
+}
+.areaDocumento{
+	bottom: 50px;
+	left: 208px;
+	position: fixed;
+	right: 210px;
+	top: 100px;
+}
+.edicion{
+	bottom: 0px;
+	left: 208px;
+	position: fixed;
+	right: 200px;
+	top: 100px;
+}
+.enviar{
+	bottom: 10px;
+	position: fixed;
+	right: 0px;
+	text-align: right;
+	width: 200px;
+}
+.mensajes{
+	bottom: 50px;
+	position: fixed;
+	right: 10px;
+	top: 100px;
+	width: 190px;
+}
+.panel{
+	float: right;
+	height: 100%;
+	margin-left: 208px;
+	margin-top: 100px;
+	position: fixed;
+	width: 100%;
+}
+
+/*Menu*/
+
+.bajo{
+    bottom: 0px;
+    position: absolute;
+    width: 100%;
+}
+.cabecera{
+	margin-left: 8px;
+    margin-top: 8px;
+}
+.iconoOpcion{
+	margin-right: 5px;
+    max-width: 25px;
+    max-height: 25px;
+}
+.menu{
+    background-color: whitesmoke;
+    float: left;
+    height: 100%;
+    position: fixed;
+    width: 208px;
+}
+.opcion{
+	align-items: center;
+	display: flex;
+	padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+.opcion:hover{
+    background-color: gainsboro;
+}
+.opcion:active{
+    background-color: lightGray;
+}
+.opciones{
+    margin-top: 20%;
+}
+
+/*Repositorio*/
+
+.contenedor{
+	display: grid | inline-grid;
+	grid-template-columns: 25% 25% 25% 25%;
+	grid-template-rows: 50% 50%;
+}
+.documento{
+	background-color: whitesmoke;
+	border-radius: 10px;
+	display: inline-block;
+	height: 170px;
+	width: 110px;
+}
+.documento:hover{
+    background-color: gainsboro;
+}
+.documento:active{
+    background-color: lightGray;
+}
+.fecha{
+	font-size: 0.6em;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.icono{
+	max-width: 90px;
+	padding-top: 5px;
+}
+.nombre{
+	font-size: 0.8em;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.panelScroll{
+	bottom: 0px;
+	float: right;
+	left: 208px;
+	overflow-y: scroll;
+	position: fixed;
+	right: 0px;
+	top: 100px;
+}
+.seccionIcono{
+	text-align: center;
+}
