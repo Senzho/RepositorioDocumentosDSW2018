@@ -3,134 +3,52 @@
 <head>
 	<title>Nuevo usuario</title>
 	<meta charset="UTF-8">
-	<style type="text/css">
-		body{
-			font-family: sans-serif;
-		}
-		
-		div{
-			margin: .4em 0;
-		}
-		label{
-			display: block;
-  			margin: .5em 0 0 0;
-		}
-		div label{
-			width: 7em;
-  			float: left;
-		}
-		div input{
-			width: 80%;
-		}
-		#divDatosUsuario{
-			margin:auto;
-			width: 50%;
-		} 
-		.imgLogo{
-			width: 10%
-		}
-		.imgLogo2{
-			width: 5%;
-		}
-		#imgFotoUsuario{
-			width: 14%;
-		}
-		#imgLapiz{
-			width: 3%;
-		}
-		.campoTexto {
-            font-size: 1.2em;
-        }
-
-        .boton {
-            border-radius: 5px;
-            border-style: none;
-            background-color: cadetblue;
-            width: 225px;
-            height: 30px;
-        }
-        .boton:hover{
-            background-color: cornflowerblue;
-        }
-        .boton:active {
-            background-color: deepskyblue;
-        }
-
-        .cancelar{
-            border-radius: 5px;
-            border-style: none;
-            background-color:rgb(244,177,131);
-            width: 225px;
-            height: 30px;
-        }
-        .cancelar:hover{
-        	background-color:rgb(237,129,55);
-        }
-        .cancelar:active{
-        	background-color: rgb(207,95,19);
-        }
-        #divSalir{
-        	float: left;
-        }
-        #div2{
-        	margin-top: 5%;
-        }
-        #div2 > label{
-        	margin-top: 1.5em;
-        	font-size: 1.6em;
-        }
-        .lblEtiqueta{
-        	font-size: 1.2em;
-        }
-	</style>
+	<link href="estilos_general.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<div>
 		<img src="recursosGraficos/logouv.png" class="imgLogo">
 		<img src="recursosGraficos/Imagen1.png" class="imgLogo2">
 	</div>
-
-		<form>
-			<center>
+		<form class="formularioRegistro">
 				<div>
-					<img src="recursosGraficos/usuario.png" id="imgFotoUsuario">
-					<img src="recursosGraficos/lapiz.png" id="imgLapiz">
-					<h1>Registro de usuarios</h1>
-				</div>
-			</center>
-			<div id="divDatosUsuario">
-				<div>
-					<label class="lblEtiqueta">Nombre:</label>
-					<input type="input" name="" class="campoTexto">
-				</div>
-				<div>
-					<label class="lblEtiqueta">Correo:</label>
-					<input type="input" name="" class="campoTexto">
-				</div>
-				<div>
-					<label class="lblEtiqueta">Usuario:</label>
-					<input type="input" name="" class="campoTexto">
-				</div>
-				<div>
-					<label class="lblEtiqueta">Contraseña:</label>
-					<input type="password" name="" class="campoTexto">
-				</div>
-				<div>
-					<label class="lblEtiqueta">Confirmar:</label>
-					<input type="password" name="" class="campoTexto">
-				</div>
 					<center>
-						<input type="submit" name="" class="boton campoTexto" value="Registrar">
-						<input type="submit" name="" class="cancelar campoTexto" value="Cancelar">
+						<img src="recursosGraficos/usuario.png" id="imgFotoUsuario">
+						<img src="recursosGraficos/lapiz.png" id="imgLapiz">
+						<h1>Registro de usuarios</h1>
 					</center>
-			</div>
+				</div>
+				<div>
+					<div class="datoUsuario">
+						<label class="lblEtiqueta">Nombre:</label>
+						<input type="input" id="txtNombre" class="campoTexto" placeholder="Nombre">
+					</div>
+					<div class="datoUsuario">
+						<label class="lblEtiqueta">Correo:</label>
+						<input type="input" id="txtCorreo" class="campoTexto" placeholder="Correo">
+					</div>
+					<div class="datoUsuario">
+						<label class="lblEtiqueta">Usuario:</label>
+						<input type="input" id="txtUsuario" class="campoTexto" placeholder="Usuario">
+					</div>
+					<div class="datoUsuario">
+						<label class="lblEtiqueta">Contraseña:</label>
+						<input type="password" id="txtContrasena" class="campoTexto" placeholder="Contraseña">
+					</div>
+					<div class="datoUsuario">
+						<label class="lblEtiqueta">Confirmar:</label>
+						<input type="password" id="txtConfirmar" class="campoTexto" placeholder="Confirmar">
+					</div>
+				</div>
+				<center>
+					<input type="submit" name="" class="registrar" value="Registrar">
+					<input type="submit" name="" class="cancelar" value="Cancelar">
+				</center>
 		</form>
-		<div>
-			<div id="divSalir">
+		<div id="divSalir">
+			<div>
 				<img src="recursosGraficos/logoSalir.png">
-			</div>
-			<div id="div2">
-				<label>Salir</label>
+				<div><label>Salir</label></div>
 			</div>
 		</div>
 </body>

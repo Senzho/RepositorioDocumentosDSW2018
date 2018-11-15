@@ -1,0 +1,148 @@
+body{
+	font-family: sans-serif;
+}
+.imgLogo{
+	width: 10%
+}
+.imgLogo2{
+	width: 5%;
+}
+#imgFotoUsuario{
+	width: 14%;
+}
+#imgLapiz{
+	width: 3%;
+}
+#imgLapiz:hover{
+	background-color:rgb(120,199,231);
+}
+#imgLapiz:active{
+	background-color: rgb(60,75,216);
+}
+#divGeneral{
+	width: 100%;
+	margin: auto;
+}
+#imagenUsuario{
+	width: 5em;
+	height: 5em;
+}
+#divTituloArchivo{
+	float: left;
+}
+#divLinea{
+	clear: both;
+	border-bottom: 3px solid rgb(0,176,240);
+}
+.registrar{
+    border-radius: 5px;
+    border-style: none;
+    background-color: cadetblue;
+    width: 225px;
+    height: 30px;
+}
+.registrar:hover{
+	background-color:rgb(120,199,231);
+}
+.registrar:active{
+	background-color: rgb(60,75,216);
+}
+.cancelar{
+    border-radius: 5px;
+    border-style: none;
+    background-color:rgb(244,177,131);
+    width: 225px;
+    height: 30px;
+}
+.cancelar:hover{
+	background-color:rgb(237,129,55);
+}
+.cancelar:active{
+	background-color: rgb(207,95,19);
+}
+.campoTexto {
+    font-size: 1.2em;
+    width: 35em;
+}
+.lblEtiqueta{
+	display: block;
+	float: left;
+	width: 6em;
+	font-size: 1.2em;
+}
+.datoUsuario{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	display: flex;
+  	justify-content: center;
+  	align-items: center;
+}
+#divSalir{
+	float: left;
+}
+#divSalir > div{
+	display: flex;
+  	justify-content: center;
+	align-items: center;
+}
+@media screen and (max-width:  700px) {
+    .lblEtiqueta{
+    	display: none;
+    }
+    .registrar{
+	    display: block;
+	    margin-top: 10px;
+	    padding: 10px;
+	    width: 100%;
+	}
+	.cancelar{
+		margin-top: 5px;
+	   display: block;  
+	    padding: 10px;
+	    width: 100%;
+	    margin-bottom: 1em;
+	}
+	.imgLogo{
+		width: 20%
+	}
+	.imgLogo2{
+		width: 10%;
+	}
+	#imgFotoUsuario{
+		width: 24%;
+	}
+	#imgLapiz{
+		width: 6%;
+	}
+}
+/*header*/
+#divGeneral{
+	width: 100%;
+	margin: auto;	
+}
+#imagenUsuario{
+	width: 5em;
+	height: 5em;
+}
+#divDatosUsuario{
+	float: right;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#divNombreUsuario > div> label {
+	justify-content: center;
+	font-size: 1.6em;					
+}
+#divTituloArchivo{
+	float: left;
+}
+#divLinea{
+	clear: both;
+	border-bottom: 3px solid rgb(0,176,240);
+}
+@media screen and (max-width:  700px) {
+	#divNombreUsuario > div> label{
+    	display: none;
+    }
+}

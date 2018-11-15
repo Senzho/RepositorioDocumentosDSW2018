@@ -3,57 +3,10 @@
 <head>
 	<title>Mensajes pagina</title>
 	<meta charset="utf-8">
+	<link href="estilos_general.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<style type="text/css">
-	    body{
-	    	font-family: sans-serif;
-	    }
-	    .campoTexto {
-	        font-size: 1.2em;
-	    }
-	    .boton {
-	        border-radius: 5px;
-	        border-style: none;
-	        background-color: cadetblue;
-	        width: 225px;
-	        height: 30px;
-	    }
-	    .boton:hover{
-	        background-color: cornflowerblue;
-	    }
-	    .boton:active {
-	        background-color: deepskyblue;
-	    }
-	    .cancelar{
-	        border-radius: 5px;
-	        border-style: none;
-	        background-color:rgb(244,177,131);
-	        width: 225px;
-	        height: 30px;
-	    }
-	    .cancelar:hover{
-	    	background-color:rgb(237,129,55);
-	    }
-	    .cancelar:active{
-	    	background-color: rgb(207,95,19);
-	    }
-	    .lblEtiqueta{
-        	font-size: 2em;
-        	width: 5.5em;
-        }
-        .txtNombre{
-        	font-size: 1.5em;
-        	width: 18em;
-        }
-        #divDatosUsuario{
-			margin:auto;
-		} 
-		#selectCombo{
-			width: 13.5em;
-		}
-	</style>
 </head>
 <body>
 	<div>
@@ -69,14 +22,14 @@
 					<div class="modal-header">
 						<center><h1 class="modal-title">Nuevo Documento</h1></center>
 					</div>
-					<div class="modal-body" id="divDatosUsuario">
+					<div class="modal-body">
 						<div>
-							<label class="lblEtiqueta">Nombre:</label>
-							<input type="input" name="" class="txtNombre">
+							<label>Nombre:</label>
+							<input type="input">
 						</div>
 						<div>
-							<label class="lblEtiqueta">Extensión:</label>
-							<select class="lblEtiqueta" id="selectCombo">
+							<label >Extensión:</label>
+							<select>
 					            <option>Documento de texto (.docx)</option>
 					            <option>Hoja de calculo (.xlsx)</option>
             				</select>
@@ -84,8 +37,8 @@
 					</div>
 					<div class="modal-footer">
 						<center>
-            				<input type="submit" name="" class="boton campoTexto" value="Crear documento">
-            				<input type="submit" name="" class="cancelar campoTexto" data-dismiss="modal" value="Cancelar">
+            				<input type="submit" name="" class="registrar" value="Crear documento">
+            				<input type="submit" name="" class="cancelar" data-dismiss="modal" value="Cancelar">
           				</center>
 					</div>
 				</div>
@@ -101,13 +54,13 @@
 					<div class="modal-header">
 						<center><h1 class="modal-title">Eliminar documento</h1></center>
 					</div>
-					<div class="modal-body" id="divDatosUsuario">
+					<div class="modal-body">
 						<h1>¿Seguro que desea eliminar el documento  "graficasILinea.docx"?</h1>
 					</div>
 					<div class="modal-footer">
 						<center>
-            				<input type="submit" name="" class="boton campoTexto" value="Aceptar">
-            				<input type="submit" name="" class="cancelar campoTexto" data-dismiss="modal" value="Cancelar">
+            				<input type="submit" name="" class="registrar" value="Aceptar">
+            				<input type="submit" name="" class="cancelar" data-dismiss="modal" value="Cancelar">
           				</center>
 					</div>
 				</div>
