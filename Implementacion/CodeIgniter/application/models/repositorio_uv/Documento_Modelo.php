@@ -3,7 +3,7 @@
 class Documento_Model extends CI_Model
 {
 	public function __construct(){
-		$this->load->database('respositorio_uv');
+		//$this->load->database('respositorio_uv');
 	}
 	/*Elimina el registro de un documento.
 		Recibe el id del documento.
@@ -44,7 +44,19 @@ class Documento_Model extends CI_Model
 	*/
 	public function obtener_documentos($id_usuario)
 	{
-
+		$documentos;
+		$query = $this->db->get('documento');
+		$result = $query->result();
+		for ($i = 0; $i < count($result); ++ $i) {
+			$row = $result[$i];
+			$documento = array(
+				'id' => $row->id,
+				'nombre' => $row->nombre,
+				'fechaRegistro' => $row->fechaRegistro
+			);
+			$documentos[$i] = $documento;
+		}
+		return $response;
 	}
 	/*Registra un documento.
 		Recibe un documento.

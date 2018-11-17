@@ -2,11 +2,17 @@
 
 class Usuario_Controller extends CI_Controller
 {
+	private function mostrar_login($mensaje)
+	{
+		$this->load->view('pages/repositorio_uv/Login', array('mensaje' => $mensaje));
+	}
+
 	public function __construct()
 	{
         parent::__construct();
         $this->load->model('repositorio_uv/Usuario_Modelo');
         $this->load->helper('url');
+        $this->load->helper('form');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		'login': pagina de inicio de sesión.
@@ -20,7 +26,7 @@ class Usuario_Controller extends CI_Controller
 	{
 		if ($pagina === 'login')
 		{
-			$this->load->view('pages/repositorio_uv/Login');
+			$this->mostrar_login('');
 		}
 	}
 	/*Crea la sesión del usuario.
@@ -35,9 +41,9 @@ class Usuario_Controller extends CI_Controller
 		$academico = $this->Usuario_Modelo->iniciar_sesion($usuario, $contraseña);
 		if ($academico['id'] > 0)
 		{
-			
+			redirect('repositorio_uv/Documento_Controller/vista/respositorio');
 		}else{
-
+			$this->mostrar_login('Los sentimos, no podemos encontrar tu usuario, verifica que tus datos sean correctos');
 		}
 	}
 	/*Termina la sesión del usuario.

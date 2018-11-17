@@ -7,28 +7,33 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link href="<?php echo base_url(); ?>css/estilos_repositorio.css" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url(); ?>css/media_gen.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionLogin.js"></script>
 </head>
 <body>
     <div id="cabecera" class="cabecera">
         <img src="<?php echo base_url(); ?>recursos/logouv.png" class="uv" />
         <img src="<?php echo base_url(); ?>recursos/Imagen1.png" class="logo" />
     </div>
-    <div id="formulario">
-        <center>
-            <h1 class="fuente h">Iniciar sesión</h1>
-            <form>
+    <center>
+    	<h1 class="fuente h">Iniciar sesión</h1>
+	    <div id="formulario">
+            <?php echo form_open('repositorio_uv/Usuario_Controller/iniciar_sesion', array('id' => 'login')); ?>
                 <div class="divTexto">
-                    <input type="text" placeholder="Usuario" class="fuente campoTexto campoTextoMed" />
+                    <input id="usuario" type="text" placeholder="Usuario" class="fuente campoTexto campoTextoMed" />
                 </div>
                 <div class="divTexto">
-                    <input type="password" placeholder="Contraseña" class="fuente campoTexto campoTextoMed" />
+                    <input id="contraseña" type="password" placeholder="Contraseña" class="fuente campoTexto campoTextoMed" />
                 </div>
                 <input type="submit" value="Entrar" class="fuente boton botonOk botonReg" />
             </form>
             <div class="link">
                 <a href="" class="fuente">No tengo una cuenta</a>
             </div>
-        </center>
-    </div>
+	    </div>
+	    <div class="mensaje">
+	    	<label><?php echo $mensaje; ?></label>
+	    </div>
+    </center>
 </body>
 </html>

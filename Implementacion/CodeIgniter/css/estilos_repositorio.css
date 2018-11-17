@@ -47,6 +47,11 @@
 	max-height: 70px;
 	max-width: 70px;
 }
+.mensaje{
+	color: brown;
+	margin-top: 20px;
+	text-align: center;
+}
 .uv{
 	max-height: 60px;
 }

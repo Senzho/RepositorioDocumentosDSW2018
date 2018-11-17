@@ -2,6 +2,11 @@
 
 class Documento_Controller extends CI_Controller
 {
+	private function cargar_repositorio($id_academico)
+	{
+		$documentos = $this->Documento_Model->obtener_documentos($id_academico);
+	}
+
 	public function __construct()
 	{
         parent::__construct();
@@ -16,7 +21,9 @@ class Documento_Controller extends CI_Controller
 	*/
 	public function vista($pagina = 'repositorio', $id_documento = '0', $tipo_documento = 'null')
 	{
-		
+		if ($pagina === 'repositorio'){
+			$this->cargar_repositorio();
+		}
 	}
 	/*Crea un nuevo documento.
 		Recibe los datos de un Documento por POST.
