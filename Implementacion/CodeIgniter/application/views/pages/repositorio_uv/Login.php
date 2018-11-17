@@ -20,10 +20,10 @@
 	    <div id="formulario">
             <?php echo form_open('repositorio_uv/Usuario_Controller/iniciar_sesion', array('id' => 'login')); ?>
                 <div class="divTexto">
-                    <input id="usuario" type="text" placeholder="Usuario" class="fuente campoTexto campoTextoMed" />
+                    <input id="usuario" name="usuario" type="text" placeholder="Usuario" class="fuente campoTexto campoTextoMed" />
                 </div>
                 <div class="divTexto">
-                    <input id="contraseña" type="password" placeholder="Contraseña" class="fuente campoTexto campoTextoMed" />
+                    <input id="contraseña" name="contraseña" type="password" placeholder="Contraseña" class="fuente campoTexto campoTextoMed" />
                 </div>
                 <input type="submit" value="Entrar" class="fuente boton botonOk botonReg" />
             </form>

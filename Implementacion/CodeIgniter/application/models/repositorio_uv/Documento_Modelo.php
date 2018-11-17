@@ -1,9 +1,9 @@
 <?php
 
-class Documento_Model extends CI_Model
+class Documento_Modelo extends CI_Model
 {
 	public function __construct(){
-		//$this->load->database('respositorio_uv');
+		$this->load->database('repositorio_uv');
 	}
 	/*Elimina el registro de un documento.
 		Recibe el id del documento.
@@ -50,13 +50,13 @@ class Documento_Model extends CI_Model
 		for ($i = 0; $i < count($result); ++ $i) {
 			$row = $result[$i];
 			$documento = array(
-				'id' => $row->id,
+				'id' => $row->idDocumento,
 				'nombre' => $row->nombre,
-				'fechaRegistro' => $row->fechaRegistro
+				'fecha_registro' => $row->fechaRegistro
 			);
 			$documentos[$i] = $documento;
 		}
-		return $response;
+		return $documentos;
 	}
 	/*Registra un documento.
 		Recibe un documento.

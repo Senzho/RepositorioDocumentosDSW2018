@@ -4,13 +4,19 @@ class Documento_Controller extends CI_Controller
 {
 	private function cargar_repositorio($id_academico)
 	{
-		$documentos = $this->Documento_Model->obtener_documentos($id_academico);
+		$documentos = $this->Documento_Modelo->obtener_documentos($id_academico);
+		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
+		$this->load->view('templates/repositorio_uv/menu');
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre']));
+		$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
 	}
 
 	public function __construct()
 	{
         parent::__construct();
-        $this->load->model('respositorio_uv/Documento_Model');
+        $this->load->model('repositorio_uv/Documento_Modelo');
+        $this->load->model('repositorio_uv/Usuario_Modelo');
+        $this->load->helper('url');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
@@ -22,7 +28,7 @@ class Documento_Controller extends CI_Controller
 	public function vista($pagina = 'repositorio', $id_documento = '0', $tipo_documento = 'null')
 	{
 		if ($pagina === 'repositorio'){
-			$this->cargar_repositorio();
+			$this->cargar_repositorio(1);
 		}
 	}
 	/*Crea un nuevo documento.

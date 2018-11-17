@@ -41,7 +41,7 @@ class Usuario_Controller extends CI_Controller
 		$academico = $this->Usuario_Modelo->iniciar_sesion($usuario, $contraseña);
 		if ($academico['id'] > 0)
 		{
-			redirect('repositorio_uv/Documento_Controller/vista/respositorio');
+			redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 		}else{
 			$this->mostrar_login('Los sentimos, no podemos encontrar tu usuario, verifica que tus datos sean correctos');
 		}

@@ -177,6 +177,9 @@
 	border-radius: 10px;
 	display: inline-block;
 	height: 170px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
 	width: 110px;
 }
 .documento:hover{
