@@ -64,6 +64,6 @@ class Documento_Modelo extends CI_Model
 	*/
 	public function registrar_documento($documento)
 	{
-
+		return $this->db->insert('documento', $documento);
 	}
 }

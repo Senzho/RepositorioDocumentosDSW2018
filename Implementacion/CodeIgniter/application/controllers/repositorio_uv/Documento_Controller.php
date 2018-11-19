@@ -17,6 +17,7 @@ class Documento_Controller extends CI_Controller
         $this->load->model('repositorio_uv/Documento_Modelo');
         $this->load->model('repositorio_uv/Usuario_Modelo');
         $this->load->helper('url');
+        $this->load->library('session');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
@@ -27,8 +28,9 @@ class Documento_Controller extends CI_Controller
 	*/
 	public function vista($pagina = 'repositorio', $id_documento = '0', $tipo_documento = 'null')
 	{
+		$id = $this->session->userdata('id');
 		if ($pagina === 'repositorio'){
-			$this->cargar_repositorio(1);
+			$this->cargar_repositorio($id);
 		}
 	}
 	/*Crea un nuevo documento.
@@ -84,7 +86,25 @@ class Documento_Controller extends CI_Controller
 	*/
 	public function subir_documento()
 	{
-
+		$id = $this->session->userdata('id');
+		$respuesta;
+		$nombre = $this->input->post('nombre');
+		$fecha = getdate();
+		$fecha_registro = $fecha['year'] . '-' . $fecha['mon'] . '-' $fecha['mday'];
+		$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id);
+		if ($this->Documento_Modelo->registrar_documento($documento)){
+			$config['upload_path'] = './archivos/';
+            $config['allowed_types'] = 'pdf|xlsx|docx|pptx';
+            $this->load->library('upload', $config);
+            if ($this->upload->do_upload('archivo')){
+            	$respuesta['creado'] = True;
+            }else{
+            	$respuesta['creado'] = False;
+            }
+		}else{
+			$respuesta['creado'] = False;
+		}
+		echo json_encode($respuesta);
 	}
 	/*Ubica un documento y regresa la ruta.
 		Recibe el id de un documento por POST.
