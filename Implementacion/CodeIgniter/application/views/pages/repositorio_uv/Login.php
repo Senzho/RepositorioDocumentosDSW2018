@@ -28,7 +28,7 @@
                 <input type="submit" value="Entrar" class="fuente boton botonOk botonReg" />
             </form>
             <div class="link">
-                <a href="" class="fuente">No tengo una cuenta</a>
+                <a href="<?php echo base_url(); ?>index.php/repositorio_uv/Usuario_Controller/vista/registrar_usuario" class="fuente">No tengo una cuenta</a>
             </div>
 	    </div>
 	    <div class="mensaje">

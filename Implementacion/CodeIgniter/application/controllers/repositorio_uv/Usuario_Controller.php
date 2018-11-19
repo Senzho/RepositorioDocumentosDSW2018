@@ -6,6 +6,9 @@ class Usuario_Controller extends CI_Controller
 	{
 		$this->load->view('pages/repositorio_uv/Login', array('mensaje' => $mensaje));
 	}
+	private function mostrar_registro_usuario($mensaje){
+		$this->load->view('pages/repositorio_uv/Registrar_usuario', array('mensaje'=>$mensaje));
+	}
 
 	public function __construct()
 	{
@@ -13,6 +16,7 @@ class Usuario_Controller extends CI_Controller
         $this->load->model('repositorio_uv/Usuario_Modelo');
         $this->load->helper('url');
         $this->load->helper('form');
+        $this->load->library('form_validation');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		'login': pagina de inicio de sesión.
@@ -27,6 +31,9 @@ class Usuario_Controller extends CI_Controller
 		if ($pagina === 'login')
 		{
 			$this->mostrar_login('');
+		}else if($pagina === 'registrar_usuario')
+		{
+			$this->mostrar_registro_usuario('');
 		}
 	}
 	/*Crea la sesión del usuario.
@@ -60,7 +67,29 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function crear_usuario()
 	{
-
+		$this->form_validation->set_rules('nombre', 'nombre', 'required');
+		$this->form_validation->set_rules('correo', 'correo', 'required');
+		$this->form_validation->set_rules('nickname', 'nickname', 'required');
+		$this->form_validation->set_rules('contrasena', 'contrasena', 'required');
+		$this->form_validation->set_rules('confirmar', 'confirmar', 'required');
+		if ($this->form_validation->run()) {
+			$nombre = $this->input->post('nombre');
+			$correo = $this->input->post('correo');
+			$nickname = $this->input->post('nickname');
+			$contrasena = $this->input->post('contrasena');
+			$confirmar = $this->input->post('confirmar');
+			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$contrasena);
+			$usuario_registrado = $this->Usuario_Modelo->Registrar_usuario($academico);
+			if($contrasena!=$confirmar){
+				$this->mostrar_registro_usuario('Las contraseñas no coinciden. Intentelo de nuevo');
+			}else if(!$usuario_registrado){
+				$this->mostrar_registro_usuario('Lo sentimos, el usuario agregado existe en el sistema');
+			}else{
+				echo "usuario registrado";
+			}
+		}else{
+			$this->mostrar_registro_usuario('Algunos datos faltan en el registro');
+		}
 	}
 	/*Actualiza una cuenta de usuario.
 		Recibe los datos de la cuenta por PUT. Verifica el id del usuario en caché, y en caso de no

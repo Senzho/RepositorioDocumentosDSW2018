@@ -41,13 +41,32 @@ class Usuario_Modelo extends CI_Model
 		}
 		return $academico;
 	}
+	private function verificar_registro($nombre, $contraseña){
+		$academico_registrado = False;
+		$query = $this->db->get_where('academico', array('nickname' => $nombre, 'contrasena' => $contraseña));
+		if ($query->num_rows() > 0){
+			$academico_registrado = True;
+		}
+		return $academico_registrado;
+	}
 	/*Registra un Academico.
 		Recibe un Academico.
 		Regresa un valor booleano indicando el resultado.
 	*/
 	public function registrar_usuario($academico)
 	{
-
+		$usuario_registrado;
+		if($this->verificar_registro($academico['nickname'],$academico['contrasena'])){
+			$usuario_registrado = false;
+		}else{
+			$this->db->set('idAcademico',$academico['idAcademico']);
+			$this->db->set('nombre',$academico['nombre']);
+			$this->db->set('correo',$academico['correo']);
+			$this->db->set('nickname',$academico['nickname']);	
+			$this->db->set('contrasena',$academico['contrasena']);
+			$usuario_registrado = $this->db->insert('academico');
+		}
+		return $usuario_registrado;
 	}
 	/*Actualiza un Academico.
 		Recibe un Academico.
