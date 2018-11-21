@@ -4,6 +4,8 @@
 	<title>Nuevo usuario</title>
 	<meta charset="UTF-8">
 	<link href="<?php echo base_url(); ?>css/estilos_general.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
 </head>
 <body>
 	<div>
@@ -21,23 +23,23 @@
 			<div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Nombre:</label>
-					<input type="input" name="nombre" class="campoTexto" placeholder="Nombre">
+					<input type="input" name="nombre" class="campoTexto" placeholder="Nombre" value="<?php echo $nombre; ?>">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Correo:</label>
-					<input type="input" name="correo" class="campoTexto" placeholder="Correo">
+					<input type="input" name="correo" class="campoTexto" placeholder="Correo" value="<?php echo $correo; ?>">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Nickname:</label>
-					<input type="input" name="nickname" class="campoTexto" placeholder="Nickname">
+					<input type="input" name="nickname" class="campoTexto" placeholder="Nickname" value="<?php echo $nickname; ?>">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Contraseña:</label>
-					<input type="password" name="contrasena" class="campoTexto" placeholder="Contraseña">
+					<input type="password" id="contrasena" name="contrasena" class="campoTexto" placeholder="Contraseña">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Confirmar:</label>
-					<input type="password" name="confirmar" class="campoTexto" placeholder="Confirmar">
+					<input type="password" id="confirmar" name="confirmar" class="campoTexto" placeholder="Confirmar">
 				</div>
 			</div>
 			<center>
@@ -47,7 +49,7 @@
 			</center>
 	</form>
 	<div class="mensaje">
-    	<center><label><?php echo $mensaje; ?></label></center>
+    	<center><label id="mensaje_usuario"><?php echo $mensaje; ?></label></center>
     </div>
 	<div id="divSalir">
 		<div>

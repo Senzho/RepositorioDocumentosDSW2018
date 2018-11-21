@@ -6,8 +6,8 @@ class Usuario_Controller extends CI_Controller
 	{
 		$this->load->view('pages/repositorio_uv/Login', array('mensaje' => $mensaje));
 	}
-	private function mostrar_registro_usuario($mensaje){
-		$this->load->view('pages/repositorio_uv/Registrar_usuario', array('mensaje'=>$mensaje));
+	private function mostrar_registro_usuario($datos_usuario){
+		$this->load->view('pages/repositorio_uv/Registrar_usuario', array('nombre'=>$datos_usuario['nombre'],'correo'=>$datos_usuario['correo'],'nickname'=>$datos_usuario['nickname'],'mensaje'=>$datos_usuario['mensaje']));
 	}
 
 	public function __construct()
@@ -17,7 +17,6 @@ class Usuario_Controller extends CI_Controller
         $this->load->helper('url');
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $this->load->library('session');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		'login': pagina de inicio de sesión.
@@ -34,7 +33,7 @@ class Usuario_Controller extends CI_Controller
 			$this->mostrar_login('');
 		}else if($pagina === 'registrar_usuario')
 		{
-			$this->mostrar_registro_usuario('');
+			$this->mostrar_registro_usuario(array('nombre'=>'','correo'=>'','nickname'=>'','mensaje'=>''));
 		}
 	}
 	/*Crea la sesión del usuario.
@@ -47,10 +46,8 @@ class Usuario_Controller extends CI_Controller
 		$usuario = $this->input->post('usuario');
 		$contraseña = $this->input->post('contraseña');
 		$academico = $this->Usuario_Modelo->iniciar_sesion($usuario, $contraseña);
-		$id = $academico['id'];
-		if ($id > 0)
+		if ($academico['id'] > 0)
 		{
-			$this->session->set_userdata(array('id' => $id));
 			redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 		}else{
 			$this->mostrar_login('Los sentimos, no podemos encontrar tu usuario, verifica que tus datos sean correctos');
@@ -61,8 +58,7 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function cerrar_sesion()
 	{
-		$this->session->unset_userdata('id');
-		redirect('repositorio_uv/Usuario_Controller/vista/login');
+
 	}
 	/*Crea una nueva cuenta de usuario.
 		Recibe los datos de la cuenta por POST. Registra la cuenta y redirije a la vista de
@@ -71,28 +67,28 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function crear_usuario()
 	{
+		$nombre = $this->input->post('nombre');
+		$correo = $this->input->post('correo');
+		$nickname = $this->input->post('nickname');
+		$contrasena = $this->input->post('contrasena');
+		$confirmar = $this->input->post('confirmar');
 		$this->form_validation->set_rules('nombre', 'nombre', 'required');
 		$this->form_validation->set_rules('correo', 'correo', 'required');
 		$this->form_validation->set_rules('nickname', 'nickname', 'required');
 		$this->form_validation->set_rules('contrasena', 'contrasena', 'required');
 		$this->form_validation->set_rules('confirmar', 'confirmar', 'required');
 		if ($this->form_validation->run()) {
-			$nombre = $this->input->post('nombre');
-			$correo = $this->input->post('correo');
-			$nickname = $this->input->post('nickname');
-			$contrasena = $this->input->post('contrasena');
-			$confirmar = $this->input->post('confirmar');
 			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$contrasena);
 			$usuario_registrado = $this->Usuario_Modelo->Registrar_usuario($academico);
 			if($contrasena!=$confirmar){
-				$this->mostrar_registro_usuario('Las contraseñas no coinciden. Intentelo de nuevo');
-			}else if(!$usuario_registrado){
-				$this->mostrar_registro_usuario('Lo sentimos, el usuario agregado existe en el sistema');
-			}else{
+				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'Las contraseñas no coinciden. Intentelo de nuevo'));
+			}else if($usuario_registrado===TRUE){
 				echo "usuario registrado";
+			}else{
+				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> $usuario_registrado));
 			}
 		}else{
-			$this->mostrar_registro_usuario('Algunos datos faltan en el registro');
+			$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'Faltan datos para registrar'));
 		}
 	}
 	/*Actualiza una cuenta de usuario.

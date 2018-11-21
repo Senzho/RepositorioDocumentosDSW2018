@@ -41,9 +41,17 @@ class Usuario_Modelo extends CI_Model
 		}
 		return $academico;
 	}
-	private function verificar_registro($nombre, $contraseña){
+	private function verificar_correo($correo){
 		$academico_registrado = False;
-		$query = $this->db->get_where('academico', array('nickname' => $nombre, 'contrasena' => $contraseña));
+		$query = $this->db->get_where('academico', array('correo' => $correo));
+		if ($query->num_rows() > 0){
+			$academico_registrado = True;
+		}
+		return $academico_registrado;
+	}
+	private function verificar_nickname($nickname){
+		$academico_registrado = False;
+		$query = $this->db->get_where('academico', array('nickname' => $nickname));
 		if ($query->num_rows() > 0){
 			$academico_registrado = True;
 		}
@@ -56,8 +64,10 @@ class Usuario_Modelo extends CI_Model
 	public function registrar_usuario($academico)
 	{
 		$usuario_registrado;
-		if($this->verificar_registro($academico['nickname'],$academico['contrasena'])){
-			$usuario_registrado = false;
+		if($this->verificar_correo($academico['correo'])){
+			$usuario_registrado = 'El correo está registrado anteriormente';
+		}else if($this->verificar_nickname($academico['nickname'])){
+			$usuario_registrado = 'el nickname esta registrado anteriormente';
 		}else{
 			$this->db->set('idAcademico',$academico['idAcademico']);
 			$this->db->set('nombre',$academico['nombre']);
