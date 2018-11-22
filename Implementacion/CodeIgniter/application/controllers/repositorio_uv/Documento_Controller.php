@@ -89,15 +89,17 @@ class Documento_Controller extends CI_Controller
 		$id = $this->session->userdata('id');
 		$respuesta;
 		$nombre = $this->input->post('nombre');
-		$fecha = getdate();
-		$fecha_registro = $fecha['year'] . '-' . $fecha['mon'] . '-' $fecha['mday'];
+		$fecha_registro = date('Y-m-d');
 		$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id);
-		if ($this->Documento_Modelo->registrar_documento($documento)){
-			$config['upload_path'] = './archivos/';
+		$resultado = $this->Documento_Modelo->registrar_documento($documento);
+		if ($resultado['resultado']){
+			$config['upload_path'] = './documentos/';
             $config['allowed_types'] = 'pdf|xlsx|docx|pptx';
             $this->load->library('upload', $config);
             if ($this->upload->do_upload('archivo')){
             	$respuesta['creado'] = True;
+            	$documento['idDocumento'] = $resultado['id'];
+            	$respuesta['documento'] = $documento;
             }else{
             	$respuesta['creado'] = False;
             }

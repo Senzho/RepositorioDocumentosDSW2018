@@ -43,6 +43,11 @@
 	font-size: 0.7em;
 	margin-top: 25px;
 }
+.lista{
+	list-style: none;
+	list-style-position: inside;
+	padding-left: 0px;
+}
 .logo{
 	max-height: 70px;
 	max-width: 70px;

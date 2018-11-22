@@ -60,10 +60,13 @@ class Documento_Modelo extends CI_Model
 	}
 	/*Registra un documento.
 		Recibe un documento.
-		Regresa un valor booleano indicando el resultado.
+		Regresa un arreglo con un booleano indicando el resultado y un entero indicando el id asignado.
 	*/
 	public function registrar_documento($documento)
 	{
-		return $this->db->insert('documento', $documento);
+		$resultado = $this->db->insert('documento', $documento);
+		$id = $this->db->insert_id();
+		$respuesta = array('resultado' => $resultado, 'id' => $id);
+		return $respuesta;
 	}
 }
