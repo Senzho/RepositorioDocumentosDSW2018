@@ -197,6 +197,14 @@
 	font-size: 0.6em;
 	padding-left: 3px;
 	padding-right: 3px;
+	word-wrap: break-word;
+}
+.emisor{
+	font-style: italic;
+	font-size: 0.6em;
+	padding-left: 3px;
+	padding-right: 3px;
+	word-wrap: break-word;
 }
 .icono{
 	max-width: 90px;
@@ -206,6 +214,7 @@
 	font-size: 0.8em;
 	padding-left: 3px;
 	padding-right: 3px;
+	word-wrap: break-word;
 }
 .panelScroll{
 	bottom: 0px;

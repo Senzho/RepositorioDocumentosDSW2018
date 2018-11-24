@@ -4,6 +4,7 @@ class Documento_Modelo extends CI_Model
 {
 	public function __construct(){
 		$this->load->database('repositorio_uv');
+		$this->load->model('repositorio_uv/Usuario_Modelo');
 	}
 	/*Elimina el registro de un documento.
 		Recibe el id del documento.
@@ -36,7 +37,25 @@ class Documento_Modelo extends CI_Model
 	*/
 	public function obtener_compartidos($id_usuario)
 	{
-
+		$documentos = array();
+		$this->db->select('d.idDocumento, d.nombre, d.fechaRegistro, dc.idAcademicoEmisor');
+		$this->db->from('documento d, documentocompartido dc');
+		$this->db->where('d.idDocumento = dc.idDocumento');
+		$this->db->where('dc.idAcademicoReceptor', $id_usuario);
+		$query = $this->db->get();
+		$result = $query->result();
+		for ($i = 0; $i < count($result); ++ $i) {
+			$fila = $result[$i];
+			$academico = $this->Usuario_Modelo->obtener_usuario($fila->idAcademicoEmisor);
+			$documento = array(
+				'id' => $fila->idDocumento,
+				'nombre' => $fila->nombre,
+				'fecha_registro' => $fila->fechaRegistro,
+				'academico' => $academico['nombre']
+			);
+			$documentos[$i] = $documento;
+		}
+		return $documentos;
 	}
 	/*Obtiene los documentos personales de un usuario.
 		Recibe el id del académico.
@@ -44,15 +63,15 @@ class Documento_Modelo extends CI_Model
 	*/
 	public function obtener_documentos($id_usuario)
 	{
-		$documentos;
-		$query = $this->db->get('documento');
+		$documentos = array();
+		$query = $this->db->get_where('documento', array('idAcademico' => $id_usuario));
 		$result = $query->result();
 		for ($i = 0; $i < count($result); ++ $i) {
-			$row = $result[$i];
+			$fila = $result[$i];
 			$documento = array(
-				'id' => $row->idDocumento,
-				'nombre' => $row->nombre,
-				'fecha_registro' => $row->fechaRegistro
+				'id' => $fila->idDocumento,
+				'nombre' => $fila->nombre,
+				'fecha_registro' => $fila->fechaRegistro
 			);
 			$documentos[$i] = $documento;
 		}

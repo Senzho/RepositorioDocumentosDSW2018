@@ -2,13 +2,27 @@
 
 class Documento_Controller extends CI_Controller
 {
-	private function cargar_repositorio($id_academico)
+	private function cargar_repositorio($id_academico, $propios)
 	{
-		$documentos = $this->Documento_Modelo->obtener_documentos($id_academico);
+		$documentos;
+		$titulo;
+		if ($propios){
+			$documentos = $this->Documento_Modelo->obtener_documentos($id_academico);
+			$titulo = 'Mi repositorio';
+		}else{
+			$documentos = $this->Documento_Modelo->obtener_compartidos($id_academico);
+			$titulo = 'Compartidos conmigo';
+		}
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
-		$this->load->view('templates/repositorio_uv/menu');
+		$this->load->view('templates/repositorio_uv/menu', array('titulo' => $titulo));
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre']));
 		$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
+	}
+	private function validar_documento()
+	{
+		$this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|max_length[50]|min_length[6]');
+		$this->form_validation->set_rules('archivo', 'Ruta', 'required');
+		return $this->form_Validation->run();
 	}
 
 	public function __construct()
@@ -18,6 +32,7 @@ class Documento_Controller extends CI_Controller
         $this->load->model('repositorio_uv/Usuario_Modelo');
         $this->load->helper('url');
         $this->load->library('session');
+        $this->load->library('form_validation');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
@@ -29,9 +44,15 @@ class Documento_Controller extends CI_Controller
 	public function vista($pagina = 'repositorio', $id_documento = '0', $tipo_documento = 'null')
 	{
 		$id = $this->session->userdata('id');
-		if ($pagina === 'repositorio'){
-			$this->cargar_repositorio($id);
-		}
+		if ($id){
+			if ($pagina === 'repositorio'){
+				$this->cargar_repositorio($id, True);
+			}else if ($pagina === 'compartidos'){
+				$this->cargar_repositorio($id, False);
+			}
+		}else{
+			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
+		}	
 	}
 	/*Crea un nuevo documento.
 		Recibe los datos de un Documento por POST.
@@ -87,26 +108,32 @@ class Documento_Controller extends CI_Controller
 	public function subir_documento()
 	{
 		$id = $this->session->userdata('id');
-		$respuesta;
-		$nombre = $this->input->post('nombre');
-		$fecha_registro = date('Y-m-d');
-		$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id);
-		$resultado = $this->Documento_Modelo->registrar_documento($documento);
-		if ($resultado['resultado']){
-			$config['upload_path'] = './documentos/';
-            $config['allowed_types'] = 'pdf|xlsx|docx|pptx';
-            $this->load->library('upload', $config);
-            if ($this->upload->do_upload('archivo')){
-            	$respuesta['creado'] = True;
-            	$documento['idDocumento'] = $resultado['id'];
-            	$respuesta['documento'] = $documento;
-            }else{
-            	$respuesta['creado'] = False;
-            }
+		if ($id){
+			$respuesta;
+			$nombre = $this->input->post('nombre');
+			$ruta = $this->input->post('archivo');
+			$fecha_registro = date('Y-m-d');
+			$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id);
+			$resultado = $this->Documento_Modelo->registrar_documento($documento);
+			if ($resultado['resultado']){
+				$config['upload_path'] = './documentos/';
+	            $config['allowed_types'] = 'pdf|xlsx|docx|pptx';
+	            $config['file_name'] = $resultado['id'];
+	            $this->load->library('upload', $config);
+	            if ($this->upload->do_upload('archivo')){
+	            	$respuesta['creado'] = True;
+	            	$documento['idDocumento'] = $resultado['id'];
+	            	$respuesta['documento'] = $documento;
+	            }else{
+	            	$respuesta['creado'] = False;
+	            }
+			}else{
+				$respuesta['creado'] = False;
+			}
+			echo json_encode($respuesta);
 		}else{
-			$respuesta['creado'] = False;
+			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
 		}
-		echo json_encode($respuesta);
 	}
 	/*Ubica un documento y regresa la ruta.
 		Recibe el id de un documento por POST.

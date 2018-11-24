@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Menú principal</title>
+    <title><?php  echo $titulo; ?></title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link href="<?php echo base_url() ?>css/estilos_general.css" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url() ?>css/estilos_repositorio.css" rel="stylesheet" type="text/css">
@@ -23,13 +23,13 @@
         </div>
         <div id="opciones" class="opciones">
         	<ul class="lista" name="Menu">
-        		<li name="repositorio">
+        		<li id="opcionRepositorio" name="repositorio">
         			<div class="opcion">
 		                <img src="<?php echo base_url() ?>/recursos/home.png" class="iconoOpcion"/>
 		                <label class="fuente textoOpcion">Mi repositorio</label>
 		            </div>
         		</li>
-        		<li name="compartidos">
+        		<li id="opcionCompartidos" name="compartidos">
         			<div class="opcion">
 		                <img src="<?php echo base_url() ?>/recursos/share.png" class="iconoOpcion"/>
 		                <label class="fuente textoOpcion">Compartidos</label>
@@ -49,7 +49,7 @@
         		</li>
         	</ul>   
         </div>
-        <div id="salir" class="bajo">
+        <div id="opcionSalir" class="bajo">
             <div class="opcion">
                 <img src="<?php echo base_url() ?>/recursos/logoSalir.png" class="iconoOpcion"/>
                 <label class="fuente textoOpcion">Salir</label>
@@ -81,8 +81,8 @@
             <div class="modal-content">
                 <form id="formularioSubirDocumento">
                     <div class="modal-body">
-                        <input id="nombreDocumento" type="text" name="nombre" placeholder="Nombre del documento" class="campoTexto campoTextoMed"/>
-                        <input id="archivo" type="file" name="archivo" class="campoTexto campoTextoMed"/>
+                        <input id="nombreDocumento" type="text" name="nombre" placeholder="Nombre del documento" class="campoTexto campoTextoMed" value="<?php echo set_value('nombre'); ?>" />
+                        <input id="archivo" type="file" name="archivo" class="campoTexto campoTextoMed" value="<?php echo set_value('nombre'); ?>" />
                     </div>
                     <div class="modal-footer">
                         <input type="submit" value="Subir" class="boton botonOk botonReg" />
