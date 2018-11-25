@@ -17,6 +17,7 @@ class Usuario_Controller extends CI_Controller
         $this->load->helper('url');
         $this->load->helper('form');
         $this->load->library('form_validation');
+        $this->load->library('session');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		'login': pagina de inicio de sesión.
@@ -46,8 +47,10 @@ class Usuario_Controller extends CI_Controller
 		$usuario = $this->input->post('usuario');
 		$contraseña = $this->input->post('contraseña');
 		$academico = $this->Usuario_Modelo->iniciar_sesion($usuario, $contraseña);
-		if ($academico['id'] > 0)
+		$id = $academico['id'];
+		if ($id > 0)
 		{
+			$this->session->set_userdata(array('id' => $id));
 			redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 		}else{
 			$this->mostrar_login('Los sentimos, no podemos encontrar tu usuario, verifica que tus datos sean correctos');
@@ -58,7 +61,55 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function cerrar_sesion()
 	{
-
+		$this->session->unset_userdata('id');
+		redirect('repositorio_uv/Usuario_Controller/vista/login');
+	}
+	private function validar_datos_usuario(){
+		$this->form_validation->set_rules(
+			'nombre','nombre',
+			'trim|required|min_length[3]|max_length[50]',
+			array(
+				'required' => 'El campo %s debe ser llenado',
+				'min_length' => 'El campo %s debe tener al menos 3 caracteres.',
+				'max_length' => 'El Campo %s debe contener un maximo de 50 caracteres.'
+			)
+		);
+		$this->form_validation->set_rules(
+			'nickname','nickname',
+			'trim|required|min_length[3]|max_length[50]',
+			array(
+				'required' => 'El campo %s debe ser llenado',
+				'min_length' => 'El campo %s debe tener al menos 3 caracteres.',
+				'max_length' => 'El Campo %s debe contener un maximo de 50 caracteres.'
+			)
+		);
+		$this->form_validation->set_rules(
+			'correo','correo',
+			'trim|required|valid_email',
+			array(
+				'required' => 'El campo %s debe ser llenado.',
+				'valid_email' => 'El %s no es valido.',
+			)
+		);
+		$this->form_validation->set_rules(
+			'contrasena','contraseña',
+			'trim|required',
+			array(
+				'required' => 'El campo %s debe ser llenado.',
+			)
+		);
+		$this->form_validation->set_rules(
+			'confirmar','confirmar',
+			'trim|required|matches[contrasena]',
+			array(
+				'required' => 'Las contraseñas no coinciden, intentelo de nuevo.',
+			)
+		);
+		$datos_validos = false;
+		if($this->form_validation->run()){
+			$datos_validos = true;
+		}
+		return $datos_validos;
 	}
 	/*Crea una nueva cuenta de usuario.
 		Recibe los datos de la cuenta por POST. Registra la cuenta y redirije a la vista de
@@ -71,19 +122,21 @@ class Usuario_Controller extends CI_Controller
 		$correo = $this->input->post('correo');
 		$nickname = $this->input->post('nickname');
 		$contrasena = $this->input->post('contrasena');
-		$confirmar = $this->input->post('confirmar');
-		$this->form_validation->set_rules('nombre', 'nombre', 'required');
-		$this->form_validation->set_rules('correo', 'correo', 'required');
-		$this->form_validation->set_rules('nickname', 'nickname', 'required');
-		$this->form_validation->set_rules('contrasena', 'contrasena', 'required');
-		$this->form_validation->set_rules('confirmar', 'confirmar', 'required');
-		if ($this->form_validation->run()) {
+		if ($this->validar_datos_usuario()) {
 			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$contrasena);
 			$usuario_registrado = $this->Usuario_Modelo->Registrar_usuario($academico);
-			if($contrasena!=$confirmar){
-				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'Las contraseñas no coinciden. Intentelo de nuevo'));
-			}else if($usuario_registrado===TRUE){
-				echo "usuario registrado";
+			if($usuario_registrado===TRUE){
+				$config['upload_path'] = './usuarios/';
+		        $config['allowed_types'] = 'jpg|png|gif';
+		        $config['file_name'] = $nickname;
+		        $this->load->library('upload', $config);
+		        if(!$this->upload->do_upload('userfile'))
+		        {
+		        	$error = array('error' => $this->upload->display_errors());
+		        	echo $error['error'];
+		        }else{
+		        	echo "usuario registrado";
+		        }
 			}else{
 				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> $usuario_registrado));
 			}

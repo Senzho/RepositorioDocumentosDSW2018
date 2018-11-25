@@ -14,14 +14,17 @@ body{
 	width: 3%;
 }
 #imgLapiz:hover{
-	background-color:rgb(120,199,231);
+	background-color:rgb(214, 219, 223);
 }
 #imgLapiz:active{
-	background-color: rgb(60,75,216);
+	background-color: rgb(171, 178, 185);
 }
 #divGeneral{
 	width: 100%;
 	margin: auto;
+}
+#file_input{
+	display:none;
 }
 .header{
 	margin-left: 208px;
