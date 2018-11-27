@@ -5,7 +5,15 @@
 		</div>
 		<div id="divDatosUsuario">
 			<div id="divImagenUsuario">
-				<img src="<?php echo base_url(); ?>recursos/usuario.png" id="imagenUsuario">
+				<?php
+					$recurso = base_url();
+					if (!$this->util->url_existe(base_url() . 'usuarios/' . $nickname . '.jpg')){
+						$recurso = $recurso . 'recursos/usuario.png';
+					}else{
+						$recurso = $recurso . 'usuarios/' . $nickname . '.jpg';
+					}
+					echo "<img src=$recurso id='imagenUsuario'>";
+				?>
 			</div>
 			<div id="divNombreUsuario">
 				<div><label><?php echo $nombre; ?></label></div>

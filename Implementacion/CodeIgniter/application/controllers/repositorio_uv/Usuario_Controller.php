@@ -31,7 +31,11 @@ class Usuario_Controller extends CI_Controller
 	{
 		if ($pagina === 'login')
 		{
-			$this->mostrar_login('');
+			if ($this->session->userdata('id')){
+				redirect('repositorio_uv/Documento_Controller/vista/repositorio');
+			}else{
+				$this->mostrar_login('');
+			}
 		}else if($pagina === 'registrar_usuario')
 		{
 			$this->mostrar_registro_usuario(array('nombre'=>'','correo'=>'','nickname'=>'','mensaje'=>''));

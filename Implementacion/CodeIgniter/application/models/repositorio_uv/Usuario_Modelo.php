@@ -17,7 +17,8 @@ class Usuario_Modelo extends CI_Model
 			$fila = $query->row();
 			$academico = array('id' => $fila->idAcademico,
 				'nombre' => $fila->nombre,
-				'correo' => $fila->correo);
+				'correo' => $fila->correo,
+				'nickname' => $fila->nickname);
 		}else{
 			$academico = array('id' => 0);
 		}
@@ -35,7 +36,8 @@ class Usuario_Modelo extends CI_Model
 			$fila = $query->row();
 			$academico = array('id' => $fila->idAcademico,
 				'nombre' => $fila->nombre,
-				'correo' => $fila->correo);
+				'correo' => $fila->correo,
+				'nickname' => $fila->nickname);
 		}else{
 			$academico = array('id' => 0);
 		}

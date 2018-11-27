@@ -154,6 +154,7 @@
 }
 .opcion{
 	align-items: center;
+	color: black;
 	display: flex;
 	padding-bottom: 5px;
     padding-left: 10px;

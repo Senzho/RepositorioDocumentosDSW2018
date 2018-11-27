@@ -24,16 +24,20 @@
         <div id="opciones" class="opciones">
         	<ul class="lista" name="Menu">
         		<li id="opcionRepositorio" name="repositorio">
-        			<div class="opcion">
-		                <img src="<?php echo base_url() ?>/recursos/home.png" class="iconoOpcion"/>
-		                <label class="fuente textoOpcion">Mi repositorio</label>
-		            </div>
+                    <a href="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/vista/repositorio">
+            			<div class="opcion">
+    		                <img src="<?php echo base_url() ?>/recursos/home.png" class="iconoOpcion"/>
+    		                <label class="fuente textoOpcion">Mi repositorio</label>
+    		            </div>
+                    </a>
         		</li>
         		<li id="opcionCompartidos" name="compartidos">
-        			<div class="opcion">
-		                <img src="<?php echo base_url() ?>/recursos/share.png" class="iconoOpcion"/>
-		                <label class="fuente textoOpcion">Compartidos</label>
-		            </div>
+                    <a href="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/vista/compartidos">
+            			<div class="opcion">
+    		                <img src="<?php echo base_url() ?>/recursos/share.png" class="iconoOpcion"/>
+    		                <label class="fuente textoOpcion">Compartidos</label>
+    		            </div>
+                    </a>
         		</li>
         		<li name="nuevo">
         			<div class="opcion" data-toggle="modal" data-target="#modalOpcionesNuevo">
@@ -50,10 +54,12 @@
         	</ul>   
         </div>
         <div id="opcionSalir" class="bajo">
-            <div class="opcion">
-                <img src="<?php echo base_url() ?>/recursos/logoSalir.png" class="iconoOpcion"/>
-                <label class="fuente textoOpcion">Salir</label>
-            </div>
+            <a href="<?php echo base_url()?>index.php/repositorio_uv/Usuario_Controller/cerrar_sesion">
+                <div class="opcion">
+                    <img src="<?php echo base_url() ?>/recursos/logoSalir.png" class="iconoOpcion"/>
+                    <label class="fuente textoOpcion">Salir</label>
+                </div>
+            </a>
         </div>
     </div>
     <div class="modal fade" id="modalOpcionesNuevo" role="dialog">

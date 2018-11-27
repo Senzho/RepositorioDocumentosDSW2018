@@ -15,7 +15,7 @@ class Documento_Controller extends CI_Controller
 		}
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => $titulo));
-		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre']));
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'nickname' => $academico['nickname']));
 		$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
 	}
 	private function validar_documento()
@@ -31,6 +31,7 @@ class Documento_Controller extends CI_Controller
         $this->load->model('repositorio_uv/Documento_Modelo');
         $this->load->model('repositorio_uv/Usuario_Modelo');
         $this->load->helper('url');
+        $this->load->library('repositorio_uv/util');
         $this->load->library('session');
         $this->load->library('form_validation');
     }
