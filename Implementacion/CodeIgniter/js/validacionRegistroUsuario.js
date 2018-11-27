@@ -2,17 +2,17 @@ $(document).ready(function(){
 	$('#imgLapiz').on('click', function(event){
 		$('#file_input').trigger('click');
 	});
-	document.getElementById('file_input').addEventListener('change', function(event){
+	$('#file_input').on('change', function(event){
   		mostrarImagen(event);
   	});
 	$('#registrar_usuario').on('submit',function(event){
 		if(!validar_datos_usuario()){
 			event.preventDefault();
-			document.getElementById('mensaje_usuario').innerHTML = "Faltan datos para registrar";
+			$('#mensaje_usuario').html("Faltan datos para registrar");
 		}else if(!validar_contrasenas()){
 			event.preventDefault();
-			document.getElementById('mensaje_usuario').innerHTML = "Las contraseñas no coinciden. Intentelo de nuevo";
-		}else if (document.getElementById("file_input").value===""){
+			$('#mensaje_usuario').html("Las contraseñas no coinciden. Intentelo de nuevo");
+		}else if ($("#file_input").val()===""){
 			event.preventDefault();
 			alert("debe elegir una imagen");
 		}
@@ -26,7 +26,7 @@ function validar_datos_usuario(){
 			datos_validos = false;
 			break;
 		}
-	}//
+	}
 	return datos_validos;
 }
 function validar_contrasenas(){
@@ -36,9 +36,8 @@ function validar_contrasenas(){
 	if(contrasena === confirmar){
 		contrasena_valida = true;
 		var contrasena_encriptada = CryptoJS.SHA256(contrasena).toString();
-		document.getElementById("contrasena").value = contrasena_encriptada;
-		document.getElementById("confirmar").value = contrasena_encriptada;
-		console.log(contrasena_encriptada);
+		$("#contrasena").val(contrasena_encriptada);
+		$("confirmar").val(contrasena_encriptada);
 	}
 	return contrasena_valida;
 }
@@ -46,15 +45,14 @@ function mostrarImagen(event) {
 	var file = event.target.files[0];
 	if(file){
 		var reader = new FileReader();
-    reader.readAsDataURL(file);
-	var nombre = $("#file_input").val();
+	    reader.readAsDataURL(file);
+		var nombre = $("#file_input").val();
 		if(validarExtension(nombre)){
 			reader.onload = function(event) {
-				document.getElementById('imgFotoUsuario').src= event.target.result;
-				console.log(event.target.result);	
+				$('#imgFotoUsuario').attr('src',event.target.result);
 			}
 		}else{
-			alert("La extensión del archivo debe ser .png, .jpg o .gif");
+			alert("La extensión del archivo debe ser .jpg");
 		}
 	}else{
 		alert("debe seleccionar una imagen");
@@ -63,7 +61,7 @@ function mostrarImagen(event) {
 function validarExtension(nombre){
 	var valido = false;
 	nombre = nombre.trim();
-	if (nombre.endsWith("pdf") || nombre.endsWith("jpg") || nombre.endsWith("gif")){
+	if (nombre.endsWith("jpg")){
 		valido = true;
 	}
 	return valido;

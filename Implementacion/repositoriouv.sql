@@ -26,10 +26,10 @@ CREATE TABLE `academico` (
   `idAcademico` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) DEFAULT NULL,
   `nickname` varchar(50) DEFAULT NULL,
-  `contrasena` varchar(50) DEFAULT NULL,
+  `contrasena` varchar(64) DEFAULT NULL,
   `correo` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAcademico`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +38,7 @@ CREATE TABLE `academico` (
 
 LOCK TABLES `academico` WRITE;
 /*!40000 ALTER TABLE `academico` DISABLE KEYS */;
+INSERT INTO `academico` VALUES (74,'sddf','asd','688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c','marioolopez21@gmail.com');
 /*!40000 ALTER TABLE `academico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,4 +136,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-17 12:00:35
+-- Dump completed on 2018-11-27 13:48:23
