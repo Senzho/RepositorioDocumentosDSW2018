@@ -37,7 +37,7 @@ function validar_contrasenas(){
 		contrasena_valida = true;
 		var contrasena_encriptada = CryptoJS.SHA256(contrasena).toString();
 		$("#contrasena").val(contrasena_encriptada);
-		$("confirmar").val(contrasena_encriptada);
+		$("#confirmar").val(contrasena_encriptada);
 	}
 	return contrasena_valida;
 }

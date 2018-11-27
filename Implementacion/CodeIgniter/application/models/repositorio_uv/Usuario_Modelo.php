@@ -65,7 +65,24 @@ class Usuario_Modelo extends CI_Model
 	*/
 	public function registrar_usuario($academico)
 	{
-		$usuario_registrado;
+		$usuario_registrado = false;
+		$usuario = array(
+			'nombre' => $academico['nombre'],
+			'nickname'=> $academico['nickname'],
+			'contrasena'=> $academico['contrasena'],
+			'correo' => $academico['correo']
+		); 
+		$this->db->where('idAcademico', $academico['idAcademico']);
+		$this->db->update('academico',$usuario);
+		return $usuario_registrado;
+	}
+	/*Actualiza un Academico.
+		Recibe un Academico.
+		Regresa un valor booleano indicando el resultado.
+	*/
+	public function editar_usuario($academico)
+	{
+		$usuario_registrado = false;
 		if($this->verificar_correo($academico['correo'])){
 			$usuario_registrado = 'El correo está registrado anteriormente';
 		}else if($this->verificar_nickname($academico['nickname'])){
@@ -79,14 +96,6 @@ class Usuario_Modelo extends CI_Model
 			$usuario_registrado = $this->db->insert('academico');
 		}
 		return $usuario_registrado;
-	}
-	/*Actualiza un Academico.
-		Recibe un Academico.
-		Regresa un valor booleano indicando el resultado.
-	*/
-	public function editar_usuario($academico)
-	{
-
 	}
 	/*Elimina los datos de sesión del usuario.
 	*/

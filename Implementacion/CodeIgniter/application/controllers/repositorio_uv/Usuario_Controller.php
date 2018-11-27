@@ -106,7 +106,8 @@ class Usuario_Controller extends CI_Controller
 			'confirmar','confirmar',
 			'trim|required|matches[contrasena]',
 			array(
-				'required' => 'Las contraseñas no coinciden, intentelo de nuevo.',
+				'matches' => 'Las contraseñas no coinciden, intentelo de nuevo.',
+				'required' => 'necesita llenar el campo contraseña'
 			)
 		);
 		$datos_validos = false;
@@ -114,6 +115,21 @@ class Usuario_Controller extends CI_Controller
 			$datos_validos = true;
 		}
 		return $datos_validos;
+	}
+	public function subir_foto($nickname){
+		$foto_subida = false;
+		$config['upload_path'] = './usuarios/';
+        $config['allowed_types'] = 'jpg';
+        $config['file_name'] = $nickname;
+        $this->load->library('upload', $config);
+        if(!$this->upload->do_upload('userfile'))
+        {
+        	$error = array('error' => $this->upload->display_errors());
+        	echo $error['error'];
+        }else{
+        	$foto_subida = true;
+        }
+        return $foto_subida;
 	}
 	/*Crea una nueva cuenta de usuario.
 		Recibe los datos de la cuenta por POST. Registra la cuenta y redirije a la vista de
@@ -130,17 +146,11 @@ class Usuario_Controller extends CI_Controller
 			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$contrasena);
 			$usuario_registrado = $this->Usuario_Modelo->Registrar_usuario($academico);
 			if($usuario_registrado===TRUE){
-				$config['upload_path'] = './usuarios/';
-		        $config['allowed_types'] = 'jpg|png|gif';
-		        $config['file_name'] = $nickname;
-		        $this->load->library('upload', $config);
-		        if(!$this->upload->do_upload('userfile'))
-		        {
-		        	$error = array('error' => $this->upload->display_errors());
-		        	echo $error['error'];
-		        }else{
-		        	echo "usuario registrado";
-		        }
+				if($this->subir_foto($nickname)){
+					echo "usuario registrado";
+				}else{
+					echo "usuario registrado, no se subio la foto";
+				}
 			}else{
 				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> $usuario_registrado));
 			}
@@ -153,9 +163,28 @@ class Usuario_Controller extends CI_Controller
 		encontrarlo, redirije a la vista de 'login'.
 		Actualiza el registro, y en caso de no lograrlo, carga la misma vista con un mensaje.
 	*/
+	private function mostrar_edicion_usuario($datos_usuario){
+		$this->load->view('pages/repositorio_uv/Editar_usuario', array('nombre'=>$datos_usuario['nombre'],'correo'=>$datos_usuario['correo'],'nickname'=>$datos_usuario['nickname'],'mensaje'=>$datos_usuario['mensaje']));
+	}
 	public function editar_usuario()
 	{
-
+		$id = $this->session->userdata('id');
+		$nombre = $this->input->post('nombre');
+		$nickname = $this->input->post('nickname');
+		$correo = $this->input->post('correo');
+		$contrasena = $this->input->post('contrasena');
+		$confirmar = $this->input->post('confirmar');	
+		if($this->validar_datos_usuario()){
+			$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
+			if($this->Usuario_Modelo->editar_usuario($academico)){
+				echo "usuario editado exitosamente";
+			}else{
+				echo "el usuario no se pudo editar";
+			}
+		}else{
+			$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'mensaje'));
+			//echo "uno o mas datos son invalidos, favor de verificar";
+		}
 	}
 	/*Confirma el código de registro.
 		Recibe un código de registro.

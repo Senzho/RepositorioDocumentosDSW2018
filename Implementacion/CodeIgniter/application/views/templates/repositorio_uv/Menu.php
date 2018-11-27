@@ -14,6 +14,8 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>js/menu.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/publicacionDocumento.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/functions_cryptography.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
 </head>
 <body class="body">
     <div id="menu" class="menu">
@@ -46,10 +48,12 @@
 		            </div>
         		</li>
         		<li name="perfil">
-        			<div class="opcion">
-		                <img src="<?php echo base_url() ?>/recursos/profile.png" class="iconoOpcion"/>
-		                <label class="fuente textoOpcion">Perfil</label>
-		            </div>
+                    <a href="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/vista/editar_usuario">
+        			     <div class="opcion">
+		                      <img src="<?php echo base_url() ?>/recursos/profile.png" class="iconoOpcion"/>
+		                      <label class="fuente textoOpcion">Perfil</label>
+		                 </div>
+                    </a>
         		</li>
         	</ul>   
         </div>

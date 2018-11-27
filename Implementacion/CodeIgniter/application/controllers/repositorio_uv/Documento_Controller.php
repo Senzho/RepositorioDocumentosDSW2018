@@ -2,7 +2,7 @@
 
 class Documento_Controller extends CI_Controller
 {
-	private function cargar_repositorio($id_academico, $propios)
+	private function cargar_repositorio($id_academico, $propios, $editar = False)
 	{
 		$documentos;
 		$titulo;
@@ -16,7 +16,11 @@ class Documento_Controller extends CI_Controller
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => $titulo));
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'nickname' => $academico['nickname']));
-		$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
+		if($editar){
+			$this->load->view('pages/repositorio_uv/Editar_usuario', array('nombre'=>$academico['nombre'],'correo'=>$academico['correo'],'nickname'=>$academico['nickname'],'mensaje'=>''));
+		}else{
+			$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
+		}
 	}
 	private function validar_documento()
 	{
@@ -50,6 +54,8 @@ class Documento_Controller extends CI_Controller
 				$this->cargar_repositorio($id, True);
 			}else if ($pagina === 'compartidos'){
 				$this->cargar_repositorio($id, False);
+			}else if($pagina === 'editar_usuario'){
+				$this->cargar_repositorio($id,False,True);
 			}
 		}else{
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
