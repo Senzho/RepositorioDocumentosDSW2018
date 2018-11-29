@@ -6,6 +6,10 @@ class Usuario_Controller extends CI_Controller
 	{
 		$this->load->view('pages/repositorio_uv/Login', array('mensaje' => $mensaje));
 	}
+	private function mostrar_confirmacion($mensaje)
+	{
+		$this->load->view('pages/repositorio_uv/Confirmacion_Registro', array('mensaje' => $mensaje));
+	}
 	private function mostrar_registro_usuario($datos_usuario){
 		$this->load->view('pages/repositorio_uv/Registrar_usuario', array('nombre'=>$datos_usuario['nombre'],'correo'=>$datos_usuario['correo'],'nickname'=>$datos_usuario['nickname'],'mensaje'=>$datos_usuario['mensaje']));
 	}
@@ -39,6 +43,8 @@ class Usuario_Controller extends CI_Controller
 		}else if($pagina === 'registrar_usuario')
 		{
 			$this->mostrar_registro_usuario(array('nombre'=>'','correo'=>'','nickname'=>'','mensaje'=>''));
+		}else if ($pagina === 'confirmacion'){
+			$this->mostrar_confirmacion('');
 		}
 	}
 	/*Crea la sesión del usuario.
@@ -142,17 +148,20 @@ class Usuario_Controller extends CI_Controller
 		$correo = $this->input->post('correo');
 		$nickname = $this->input->post('nickname');
 		$contrasena = $this->input->post('contrasena');
+		$confirmar = $this->input->post('confirmar');
 		if ($this->validar_datos_usuario()) {
-			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$contrasena);
+			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$confirmar);
 			$usuario_registrado = $this->Usuario_Modelo->Registrar_usuario($academico);
-			if($usuario_registrado===TRUE){
+			if($usuario_registrado['resultado']){
 				if($this->subir_foto($nickname)){
-					echo "usuario registrado";
+					$this->load->helper('repositorio_uv/Correo_Helper');
+					validar_correo($academico);
+					redirect('repositorio_uv/Usuario_Controller/vista/confirmacion');
 				}else{
-					echo "usuario registrado, no se subio la foto";
+					$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'No pudo registrarse la foto'));
 				}
 			}else{
-				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> $usuario_registrado));
+				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> "No pudo registrarse el usuario"));
 			}
 		}else{
 			$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'Faltan datos para registrar'));
@@ -192,6 +201,6 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function confirmar_registro()
 	{
-
+		$codigo = $this->input->post('codigo');
 	}
 }

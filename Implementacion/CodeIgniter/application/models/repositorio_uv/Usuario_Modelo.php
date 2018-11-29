@@ -65,16 +65,10 @@ class Usuario_Modelo extends CI_Model
 	*/
 	public function registrar_usuario($academico)
 	{
-		$usuario_registrado = false;
-		$usuario = array(
-			'nombre' => $academico['nombre'],
-			'nickname'=> $academico['nickname'],
-			'contrasena'=> $academico['contrasena'],
-			'correo' => $academico['correo']
-		); 
-		$this->db->where('idAcademico', $academico['idAcademico']);
-		$this->db->update('academico',$usuario);
-		return $usuario_registrado;
+		$resultado = $this->db->insert('academico', $academico);
+		$id = $this->db->insert_id();
+		$respuesta = array('resultado' => $resultado, 'id' => $id);
+		return $respuesta;
 	}
 	/*Actualiza un Academico.
 		Recibe un Academico.
