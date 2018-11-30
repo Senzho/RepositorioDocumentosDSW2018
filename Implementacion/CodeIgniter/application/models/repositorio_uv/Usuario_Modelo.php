@@ -24,6 +24,27 @@ class Usuario_Modelo extends CI_Model
 		}
 		return $academico;
 	}
+	/*Obtiene un Académico en proceso de registro.
+		Recibe el id del usuario.
+		Regresa un Academico.
+	*/
+	public function obtener_usuario_proceso($id_usuario)
+	{
+		$academico;
+		$query = $this->db->get_where('academicoProceso', array('idAcademico' => $id_usuario));
+		if ($query->num_rows() > 0){
+			$fila = $query->row();
+			$academico = array('idAcademico' => $fila->idAcademico,
+				'nombre' => $fila->nombre,
+				'nickname' => $fila->nickname,
+				'contrasena' => $fila->contrasena,
+				'correo' => $fila->correo,
+				'codigo' => $fila->codigo);
+		}else{
+			$academico = array('id' => 0);
+		}
+		return $academico;
+	}
 	/*Obtiene un Académico.
 		Recibe el usuario y contraseña (hash).
 		Regresa un Académico.
@@ -70,6 +91,17 @@ class Usuario_Modelo extends CI_Model
 		$respuesta = array('resultado' => $resultado, 'id' => $id);
 		return $respuesta;
 	}
+	/*Registra un Academico en proceso de registro.
+		Recibe un Academico.
+		Regresa un valor booleano indicando el resultado.
+	*/
+	public function registrar_usuario_proceso($academico)
+	{
+		$resultado = $this->db->insert('academicoProceso', $academico);
+		$id = $this->db->insert_id();
+		$respuesta = array('resultado' => $resultado, 'id' => $id);
+		return $respuesta;
+	}
 	/*Actualiza un Academico.
 		Recibe un Academico.
 		Regresa un valor booleano indicando el resultado.
@@ -96,5 +128,10 @@ class Usuario_Modelo extends CI_Model
 	public function cerrar_sesion()
 	{
 
+	}
+	public function eliminar_usuario_proceso($id)
+	{
+		$this->db->where('idAcademico', $id);
+		return $this->db->delete('academicoProceso');
 	}
 }

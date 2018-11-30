@@ -9,6 +9,7 @@
     <link href="<?php echo base_url(); ?>css/media_gen.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionLogin.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/functions_cryptography.js"></script>
 </head>
 <body>
     <div id="cabecera" class="cabecera">
@@ -24,6 +25,7 @@
                 </div>
                 <div class="divTexto">
                     <input id="contraseña" name="contraseña" type="password" placeholder="Contraseña" class="fuente campoTexto campoTextoMed" />
+                    <input type="hidden" id="hash" name="hash" />
                 </div>
                 <input type="submit" value="Entrar" class="fuente boton botonOk botonReg" />
             </form>

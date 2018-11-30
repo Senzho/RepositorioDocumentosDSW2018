@@ -26,7 +26,7 @@ $.fn.valido = function(){
 		respuesta = "NOMBRE";
 	}else if (archivo.trim().length === 0){
 		respuesta = "ARCHIVOL";
-	}else if (!validarExtension(archivo)){
+	}else if (!validarExtensionDocumento(archivo)){
 		respuesta = "ARCHIVOE";
 	}
 	else{
@@ -69,7 +69,7 @@ $.fn.actualizar = function (documento){
 		+ "</div></div>");
 	$("#modalFormularioSubir").modal("toggle");
 }
-function validarExtension(nombre){
+function validarExtensionDocumento(nombre){
 	var valido = false;
 	nombre = nombre.trim();
 	if (nombre.endsWith("pdf") || nombre.endsWith("docx") || nombre.endsWith("xlsx") || nombre.endsWith("pptx")){

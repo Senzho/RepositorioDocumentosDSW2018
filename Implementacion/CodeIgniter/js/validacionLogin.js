@@ -10,6 +10,12 @@ $(document).ready(function (){
 				mensaje = mensaje + "ingresa tu contraseña";
 			}
 			alert(mensaje);
+		}else{
+			var campoContrasena = $("#contraseña");
+			var contrasena = $(campoContrasena).val();
+			var hash = CryptoJS.SHA256(contrasena).toString();
+			$("#hash").val(hash);
+			$(campoContrasena).val('');
 		}
 	});
 });

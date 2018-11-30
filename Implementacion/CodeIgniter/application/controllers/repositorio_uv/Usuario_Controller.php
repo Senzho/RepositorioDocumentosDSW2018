@@ -8,10 +8,18 @@ class Usuario_Controller extends CI_Controller
 	}
 	private function mostrar_confirmacion($mensaje)
 	{
-		$this->load->view('pages/repositorio_uv/Confirmacion_Registro', array('mensaje' => $mensaje));
+		$academico = $this->Usuario_Modelo->obtener_usuario_proceso($this->session->flashdata('idp'));
+		$this->load->view('pages/repositorio_uv/Confirmacion_Registro', array('correo' => $academico['correo'], 'mensaje' => $mensaje));
 	}
-	private function mostrar_registro_usuario($datos_usuario){
+	private function mostrar_registro_usuario($datos_usuario)
+	{
 		$this->load->view('pages/repositorio_uv/Registrar_usuario', array('nombre'=>$datos_usuario['nombre'],'correo'=>$datos_usuario['correo'],'nickname'=>$datos_usuario['nickname'],'mensaje'=>$datos_usuario['mensaje']));
+	}
+	private function mostrar_bienvenida()
+	{
+		$id = $this->session->userdata('id');
+		$academico = $this->Usuario_Modelo->obtener_usuario($id);
+		$this->load->view('pages/repositorio_uv/Ingresar', array('nombre' => $academico['nombre']));
 	}
 
 	public function __construct()
@@ -40,11 +48,21 @@ class Usuario_Controller extends CI_Controller
 			}else{
 				$this->mostrar_login('');
 			}
-		}else if($pagina === 'registrar_usuario')
-		{
+		}else if($pagina === 'registrar_usuario'){
 			$this->mostrar_registro_usuario(array('nombre'=>'','correo'=>'','nickname'=>'','mensaje'=>''));
 		}else if ($pagina === 'confirmacion'){
-			$this->mostrar_confirmacion('');
+			if ($this->session->flashdata('idp')){
+				$this->session->keep_flashdata('idp');
+				$this->mostrar_confirmacion('');
+			}else{
+				$this->mostrar_login('');
+			}
+		}else if ($pagina === 'ingresar'){
+			if ($this->session->userdata('id')){
+				$this->mostrar_bienvenida();
+			}else{
+				$this->mostrar_login('');
+			}
 		}
 	}
 	/*Crea la sesión del usuario.
@@ -55,12 +73,12 @@ class Usuario_Controller extends CI_Controller
 	public function iniciar_sesion()
 	{
 		$usuario = $this->input->post('usuario');
-		$contraseña = $this->input->post('contraseña');
+		$contraseña = $this->input->post('hash');
 		$academico = $this->Usuario_Modelo->iniciar_sesion($usuario, $contraseña);
 		$id = $academico['id'];
 		if ($id > 0)
 		{
-			$this->session->set_userdata(array('id' => $id));
+			$this->session->set_userdata('id', $id);
 			redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 		}else{
 			$this->mostrar_login('Los sentimos, no podemos encontrar tu usuario, verifica que tus datos sean correctos');
@@ -151,11 +169,15 @@ class Usuario_Controller extends CI_Controller
 		$confirmar = $this->input->post('confirmar');
 		if ($this->validar_datos_usuario()) {
 			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$confirmar);
-			$usuario_registrado = $this->Usuario_Modelo->Registrar_usuario($academico);
+			$this->load->library('repositorio_uv/util');
+			$codigo = $this->util->obtener_codigo($academico);
+			$academico['codigo'] = $codigo;
+			$usuario_registrado = $this->Usuario_Modelo->registrar_usuario_proceso($academico);
 			if($usuario_registrado['resultado']){
+				$this->session->set_flashdata('idp', $usuario_registrado['id']);
 				if($this->subir_foto($nickname)){
 					$this->load->helper('repositorio_uv/Correo_Helper');
-					validar_correo($academico);
+					validar_correo($academico, $codigo);
 					redirect('repositorio_uv/Usuario_Controller/vista/confirmacion');
 				}else{
 					$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'No pudo registrarse la foto'));
@@ -202,5 +224,34 @@ class Usuario_Controller extends CI_Controller
 	public function confirmar_registro()
 	{
 		$codigo = $this->input->post('codigo');
+		$id = $this->session->flashdata('idp');
+		$academico = $this->Usuario_Modelo->obtener_usuario_proceso($id);
+		if ($academico['codigo'] === $codigo){
+			$this->Usuario_Modelo->eliminar_usuario_proceso($id);
+			unset($academico['codigo']);
+			$registro = $this->Usuario_Modelo->registrar_usuario($academico);
+			if ($registro['resultado']){
+				$this->session->set_userdata('id', $registro['id']);
+				redirect('repositorio_uv/Usuario_Controller/vista/ingresar');
+			}else{
+				//Error de registro
+			}
+		}else{
+			$this->session->keep_flashdata('idp');
+			$this->mostrar_confirmacion('Lo sentimos, el código es incorrecto');
+		}
+	}
+	public function enviar_correo()
+	{
+		$id = $this->session->flashdata('idp');
+		if ($id){
+			$this->session->keep_flashdata('idp');
+			$academico = $this->Usuario_Modelo->obtener_usuario_proceso($id);
+			$this->load->helper('repositorio_uv/Correo_Helper');
+			validar_correo($academico, $academico['codigo']);
+			$this->mostrar_confirmacion('');
+		}else{
+			$this->mostrar_login('');
+		}
 	}
 }
