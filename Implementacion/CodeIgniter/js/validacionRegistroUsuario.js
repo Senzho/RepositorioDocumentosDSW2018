@@ -1,10 +1,5 @@
 $(document).ready(function(){
-	$('#imgLapiz').on('click', function(event){
-		$('#file_input').trigger('click');
-	});
-	$('#file_input').on('change', function(event){
-  		mostrarImagen(event);
-  	});
+	buscar_imagen();
 	$('#registrar_usuario').on('submit',function(event){
 		if(!validar_datos_usuario()){
 			event.preventDefault();
@@ -17,10 +12,33 @@ $(document).ready(function(){
 			alert("debe elegir una imagen");
 		}
 	});
+	$('#editar_usuario').on('submit', function(event){
+		if(!validar_datos_usuario()){
+			event.preventDefault();
+			$('#mensaje_usuario').html('faltan datos para registrar');
+		}else if(!validar_contrasenas()){
+			console.log('validacion de contraseñas');
+			event.preventDefault();
+			$('#mensaje_usuario').html('Las contraseñas no coinciden. Intentelo de nuevo');
+		}else if ($("#file_input").val()===""){
+			event.preventDefault();
+			alert("debe elegir una imagen");
+		}
+	});
 });
+
+function buscar_imagen(){
+	$('#imgLapiz').on('click', function(event){
+		$('#file_input').trigger('click');
+	});
+	$('#file_input').on('change', function(event){
+  		mostrarImagen(event);
+  	});
+}
+
 function validar_datos_usuario(){
 	var datos_validos = true;
-	var datos_usuario = $(".campoTexto");
+	var datos_usuario = $(".datoRegistro");
 	for(var i = 0; i < datos_usuario.length; i++){
 		if(datos_usuario[i].value.trim().length===0){
 			datos_validos = false;

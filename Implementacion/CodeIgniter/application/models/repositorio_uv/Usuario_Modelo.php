@@ -64,22 +64,6 @@ class Usuario_Modelo extends CI_Model
 		}
 		return $academico;
 	}
-	private function verificar_correo($correo){
-		$academico_registrado = False;
-		$query = $this->db->get_where('academico', array('correo' => $correo));
-		if ($query->num_rows() > 0){
-			$academico_registrado = True;
-		}
-		return $academico_registrado;
-	}
-	private function verificar_nickname($nickname){
-		$academico_registrado = False;
-		$query = $this->db->get_where('academico', array('nickname' => $nickname));
-		if ($query->num_rows() > 0){
-			$academico_registrado = True;
-		}
-		return $academico_registrado;
-	}
 	/*Registra un Academico.
 		Recibe un Academico.
 		Regresa un valor booleano indicando el resultado.
@@ -102,26 +86,38 @@ class Usuario_Modelo extends CI_Model
 		$respuesta = array('resultado' => $resultado, 'id' => $id);
 		return $respuesta;
 	}
+	private function verificar_correo($correo, $registrar = False){
+		$correo_disponible = True;
+		$query = $this->db->get_where('academico', array('correo' => $correo));
+		if ($query->num_rows() > 1){
+			$correo_disponible = False;
+		}
+		return $correo_disponible;
+	}
+	private function verificar_nickname($nickname,  $registrar = False){
+		$nickname_disponible = False;
+		$query = $this->db->get_where('academico', array('nickname' => $nickname));
+		if ($query->num_rows() > 1){
+			$nickname_disponible = True;
+		}
+		return $nickname_disponible;
+	}
 	/*Actualiza un Academico.
 		Recibe un Academico.
 		Regresa un valor booleano indicando el resultado.
 	*/
 	public function editar_usuario($academico)
 	{
-		$usuario_registrado = false;
-		if($this->verificar_correo($academico['correo'])){
-			$usuario_registrado = 'El correo está registrado anteriormente';
-		}else if($this->verificar_nickname($academico['nickname'])){
-			$usuario_registrado = 'el nickname esta registrado anteriormente';
-		}else{
-			$this->db->set('idAcademico',$academico['idAcademico']);
-			$this->db->set('nombre',$academico['nombre']);
-			$this->db->set('correo',$academico['correo']);
-			$this->db->set('nickname',$academico['nickname']);	
-			$this->db->set('contrasena',$academico['contrasena']);
-			$usuario_registrado = $this->db->insert('academico');
+		$usuario_editado = False;
+		if($this->verificar_correo($academico['correo'] && $this->verificar_nickname($academico['nickname']))){
+			$this->db->where('idAcademico', $academico['idAcademico']);
+			$this->db->set('nombre', $academico['nombre']);//verificar que solo exista un nickname
+			$this->db->set('nickname', $academico['nickname']);
+			$this->db->set('contrasena', $academico['contrasena']);
+			$this->db->set('correo', $academico['correo']);
+			$usuario_editado = $this->db->update('academico');
 		}
-		return $usuario_registrado;
+		return $usuario_editado;
 	}
 	/*Elimina los datos de sesión del usuario.
 	*/

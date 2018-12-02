@@ -28,7 +28,9 @@ class Usuario_Controller extends CI_Controller
         $this->load->model('repositorio_uv/Usuario_Modelo');
         $this->load->helper('url');
         $this->load->helper('form');
+        $this->load->library('repositorio_uv/util');
         $this->load->library('form_validation');
+        $this->load->helper('file');
         $this->load->library('session');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
@@ -143,6 +145,11 @@ class Usuario_Controller extends CI_Controller
 	public function subir_foto($nickname){
 		$foto_subida = false;
 		$config['upload_path'] = './usuarios/';
+		if(unlink('./usuarios/'.$nickname.'.jpg')){
+			echo "foto existe y se borra";
+		}else{
+			echo "foto no existia ahora se guarda";
+		}
         $config['allowed_types'] = 'jpg';
         $config['file_name'] = $nickname;
         $this->load->library('upload', $config);
@@ -208,9 +215,10 @@ class Usuario_Controller extends CI_Controller
 		if($this->validar_datos_usuario()){
 			$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
 			if($this->Usuario_Modelo->editar_usuario($academico)){
+				$this->subir_foto($nickname);
 				echo "usuario editado exitosamente";
 			}else{
-				echo "el usuario no se pudo editar";
+				$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'mensaje'));
 			}
 		}else{
 			$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'mensaje'));
