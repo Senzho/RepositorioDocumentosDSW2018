@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.60, for Win64 (AMD64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: repositoriouv
 -- ------------------------------------------------------
--- Server version	5.5.60-log
+-- Server version	5.7.17-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +29,7 @@ CREATE TABLE `academico` (
   `contrasena` varchar(64) DEFAULT NULL,
   `correo` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idAcademico`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,8 +38,35 @@ CREATE TABLE `academico` (
 
 LOCK TABLES `academico` WRITE;
 /*!40000 ALTER TABLE `academico` DISABLE KEYS */;
-INSERT INTO `academico` VALUES (74,'sddf','asd','688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c','marioolopez21@gmail.com');
+INSERT INTO `academico` VALUES (1,'Víctor Javier García Mascareñas','victor','e63c8c8a0f530555c761a7f3383121d33be720b83bc038a8ca54b6e6c42300e1','vijagama@outlook.es'),(2,'Violeta Magaña Castelán','viola','dcd09f2214637af39fbe8301bb4c6ccc0d12463306f125e503ad39de5ba36049','vimacas@gmail.com'),(22,'Pancho Pantera','pancho','00e37ffae0562ab6818d8f4f97457ac5f9679723c1b57f4b371b93f379f1c17a','vijagama@outlook.es');
 /*!40000 ALTER TABLE `academico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `academicoproceso`
+--
+
+DROP TABLE IF EXISTS `academicoproceso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `academicoproceso` (
+  `idAcademico` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) DEFAULT NULL,
+  `nickname` varchar(50) DEFAULT NULL,
+  `contrasena` varchar(64) DEFAULT NULL,
+  `correo` varchar(100) DEFAULT NULL,
+  `codigo` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`idAcademico`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `academicoproceso`
+--
+
+LOCK TABLES `academicoproceso` WRITE;
+/*!40000 ALTER TABLE `academicoproceso` DISABLE KEYS */;
+/*!40000 ALTER TABLE `academicoproceso` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -54,10 +81,11 @@ CREATE TABLE `documento` (
   `nombre` varchar(50) DEFAULT NULL,
   `fechaRegistro` date DEFAULT NULL,
   `idAcademico` int(11) DEFAULT NULL,
+  `habilitado` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idDocumento`),
   KEY `idAcademico` (`idAcademico`),
   CONSTRAINT `documento_ibfk_1` FOREIGN KEY (`idAcademico`) REFERENCES `academico` (`idAcademico`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,6 +94,7 @@ CREATE TABLE `documento` (
 
 LOCK TABLES `documento` WRITE;
 /*!40000 ALTER TABLE `documento` DISABLE KEYS */;
+INSERT INTO `documento` VALUES (1,'Cursos 2019','2018-11-17',1,1),(2,'PAFI 2018','2018-11-13',1,1),(33,'55_LR','2018-11-22',1,1),(34,'uhlyouyouy','2018-11-22',1,1),(35,'documento','2018-11-24',2,1),(36,'otro jaja','2018-11-24',2,1),(37,'768576543','2018-11-24',2,1),(38,'doc_00100_lr','2018-11-28',2,1),(39,'documento_test','2018-11-29',2,1);
 /*!40000 ALTER TABLE `documento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +117,7 @@ CREATE TABLE `documentocompartido` (
   CONSTRAINT `documentocompartido_ibfk_1` FOREIGN KEY (`idAcademicoEmisor`) REFERENCES `academico` (`idAcademico`),
   CONSTRAINT `documentocompartido_ibfk_2` FOREIGN KEY (`idAcademicoReceptor`) REFERENCES `academico` (`idAcademico`),
   CONSTRAINT `documentocompartido_ibfk_3` FOREIGN KEY (`idDocumento`) REFERENCES `documento` (`idDocumento`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,6 +126,7 @@ CREATE TABLE `documentocompartido` (
 
 LOCK TABLES `documentocompartido` WRITE;
 /*!40000 ALTER TABLE `documentocompartido` DISABLE KEYS */;
+INSERT INTO `documentocompartido` VALUES (1,1,2,1);
 /*!40000 ALTER TABLE `documentocompartido` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,4 +166,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-27 13:48:23
+-- Dump completed on 2018-12-01 22:00:08

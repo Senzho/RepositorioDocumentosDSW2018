@@ -86,7 +86,16 @@ class Documento_Controller extends CI_Controller
 	*/
 	public function eliminar_documento($id_documento)
 	{
-
+		if ($this->session->userdata('id')){
+			$respuesta['eliminado'] = $this->Documento_Modelo->borrar_documento($id_documento);
+			if ($respuesta['eliminado']){
+				//No sirve (borrar archivo):
+				//unlink(base_url() . 'documentos/' . $id_documento);
+			}
+			echo json_encode($respuesta);
+		}else{
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
+		}
 	}
 	/*Comparte un documento.
 		Recibe el id del documento, el correo destinatario y un booleano para el permiso de edición.

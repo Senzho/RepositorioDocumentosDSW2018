@@ -12,7 +12,8 @@ class Documento_Modelo extends CI_Model
 	*/
 	public function borrar_documento($id_documento)
 	{
-
+		$this->db->where('idDocumento', $id_documento);
+		return $this->db->update('documento', array('habilitado' => False));
 	}
 	/*Registra un documento compartido.
 		Recibe el id del documento, el id del academico al cual se comparte y un booleano
@@ -41,6 +42,7 @@ class Documento_Modelo extends CI_Model
 		$this->db->select('d.idDocumento, d.nombre, d.fechaRegistro, dc.idAcademicoEmisor');
 		$this->db->from('documento d, documentocompartido dc');
 		$this->db->where('d.idDocumento = dc.idDocumento');
+		$this->db->where('d.habilitado', True);
 		$this->db->where('dc.idAcademicoReceptor', $id_usuario);
 		$query = $this->db->get();
 		$result = $query->result();
@@ -64,7 +66,7 @@ class Documento_Modelo extends CI_Model
 	public function obtener_documentos($id_usuario)
 	{
 		$documentos = array();
-		$query = $this->db->get_where('documento', array('idAcademico' => $id_usuario));
+		$query = $this->db->get_where('documento', array('idAcademico' => $id_usuario, 'habilitado' => True));
 		$result = $query->result();
 		for ($i = 0; $i < count($result); ++ $i) {
 			$fila = $result[$i];

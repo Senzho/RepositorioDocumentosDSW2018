@@ -16,6 +16,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>js/publicacionDocumento.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/functions_cryptography.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/menuDocumento.js"></script>
 </head>
 <body class="body">
     <div id="menu" class="menu">
@@ -91,7 +92,7 @@
             <div class="modal-content">
                 <form id="formularioSubirDocumento">
                     <div class="modal-body">
-                        <input id="nombreDocumento" type="text" name="nombre" placeholder="Nombre del documento" class="campoTexto campoTextoMed" value="<?php echo set_value('nombre'); ?>" />
+                        <input id="nombreDocumentoSubir" type="text" name="nombre" placeholder="Nombre del documento" class="campoTexto campoTextoMed" value="<?php echo set_value('nombre'); ?>" />
                         <input id="archivo" type="file" name="archivo" class="campoTexto campoTextoMed" value="<?php echo set_value('nombre'); ?>" />
                     </div>
                     <div class="modal-footer">
