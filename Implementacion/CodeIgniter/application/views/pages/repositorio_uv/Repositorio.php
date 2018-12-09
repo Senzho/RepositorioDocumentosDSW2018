@@ -46,7 +46,15 @@
 		                		<div class="fuente nombre center">Editar</div>
 		                	</div>
                 		</li>
-                		<li name="opcionCompartir" class="linea">
+                        <li name="opcionFirmar" class="linea">
+                            <div class="item">
+                                <div class="center">
+                                    <img src="<?php echo base_url(); ?>/recursos/signature.png" class='iconoItem'/>
+                                </div>
+                                <div class="fuente nombre center">Firmar</div>
+                            </div>
+                        </li>
+                		<li name="opcionCompartir" class="linea" data-toggle="modal" data-target='#modalCompartir'>
                 			<div class="item">
 		                		<div class="center">
 		                			<img src="<?php echo base_url(); ?>/recursos/share.png" class='iconoItem'/>
@@ -64,6 +72,27 @@
                 		</li>
                 	</ul> 
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalCompartir" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="fuente h3">Compartir</h3>
+                </div>
+                <form id="formularioCompartir" action="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/solicitar_comparticion/">
+                    <div class="modal-body center">
+                        <input id="correoCompartir" type="email" name="correo" placeholder="Correo" class="campoTexto campoTextoMed"/>
+                        <select id="selectEdicion" name="edicion">
+                            <option value="si" selected="selected">Puede editar</option>
+                            <option value="no">No puede editar</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Compartir" class="boton botonOk botonReg" />
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -26,4 +26,7 @@ class Util
 		$contraseña = $academico['contrasena'];
 		return hash('crc32', $id . $nombre . $id . $correo . $id . $nickname . $id . $contraseña . $id);
 	}
+	function obtener_solicitud($id_documento, $id_fuente, $id_objetivo, $fecha){
+		return hash('sha256', $id_documento . $id_fuente . $id_objetivo . $fecha);
+	}
 }

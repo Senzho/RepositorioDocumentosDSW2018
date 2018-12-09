@@ -45,6 +45,20 @@ class Usuario_Modelo extends CI_Model
 		}
 		return $academico;
 	}
+	public function obtener_usuario_correo($correo){
+		$academico;
+		$query = $this->db->get_where('academico', array('correo' => $correo));
+		if ($query->num_rows() > 0){
+			$fila = $query->row();
+			$academico = array('id' => $fila->idAcademico,
+				'nombre' => $fila->nombre,
+				'correo' => $fila->correo,
+				'nickname' => $fila->nickname);
+		}else{
+			$academico = array('id' => 0);
+		}
+		return $academico;
+	}
 	/*Obtiene un Académico.
 		Recibe el usuario y contraseña (hash).
 		Regresa un Académico.

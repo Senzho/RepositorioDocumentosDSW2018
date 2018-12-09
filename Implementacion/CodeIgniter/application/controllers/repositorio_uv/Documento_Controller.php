@@ -97,15 +97,50 @@ class Documento_Controller extends CI_Controller
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
-	/*Comparte un documento.
-		Recibe el id del documento, el correo destinatario y un booleano para el permiso de edición.
-		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
-		Regresa un cadena JSON indicando el resultado: 
-			['compartido': True | False, 'correo_valido': True | False].
-	*/
-	public function compartir_documento($id_documento, $correo, $edicion)
+	public function solicitar_comparticion($id_documento)
 	{
-
+		$id_fuente = $this->session->userdata('id');
+		if ($id_fuente){
+			$respuesta;
+			$correo = $this->input->post('correo');
+			$edicion = $this->input->post('edicion');
+			$objetivo = $this->Usuario_Modelo->obtener_usuario_correo($correo);
+			if ($objetivo['id'] > 0){
+				$this->load->library('repositorio_uv/util');
+				$fecha = date('Y-m-d-u');
+				$solicitud = $this->util->obtener_solicitud($id_documento, $id_fuente, $objetivo['id'], $fecha);
+				$academico = $this->Usuario_Modelo->obtener_usuario($id_fuente);
+				if ($this->Documento_Modelo->registrar_solicitud_documento($id_documento, $solicitud, $edicion)){
+					$respuesta['compartido'] = True;
+					$this->load->helper('repositorio_uv/Correo_Helper');
+					enviar_solicitud_documento($academico, $objetivo, $id_documento, $fecha);
+				}else{
+					$respuesta['compartido'] = False;
+				}	
+			}else{
+				$respuesta['compartido'] = False;
+			}
+			echo json_encode($respuesta);
+		}else{
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
+		}
+	}
+	public function aceptar_solicitud($id_documento, $id_academico, $id_objetivo, $fecha)
+	{
+		$id = $this->session->userdata('id');
+		if ($id){
+			$this->load->library('repositorio_uv/util');
+			$solicitud = $this->util->obtener_solicitud($id_documento, $id_academico, $id_objetivo, $fecha);
+			if ($this->Documento_Modelo->obtener_documento_solicitud($solicitud)['id'] === 1){
+				echo "si";
+				//eliminar registro de solicitud y hacer registro verdadero
+			}else{
+				echo "no";
+				//mostrar página de mensaje de error
+			}
+		}else{
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
+		}
 	}
 	/*Firma un documento.
 		Recibe el id del documento.
