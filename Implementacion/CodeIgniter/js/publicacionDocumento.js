@@ -18,7 +18,7 @@ $(document).ready(function(){
 });
 $.fn.valido = function(){
 	var respuesta;
-	var campoNombre = $("#nombreDocumento");
+	var campoNombre = $("#nombreDocumentoSubir");
 	var campoArchivo = $("#archivo");
 	var nombre = campoNombre.val();
 	var archivo = campoArchivo.val();

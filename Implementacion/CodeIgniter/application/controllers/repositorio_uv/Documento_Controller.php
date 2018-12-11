@@ -143,12 +143,16 @@ class Documento_Controller extends CI_Controller
 		if ($id){
 			$this->load->library('repositorio_uv/util');
 			$solicitud = $this->util->obtener_solicitud($id_documento, $id_academico, $id_objetivo, $fecha);
-			if ($this->Documento_Modelo->obtener_documento_solicitud($solicitud)['id'] === 1){
-				echo "si";
-				//eliminar registro de solicitud y hacer registro verdadero
+			$documento_solicitud = $this->Documento_Modelo->obtener_documento_solicitud($solicitud);
+			if ($documento_solicitud['id'] === 1){
+				if ($this->Documento_Modelo->compartir_documento($id_documento, $id_academico, $id_objetivo, $documento_solicitud['edicion'])){
+					$this->Documento_Modelo->borrar_documento_solicitud($solicitud);
+					$this->cargar_repositorio($id_academico, False, False);
+				}else{
+					$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se pudo compartir el documento contigo'));
+				}
 			}else{
-				echo "no";
-				//mostrar página de mensaje de error
+				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, la solicitud no es para ti'));
 			}
 		}else{
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');

@@ -15,23 +15,22 @@ class Documento_Modelo extends CI_Model
 		$this->db->where('idDocumento', $id_documento);
 		return $this->db->update('documento', array('habilitado' => False));
 	}
+	public function borrar_documento_solicitud($solicitud)
+	{
+		$this->db->where('solicitud', $solicitud);
+		return $this->db->delete('solicituddocumento');
+	}
 	/*Registra un documento compartido.
 		Recibe el id del documento, el id del académico que comparte ($id_fuente),
 		el corre del academico al cual se comparte ($correo) y un booleano
 		para el permiso de edición.
 		Regresa un valor booleano indicando el resultado.
 	*/
-	public function compartir_documento($id_documento, $id_fuente, $correo, $edicion)
+	public function compartir_documento($id_documento, $id_fuente, $id_academico, $edicion)
 	{
-		$registro;
-		$academico = $this->Usuario_Modelo->obtener_usuario_correo($correo);
-		if ($academico['id'] > 0){
-			$registro = $this->db->insert('documentocompartido', array('idDocumentoCompartido' => 0,
-				'idAcademicoEmisor' => $id_fuente, 'idAcademicoReceptor' => $academico['id'],
-				'idDocumento' => $id_documento, 'edicion' => $edicion));
-		}else{
-			$registro = False;
-		}
+		$registro = $this->db->insert('documentocompartido', array('idDocumentoCompartido' => 0,
+			'idAcademicoEmisor' => $id_fuente, 'idAcademicoReceptor' => $id_academico,
+			'idDocumento' => $id_documento, 'edicion' => $edicion));
 		return $registro;
 	}
 	public function registrar_solicitud_documento($id_documento, $solicitud, $edicion)

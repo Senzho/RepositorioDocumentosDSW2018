@@ -1,6 +1,6 @@
  async function obtenerArchivo(){
     var documento = $("#loaded-layout").attr("name");
-    let response = await fetch('http://localhost/proyectoFinalWeb/documentos/'+documento+".docx");
+    let response = await fetch('http://localhost/CodeIgniter/documentos/'+documento+".docx");
     let data = await response.blob();
     let metadata = {
         type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -8,7 +8,7 @@
     return new File([data], documento+".docx", metadata);
 }
 $(document).ready(function(){
-        obtenerArchivo().then(function(archivo){
+    obtenerArchivo().then(function(archivo){
         console.log(archivo);
         mostrarArchivo(archivo);
     });

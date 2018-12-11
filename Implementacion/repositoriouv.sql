@@ -38,7 +38,7 @@ CREATE TABLE `academico` (
 
 LOCK TABLES `academico` WRITE;
 /*!40000 ALTER TABLE `academico` DISABLE KEYS */;
-INSERT INTO `academico` VALUES (1,'Víctor Javier García Mascareñas','victor','e63c8c8a0f530555c761a7f3383121d33be720b83bc038a8ca54b6e6c42300e1','vijagama@outlook.es'),(2,'Violeta Magaña Castelán','viola','dcd09f2214637af39fbe8301bb4c6ccc0d12463306f125e503ad39de5ba36049','vimacas@gmail.com'),(22,'Pancho Pantera','pancho','00e37ffae0562ab6818d8f4f97457ac5f9679723c1b57f4b371b93f379f1c17a','vijagama@outlook.es');
+INSERT INTO `academico` VALUES (1,'Víctor Javier García Mascareñas','victor','e63c8c8a0f530555c761a7f3383121d33be720b83bc038a8ca54b6e6c42300e1','vijagama@outlook.es'),(2,'Violeta Magaña Castelán','viola','dcd09f2214637af39fbe8301bb4c6ccc0d12463306f125e503ad39de5ba36049','vimacas@gmail.com');
 /*!40000 ALTER TABLE `academico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,6 +110,7 @@ CREATE TABLE `documentocompartido` (
   `idAcademicoEmisor` int(11) DEFAULT NULL,
   `idAcademicoReceptor` int(11) DEFAULT NULL,
   `idDocumento` int(11) DEFAULT NULL,
+  `edicion` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idDocumentoCompartido`),
   KEY `idAcademicoEmisor` (`idAcademicoEmisor`),
   KEY `idAcademicoReceptor` (`idAcademicoReceptor`),
@@ -117,7 +118,7 @@ CREATE TABLE `documentocompartido` (
   CONSTRAINT `documentocompartido_ibfk_1` FOREIGN KEY (`idAcademicoEmisor`) REFERENCES `academico` (`idAcademico`),
   CONSTRAINT `documentocompartido_ibfk_2` FOREIGN KEY (`idAcademicoReceptor`) REFERENCES `academico` (`idAcademico`),
   CONSTRAINT `documentocompartido_ibfk_3` FOREIGN KEY (`idDocumento`) REFERENCES `documento` (`idDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +127,7 @@ CREATE TABLE `documentocompartido` (
 
 LOCK TABLES `documentocompartido` WRITE;
 /*!40000 ALTER TABLE `documentocompartido` DISABLE KEYS */;
-INSERT INTO `documentocompartido` VALUES (1,1,2,1);
+INSERT INTO `documentocompartido` VALUES (1,1,2,1,1),(2,1,NULL,34,0),(3,1,1,33,0),(4,1,1,34,1);
 /*!40000 ALTER TABLE `documentocompartido` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,6 +157,30 @@ LOCK TABLES `firma` WRITE;
 /*!40000 ALTER TABLE `firma` DISABLE KEYS */;
 /*!40000 ALTER TABLE `firma` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `solicituddocumento`
+--
+
+DROP TABLE IF EXISTS `solicituddocumento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `solicituddocumento` (
+  `idSolicitud` int(11) NOT NULL AUTO_INCREMENT,
+  `solicitud` varchar(64) DEFAULT NULL,
+  `edicion` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`idSolicitud`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `solicituddocumento`
+--
+
+LOCK TABLES `solicituddocumento` WRITE;
+/*!40000 ALTER TABLE `solicituddocumento` DISABLE KEYS */;
+/*!40000 ALTER TABLE `solicituddocumento` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -166,4 +191,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-01 22:00:08
+-- Dump completed on 2018-12-10 22:53:15

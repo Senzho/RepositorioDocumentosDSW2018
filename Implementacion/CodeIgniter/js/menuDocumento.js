@@ -1,7 +1,7 @@
 $(document).ready(function (){
 	var id;
 	$(".documento").click(function(event) {
-		var documento = event.target;
+		var documento = event.currentTarget;
 		id = $(documento).attr("id");
 		var nombre = $(documento).find(".nombre").html();
 		$("#nombreDocumento").html(nombre);
