@@ -30,13 +30,15 @@
             	</div>
                 <div class="modal-body center">
                 	<ul name="menuDocumento" class="lista">
-                		<li name="opcionVer" class="linea">
-                			<div class="item">
-		                		<div class="center">
-		                			<img src="<?php echo base_url(); ?>/recursos/view.png" class='iconoItem'/>
-		                		</div>
-		                		<div class="fuente nombre center">Ver</div>
-		                	</div>
+                		<li name="opcionVer" class="linea" id="opcionVer">
+                			<a id="urlVerDocumento" href="<?php echo base_url().'index.php/repositorio_uv/Documento_Controller/vista/visualizar/'?>">
+                                <div class="item">
+                                    <div class="center">
+                                        <img src="<?php echo base_url(); ?>/recursos/view.png" class='iconoItem'/>
+                                    </div>
+                                    <div class="fuente nombre center">Ver</div>
+                                </div>         
+                            </a>
                 		</li>
                 		<li name="opcionEditar" class="linea">
                 			<div class="item">

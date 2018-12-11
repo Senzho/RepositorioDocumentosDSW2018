@@ -9,6 +9,7 @@ $(document).ready(function (){
 			var url = $("#linkEliminar").attr("name") + id;
 			$(this).eliminar(id, url)
 		});
+		$("#urlVerDocumento").attr("href", $("#urlVerDocumento").attr("href")+id);
 	});
 	$("#formularioCompartir").on("submit", function (event){
 		event.preventDefault();

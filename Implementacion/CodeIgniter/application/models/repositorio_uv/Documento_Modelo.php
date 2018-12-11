@@ -111,6 +111,22 @@ class Documento_Modelo extends CI_Model
 		Recibe un documento.
 		Regresa un arreglo con un booleano indicando el resultado y un entero indicando el id asignado.
 	*/
+	public function obtener_documento($id_documento)
+	{
+		$documento;
+		$query = $this->db->get_where('documento', array('idDocumento' => $id_documento, 'habilitado' => True));
+		if ($query->num_rows() > 0){
+			$fila = $query->row();
+			$documento = array('idDocumento' => $fila->idAcademico,
+				'nombre' => $fila->nombre,
+				'fechaRegistro' => $fila->fechaRegistro,
+				'idAcademico' => $fila->idAcademico,
+				'habilitado' => $fila->habilitado);
+		}else{
+			$documento = array('idDocumento' => 0);
+		}
+		return $documento;
+	}
 	public function registrar_documento($documento)
 	{
 		$resultado = $this->db->insert('documento', $documento);

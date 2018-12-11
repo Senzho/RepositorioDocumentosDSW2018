@@ -22,6 +22,16 @@ class Documento_Controller extends CI_Controller
 			$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
 		}
 	}
+	/*aqui empieza la visualizacion del documento*/
+	public function cargar_documento($id_academico, $id_documento){
+		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
+		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Documento'));
+		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => $documento['nombre'], 'nombre' => $academico['nombre'], 'nickname' => $academico['nickname']));
+		$this->load->view('pages/repositorio_uv/visualizar_documento', array('idDocumento' => $id_documento));
+	}
+
+	/*aqui empieza la visualizacion del documento*/
 	private function validar_documento()
 	{
 		$this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|max_length[50]|min_length[6]');
@@ -56,6 +66,8 @@ class Documento_Controller extends CI_Controller
 				$this->cargar_repositorio($id, False);
 			}else if($pagina === 'editar_usuario'){
 				$this->cargar_repositorio($id,False,True);
+			}else if($pagina === 'visualizar'){
+				$this->cargar_documento($id,$id_documento);
 			}
 		}else{
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
