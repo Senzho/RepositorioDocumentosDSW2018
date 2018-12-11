@@ -143,13 +143,14 @@ class Usuario_Controller extends CI_Controller
 		return $datos_validos;
 	}
 	public function subir_foto($nickname){
-		$foto_subida = false;
-		$config['upload_path'] = './usuarios/';
-		if(unlink('./usuarios/'.$nickname.'.jpg')){
+		$foto_subida = false;//aqui hay que hacer un if exists
+		if(file_exists ('./usuarios/'.$nickname.'.jpg')){
+			unlink('./usuarios/'.$nickname.'.jpg');
 			echo "foto existe y se borra";
 		}else{
 			echo "foto no existia ahora se guarda";
 		}
+		$config['upload_path'] = './usuarios/';
         $config['allowed_types'] = 'jpg';
         $config['file_name'] = $nickname;
         $this->load->library('upload', $config);
@@ -214,14 +215,14 @@ class Usuario_Controller extends CI_Controller
 		$confirmar = $this->input->post('confirmar');	
 		if($this->validar_datos_usuario()){
 			$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
-			if($this->Usuario_Modelo->editar_usuario($academico)){
+			if($this->Usuario_Modelo->editar_usuario($academico) === true){
 				$this->subir_foto($nickname);
 				echo "usuario editado exitosamente";
 			}else{
-				$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'mensaje'));
+				$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>$id));
 			}
 		}else{
-			$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'mensaje'));
+			$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'los datos del usuario no son validos'));
 			//echo "uno o mas datos son invalidos, favor de verificar";
 		}
 	}

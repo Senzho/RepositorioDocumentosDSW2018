@@ -1,3 +1,4 @@
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
 <div class="panelScroll">
  	<?php echo form_open_multipart('repositorio_uv/Usuario_Controller/editar_usuario', array('id' => 'editar_usuario')); ?>
 		<div>

@@ -15,7 +15,6 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/publicacionDocumento.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/functions_cryptography.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/menuDocumento.js"></script>
 </head>
 <body class="body">

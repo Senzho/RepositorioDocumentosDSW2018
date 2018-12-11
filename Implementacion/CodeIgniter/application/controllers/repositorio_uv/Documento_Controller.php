@@ -28,6 +28,13 @@ class Documento_Controller extends CI_Controller
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Documento'));
 		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => $documento['nombre'], 'nombre' => $academico['nombre'], 'nickname' => $academico['nickname']));
+		if(file_exists('./documentos/'.$id_documento.'.docx')){
+			$id_documento = $id_documento . '.docx';
+		}else if(file_exists('./documentos/'.$id_documento.'.xlsx')){
+			$id_documento = $id_documento . '.xlsx';
+		}else if (file_exists('./documentos/'.$id_documento.'.pdf')){
+			$id_documento = $id_documento . '.pdf';
+		}
 		$this->load->view('pages/repositorio_uv/visualizar_documento', array('idDocumento' => $id_documento));
 	}
 

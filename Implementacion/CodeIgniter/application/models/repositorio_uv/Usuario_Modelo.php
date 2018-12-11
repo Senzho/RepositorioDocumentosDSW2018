@@ -122,17 +122,15 @@ class Usuario_Modelo extends CI_Model
 	*/
 	public function editar_usuario($academico)
 	{
-		$usuario_editado = False;
-		if($this->verificar_correo($academico['correo'] && $this->verificar_nickname($academico['nickname']))){
+		$data = array(
+			'nombre' =>  $academico['nombre'],
+			'nickname' => $academico['nickname'],
+			'contrasena' =>  $academico['contrasena'],
+			'correo' =>  $academico['correo']);
 			$this->db->where('idAcademico', $academico['idAcademico']);
-			$this->db->set('nombre', $academico['nombre']);//verificar que solo exista un nickname
-			$this->db->set('nickname', $academico['nickname']);
-			$this->db->set('contrasena', $academico['contrasena']);
-			$this->db->set('correo', $academico['correo']);
-			$usuario_editado = $this->db->update('academico');
-		}
-		return $usuario_editado;
+		return $this->db->update('academico',$data);
 	}
+
 	/*Elimina los datos de sesión del usuario.
 	*/
 	public function cerrar_sesion()
