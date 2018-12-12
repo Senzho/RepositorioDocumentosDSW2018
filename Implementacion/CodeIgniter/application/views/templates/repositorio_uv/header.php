@@ -7,10 +7,10 @@
 			<div id="divImagenUsuario">
 				<?php
 					$recurso = base_url();
-					if (!$this->util->url_existe(base_url() . 'usuarios/' . $nickname . '.jpg')){
+					if (!$this->util->url_existe(base_url() . 'usuarios/' . $id . '.jpg')){
 						$recurso = $recurso . 'recursos/usuario.png';
 					}else{
-						$recurso = $recurso . 'usuarios/' . $nickname . '.jpg';
+						$recurso = $recurso . 'usuarios/' . $id . '.jpg';
 					}
 					echo "<img src=$recurso id='imagenUsuario'>";
 				?>

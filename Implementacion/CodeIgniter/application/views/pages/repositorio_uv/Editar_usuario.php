@@ -1,14 +1,15 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/dominioPagina.js"></script>
 <div class="panelScroll">
  	<?php echo form_open_multipart('repositorio_uv/Usuario_Controller/editar_usuario', array('id' => 'editar_usuario')); ?>
 		<div>
 			<center>
 				<?php
 					$recurso = base_url();
-					if (!$this->util->url_existe(base_url() . 'usuarios/' . $nickname . '.jpg')){
+					if (!$this->util->url_existe(base_url() . 'usuarios/' . $id . '.jpg')){
 						$recurso = $recurso . 'recursos/usuario.png';
 					}else{
-						$recurso = $recurso . 'usuarios/' . $nickname . '.jpg';
+						$recurso = $recurso . 'usuarios/' . $id . '.jpg';
 					}
 					echo "<img src=$recurso id='imgFotoUsuario'>";
 				?>
@@ -42,7 +43,7 @@
 		</div>
 		<center>
 			<input type="submit" name="" class="registrar" value="Registrar">
-			<?php echo form_submit('cancelar', 'Cancelar', array('class' => 'cancelar','formaction'=>'vista')); ?>
+			<a href="<?php echo base_url()?>index.php/repositorio_uv/Usuario_Controller/vista"><button type="button" name="cancelar" value="Cancelar" class="cancelar">Cancelar</button></a>
 		</center>
 	</form>
 	<div class="mensaje">

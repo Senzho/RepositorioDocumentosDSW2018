@@ -15,9 +15,9 @@ class Documento_Controller extends CI_Controller
 		}
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => $titulo));
-		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'nickname' => $academico['nickname']));
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' => $id_academico));
 		if($editar){
-			$this->load->view('pages/repositorio_uv/Editar_usuario', array('nombre'=>$academico['nombre'],'correo'=>$academico['correo'],'nickname'=>$academico['nickname'],'mensaje'=>''));
+			$this->load->view('pages/repositorio_uv/Editar_usuario', array('id'=> $id_academico,'nombre'=>$academico['nombre'],'correo'=>$academico['correo'],'nickname'=>$academico['nickname'],'mensaje'=>''));
 		}else{
 			$this->load->view('pages/repositorio_uv/repositorio', array('documentos' => $documentos));
 		}
@@ -27,7 +27,7 @@ class Documento_Controller extends CI_Controller
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Documento'));
 		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
-		$this->load->view('templates/repositorio_uv/header', array('titulo' => $documento['nombre'], 'nombre' => $academico['nombre'], 'nickname' => $academico['nickname']));
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => $documento['nombre'], 'nombre' => $academico['nombre'], 'id' =>$id_academico));
 		if(file_exists('./documentos/'.$id_documento.'.docx')){
 			$id_documento = $id_documento . '.docx';
 		}else if(file_exists('./documentos/'.$id_documento.'.xlsx')){

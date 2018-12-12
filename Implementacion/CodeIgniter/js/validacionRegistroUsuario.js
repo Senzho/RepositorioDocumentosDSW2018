@@ -7,7 +7,7 @@ $(document).ready(function(){
 		}else if(!validar_contrasenas()){
 			event.preventDefault();
 			$('#mensaje_usuario').html("Las contraseñas no coinciden. Intentelo de nuevo");
-		}else if ($("#file_input").val()===""){
+		}else if ($("#file_input").val()==""){
 			event.preventDefault();
 			alert("debe elegir una imagen");
 		}
@@ -15,12 +15,14 @@ $(document).ready(function(){
 	$('#editar_usuario').on('submit', function(event){
 		if(!validar_datos_usuario()){
 			event.preventDefault();
+			console.log($("#imgFotoUsuario").attr('src').split('usuarios/')[1]);
+			console.log($("#imgFotoUsuario").attr('src').split('recursos/')[1]);
 			$('#mensaje_usuario').html('faltan datos para registrar');
 		}else if(!validar_contrasenas()){
 			console.log('validacion de contraseñas');
 			event.preventDefault();
 			$('#mensaje_usuario').html('Las contraseñas no coinciden. Intentelo de nuevo');
-		}else if ($("#file_input").val()===""){
+		}else if($("#imgFotoUsuario").attr('src').split('recursos/')[1] =='usuario.png'){
 			event.preventDefault();
 			alert("debe elegir una imagen");
 		}

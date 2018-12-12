@@ -46,9 +46,8 @@
 				</div>
 			</div>
 			<center>
-				<input type="submit" name="" class="registrar" value="Registrar">
-				<?php echo form_submit('cancelar', 'Cancelar', array('class' => 'cancelar','formaction'=>'vista')); ?>
-		
+				<input type="submit" name="" class="registrar" value="Registrar" id='registrar'>
+				<a href="<?php echo base_url()?>index.php/repositorio_uv/Usuario_Controller/vista"><button type="button" name="cancelar" value="Cancelar" class="cancelar">Cancelar</button></a>
 			</center>
 	</form>
 	<div class="mensaje">

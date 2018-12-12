@@ -142,17 +142,14 @@ class Usuario_Controller extends CI_Controller
 		}
 		return $datos_validos;
 	}
-	public function subir_foto($nickname){
-		$foto_subida = false;//aqui hay que hacer un if exists
-		if(file_exists ('./usuarios/'.$nickname.'.jpg')){
-			unlink('./usuarios/'.$nickname.'.jpg');
-			echo "foto existe y se borra";
-		}else{
-			echo "foto no existia ahora se guarda";
+	public function subir_foto($id){
+		$foto_subida = false;
+		if(file_exists ('./usuarios/'.$id.'.jpg')){
+			unlink('./usuarios/'.$id.'.jpg');
 		}
 		$config['upload_path'] = './usuarios/';
         $config['allowed_types'] = 'jpg';
-        $config['file_name'] = $nickname;
+        $config['file_name'] = $id;
         $this->load->library('upload', $config);
         if(!$this->upload->do_upload('userfile'))
         {
@@ -207,23 +204,35 @@ class Usuario_Controller extends CI_Controller
 	}
 	public function editar_usuario()
 	{
-		$id = $this->session->userdata('id');
-		$nombre = $this->input->post('nombre');
-		$nickname = $this->input->post('nickname');
-		$correo = $this->input->post('correo');
-		$contrasena = $this->input->post('contrasena');
-		$confirmar = $this->input->post('confirmar');	
-		if($this->validar_datos_usuario()){
-			$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
-			if($this->Usuario_Modelo->editar_usuario($academico) === true){
-				$this->subir_foto($nickname);
-				echo "usuario editado exitosamente";
+		if($this->session->userdata('id')){
+			$id = $this->session->userdata('id');
+			$nombre = $this->input->post('nombre');
+			$nickname = $this->input->post('nickname');
+			$correo = $this->input->post('correo');
+			$contrasena = $this->input->post('contrasena');
+			$confirmar = $this->input->post('confirmar');	
+			if($this->validar_datos_usuario()){
+				$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
+				if($this->Usuario_Modelo->editar_usuario($academico) === true){
+					if(isset($_FILES) && @$_FILES['userfile']['error'] == '0'){
+				    	$this->subir_foto($id);  
+				    }
+				    $this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
+					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'Usuario editado exitosamente'));
+				}else{
+					$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
+					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'El usuario o ha podido editarse, verificar datos ingresados'));
+				}
 			}else{
-				$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>$id));
+				$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
+					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+				$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'los datos del usuario no son validos'));
+				//echo "uno o mas datos son invalidos, favor de verificar";
 			}
 		}else{
-			$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'los datos del usuario no son validos'));
-			//echo "uno o mas datos son invalidos, favor de verificar";
+			redirect('repositorio_uv/Usuario_Controller/vista');
 		}
 	}
 	/*Confirma el código de registro.
@@ -241,6 +250,9 @@ class Usuario_Controller extends CI_Controller
 			$registro = $this->Usuario_Modelo->registrar_usuario($academico);
 			if ($registro['resultado']){
 				$this->session->set_userdata('id', $registro['id']);
+				if(file_exists ('./usuarios/'.$academico['nickname'].'.jpg')){
+					rename ('./usuarios/'.$academico['nickname'].'.jpg', './usuarios/'.$registro['id'].'.jpg'); 
+				}
 				redirect('repositorio_uv/Usuario_Controller/vista/ingresar');
 			}else{
 				//Error de registro

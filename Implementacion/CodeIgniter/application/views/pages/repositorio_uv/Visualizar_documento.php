@@ -1,3 +1,4 @@
+<script type="text/javascript" src="<?php echo base_url(); ?>js/dominioPagina.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/visualizarDocumento.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/DocxJS.bundle.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/CellJS.bundle.min.js"></script>
