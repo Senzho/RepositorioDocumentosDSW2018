@@ -41,9 +41,9 @@ class Documento_Modelo extends CI_Model
 	}
 	public function obtener_documento_solicitud($solicitud){
 		$documento;
-		$query = $this->db->get_where('solicituddocumento', array('solicitud' => $solicitud));
-		if ($query->num_rows() > 0){
-			$fila = $query->row();
+		$consulta = $this->db->get_where('solicituddocumento', array('solicitud' => $solicitud));
+		if ($consulta->num_rows() > 0){
+			$fila = $consulta->row();
 			$documento = array('id' => 1, 'solicitud' => $fila->solicitud,
 				'edicion' => $fila->edicion);
 		}else{
@@ -66,13 +66,13 @@ class Documento_Modelo extends CI_Model
 	public function obtener_compartidos($id_usuario)
 	{
 		$documentos = array();
-		$this->db->select('d.idDocumento, d.nombre, d.fechaRegistro, dc.idAcademicoEmisor');
+		$this->db->select('d.idDocumento, d.nombre, d.fechaRegistro, d.extension, dc.idAcademicoEmisor, dc.edicion');
 		$this->db->from('documento d, documentocompartido dc');
 		$this->db->where('d.idDocumento = dc.idDocumento');
 		$this->db->where('d.habilitado', True);
 		$this->db->where('dc.idAcademicoReceptor', $id_usuario);
-		$query = $this->db->get();
-		$result = $query->result();
+		$consulta = $this->db->get();
+		$result = $consulta->result();
 		for ($i = 0; $i < count($result); ++ $i) {
 			$fila = $result[$i];
 			$academico = $this->Usuario_Modelo->obtener_usuario($fila->idAcademicoEmisor);
@@ -80,7 +80,9 @@ class Documento_Modelo extends CI_Model
 				'id' => $fila->idDocumento,
 				'nombre' => $fila->nombre,
 				'fecha_registro' => $fila->fechaRegistro,
-				'academico' => $academico['nombre']
+				'academico' => $academico['nombre'],
+				'extension' => $fila->extension,
+				'edicion' => $fila->edicion
 			);
 			$documentos[$i] = $documento;
 		}
@@ -93,14 +95,15 @@ class Documento_Modelo extends CI_Model
 	public function obtener_documentos($id_usuario)
 	{
 		$documentos = array();
-		$query = $this->db->get_where('documento', array('idAcademico' => $id_usuario, 'habilitado' => True));
-		$result = $query->result();
+		$consulta = $this->db->get_where('documento', array('idAcademico' => $id_usuario, 'habilitado' => True));
+		$result = $consulta->result();
 		for ($i = 0; $i < count($result); ++ $i) {
 			$fila = $result[$i];
 			$documento = array(
 				'id' => $fila->idDocumento,
 				'nombre' => $fila->nombre,
-				'fecha_registro' => $fila->fechaRegistro
+				'fecha_registro' => $fila->fechaRegistro,
+				'extension' => $fila->extension
 			);
 			$documentos[$i] = $documento;
 		}
@@ -113,9 +116,9 @@ class Documento_Modelo extends CI_Model
 	public function obtener_documento($id_documento)
 	{
 		$documento;
-		$query = $this->db->get_where('documento', array('idDocumento' => $id_documento, 'habilitado' => True));
-		if ($query->num_rows() > 0){
-			$fila = $query->row();
+		$consulta = $this->db->get_where('documento', array('idDocumento' => $id_documento, 'habilitado' => True));
+		if ($consulta->num_rows() > 0){
+			$fila = $consulta->row();
 			$documento = array('idDocumento' => $fila->idAcademico,
 				'nombre' => $fila->nombre,
 				'fechaRegistro' => $fila->fechaRegistro,
@@ -132,5 +135,20 @@ class Documento_Modelo extends CI_Model
 		$id = $this->db->insert_id();
 		$respuesta = array('resultado' => $resultado, 'id' => $id);
 		return $respuesta;
+	}
+	public function documento_pertenece($id_academico, $id_documento)
+	{
+		$consulta = $this->db->get_where('documento', array('idDocumento' => $id_documento, 'habilitado' => True, 'idAcademico' => $id_academico));
+		return $consulta->num_rows() > 0;
+	}
+	public function documento_es_compartido($id_academico, $id_documento)
+	{
+		$this->db->select('dc.edicion, d.nombre');
+		$this->db->from('documento d, documentocompartido dc');
+		$this->db->where('d.habilitado', True);
+		$this->db->where('dc.idDocumento', $id_documento);
+		$this->db->where('dc.idAcademicoReceptor', $id_academico);
+		$consulta = $this->db->get();
+		return $consulta->num_rows() > 0;
 	}
 }

@@ -6,15 +6,22 @@
                     $id = $documento['id'];
                     $nombre = $documento['nombre'];
                     $fecha_registro = $documento['fecha_registro'];
-                    $recurso = base_url() . '/recursos/pdf.png';
-                    echo "<div class='documento' id=$id data-toggle='modal' data-target='#modalOpcionesDocumento'>
+                    $icono = $documento['extension'];
+                    $recurso = base_url() . '/recursos/' . $icono . '.png';
+                    $permiso;
+                    if (array_key_exists('edicion', $documento)){
+                        $permiso = $documento['edicion'] ? ' editar' : ' ver';
+                    }else{
+                        $permiso = ' todo';
+                    }
+                    echo "<div class='documento" . $permiso . "' id=$id data-toggle='modal' data-target='#modalOpcionesDocumento'>
                             <div class='center'>
                                 <img src=$recurso class='icono'/>
                             </div>
                             <div class='fuente nombre'>$nombre</div>
                             <div class='fuente fecha'>$fecha_registro</div>";
                     if (array_key_exists('academico', $documento)){
-                        $academico = $documento['academico'];
+                        $academico = 'De: ' . $documento['academico'];
                         echo "<div class='fuente emisor'>$academico</div>";
                     }
                     echo "</div>";
@@ -30,7 +37,7 @@
             	</div>
                 <div class="modal-body center">
                 	<ul name="menuDocumento" class="lista">
-                		<li name="opcionVer" class="linea" id="opcionVer">
+                		<li id="opcionVer" name="opcionVer" class="linea" id="opcionVer">
                 			<a id="urlVerDocumento" href="<?php echo base_url().'index.php/repositorio_uv/Documento_Controller/vista/visualizar/'?>">
                                 <div class="item">
                                     <div class="center">
@@ -40,7 +47,7 @@
                                 </div>         
                             </a>
                 		</li>
-                		<li name="opcionEditar" class="linea">
+                		<li id="opcionEditar" name="opcionEditar" class="linea">
                 			<div class="item">
 		                		<div class="center">
 		                			<img src="<?php echo base_url(); ?>/recursos/edit.png" class='iconoItem'/>
@@ -48,7 +55,7 @@
 		                		<div class="fuente nombre center">Editar</div>
 		                	</div>
                 		</li>
-                        <li name="opcionFirmar" class="linea">
+                        <li id="opcionFirmar" name="opcionFirmar" class="linea">
                             <div class="item">
                                 <div class="center">
                                     <img src="<?php echo base_url(); ?>/recursos/signature.png" class='iconoItem'/>
@@ -56,7 +63,7 @@
                                 <div class="fuente nombre center">Firmar</div>
                             </div>
                         </li>
-                		<li name="opcionCompartir" class="linea" data-toggle="modal" data-target='#modalCompartir'>
+                		<li id="opcionCompartir" name="opcionCompartir" class="linea" data-toggle="modal" data-target='#modalCompartir'>
                 			<div class="item">
 		                		<div class="center">
 		                			<img src="<?php echo base_url(); ?>/recursos/share.png" class='iconoItem'/>

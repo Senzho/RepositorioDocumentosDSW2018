@@ -74,7 +74,13 @@ class Documento_Controller extends CI_Controller
 			}else if($pagina === 'editar_usuario'){
 				$this->cargar_repositorio($id,False,True);
 			}else if($pagina === 'visualizar'){
-				$this->cargar_documento($id,$id_documento);
+				if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+					$this->cargar_documento($id,$id_documento);
+				}else if($this->Documento_Modelo->documento_es_compartido($id, $id_documento)){
+					$this->cargar_documento($id,$id_documento);
+				}else{
+					$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para visualizar el documento'));
+				}
 			}
 		}else{
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
@@ -105,13 +111,18 @@ class Documento_Controller extends CI_Controller
 	*/
 	public function eliminar_documento($id_documento)
 	{
-		if ($this->session->userdata('id')){
-			$respuesta['eliminado'] = $this->Documento_Modelo->borrar_documento($id_documento);
-			if ($respuesta['eliminado']){
-				//No sirve (borrar archivo):
-				//unlink(base_url() . 'documentos/' . $id_documento);
+		$id = $this->session->userdata('id');
+		if ($id){
+			if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+				$respuesta['eliminado'] = $this->Documento_Modelo->borrar_documento($id_documento);
+				if ($respuesta['eliminado']){
+					//No sirve (borrar archivo):
+					//unlink(base_url() . 'documentos/' . $id_documento);
+				}
+				echo json_encode($respuesta);
+			}else{
+				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para eliminar el documento'));
 			}
-			echo json_encode($respuesta);
 		}else{
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
@@ -120,26 +131,30 @@ class Documento_Controller extends CI_Controller
 	{
 		$id_fuente = $this->session->userdata('id');
 		if ($id_fuente){
-			$respuesta;
-			$correo = $this->input->post('correo');
-			$edicion = $this->input->post('edicion');
-			$objetivo = $this->Usuario_Modelo->obtener_usuario_correo($correo);
-			if ($objetivo['id'] > 0){
-				$this->load->library('repositorio_uv/util');
-				$fecha = date('Y-m-d-u');
-				$solicitud = $this->util->obtener_solicitud($id_documento, $id_fuente, $objetivo['id'], $fecha);
-				$academico = $this->Usuario_Modelo->obtener_usuario($id_fuente);
-				if ($this->Documento_Modelo->registrar_solicitud_documento($id_documento, $solicitud, $edicion)){
-					$respuesta['compartido'] = True;
-					$this->load->helper('repositorio_uv/Correo_Helper');
-					enviar_solicitud_documento($academico, $objetivo, $id_documento, $fecha);
+			if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+				$respuesta;
+				$correo = $this->input->post('correo');
+				$edicion = $this->input->post('edicion');
+				$objetivo = $this->Usuario_Modelo->obtener_usuario_correo($correo);
+				if ($objetivo['id'] > 0){
+					$this->load->library('repositorio_uv/util');
+					$fecha = date('Y-m-d-u');
+					$solicitud = $this->util->obtener_solicitud($id_documento, $id_fuente, $objetivo['id'], $fecha);
+					$academico = $this->Usuario_Modelo->obtener_usuario($id_fuente);
+					if ($this->Documento_Modelo->registrar_solicitud_documento($id_documento, $solicitud, $edicion)){
+						$respuesta['compartido'] = True;
+						$this->load->helper('repositorio_uv/Correo_Helper');
+						enviar_solicitud_documento($academico, $objetivo, $id_documento, $fecha);
+					}else{
+						$respuesta['compartido'] = False;
+					}	
 				}else{
 					$respuesta['compartido'] = False;
-				}	
+				}
+				echo json_encode($respuesta);
 			}else{
-				$respuesta['compartido'] = False;
+				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para compartir el documento'));
 			}
-			echo json_encode($respuesta);
 		}else{
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
@@ -154,7 +169,7 @@ class Documento_Controller extends CI_Controller
 			if ($documento_solicitud['id'] === 1){
 				if ($this->Documento_Modelo->compartir_documento($id_documento, $id_academico, $id_objetivo, $documento_solicitud['edicion'])){
 					$this->Documento_Modelo->borrar_documento_solicitud($solicitud);
-					$this->cargar_repositorio($id_academico, False, False);
+					redirect('repositorio_uv/Documento_Controller/vista/compartidos', 'location');
 				}else{
 					$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se pudo compartir el documento contigo'));
 				}
@@ -185,9 +200,11 @@ class Documento_Controller extends CI_Controller
 		if ($id){
 			$respuesta;
 			$nombre = $this->input->post('nombre');
-			$ruta = $this->input->post('archivo');
+			$ruta = $this->input->post('ruta');
 			$fecha_registro = date('Y-m-d');
-			$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id);
+			$this->load->library('repositorio_uv/util');
+			$extension = $this->util->obtener_extension($ruta);
+			$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
 			$resultado = $this->Documento_Modelo->registrar_documento($documento);
 			if ($resultado['resultado']){
 				$config['upload_path'] = './documentos/';

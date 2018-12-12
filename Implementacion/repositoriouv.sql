@@ -38,7 +38,7 @@ CREATE TABLE `academico` (
 
 LOCK TABLES `academico` WRITE;
 /*!40000 ALTER TABLE `academico` DISABLE KEYS */;
-INSERT INTO `academico` VALUES (1,'Víctor Javier García Mascareñas','victor','e63c8c8a0f530555c761a7f3383121d33be720b83bc038a8ca54b6e6c42300e1','vijagama@outlook.es'),(2,'Violeta Magaña Castelán','viola','dcd09f2214637af39fbe8301bb4c6ccc0d12463306f125e503ad39de5ba36049','vimacas@gmail.com');
+INSERT INTO `academico` VALUES (1,'Víctor Javier García Mascareñas','victor','e63c8c8a0f530555c761a7f3383121d33be720b83bc038a8ca54b6e6c42300e1','vijagama@outlook.es'),(2,'Violeta Magaña Castelán','viola','dcd09f2214637af39fbe8301bb4c6ccc0d12463306f125e503ad39de5ba36049','maqueug@gmail.com');
 /*!40000 ALTER TABLE `academico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,10 +82,11 @@ CREATE TABLE `documento` (
   `fechaRegistro` date DEFAULT NULL,
   `idAcademico` int(11) DEFAULT NULL,
   `habilitado` tinyint(1) DEFAULT NULL,
+  `extension` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`idDocumento`),
   KEY `idAcademico` (`idAcademico`),
   CONSTRAINT `documento_ibfk_1` FOREIGN KEY (`idAcademico`) REFERENCES `academico` (`idAcademico`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +95,7 @@ CREATE TABLE `documento` (
 
 LOCK TABLES `documento` WRITE;
 /*!40000 ALTER TABLE `documento` DISABLE KEYS */;
-INSERT INTO `documento` VALUES (1,'Cursos 2019','2018-11-17',1,1),(2,'PAFI 2018','2018-11-13',1,1),(33,'55_LR','2018-11-22',1,1),(34,'uhlyouyouy','2018-11-22',1,1),(35,'documento','2018-11-24',2,1),(36,'otro jaja','2018-11-24',2,1),(37,'768576543','2018-11-24',2,1),(38,'doc_00100_lr','2018-11-28',2,1),(39,'documento_test','2018-11-29',2,1);
+INSERT INTO `documento` VALUES (76,'Joselito Marquez','2018-12-12',1,1,'xlsx'),(77,'ouyblkjhj789','2018-12-12',1,1,'docx'),(79,'Juan Camanei','2018-12-12',1,1,'pdf');
 /*!40000 ALTER TABLE `documento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +119,7 @@ CREATE TABLE `documentocompartido` (
   CONSTRAINT `documentocompartido_ibfk_1` FOREIGN KEY (`idAcademicoEmisor`) REFERENCES `academico` (`idAcademico`),
   CONSTRAINT `documentocompartido_ibfk_2` FOREIGN KEY (`idAcademicoReceptor`) REFERENCES `academico` (`idAcademico`),
   CONSTRAINT `documentocompartido_ibfk_3` FOREIGN KEY (`idDocumento`) REFERENCES `documento` (`idDocumento`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +128,7 @@ CREATE TABLE `documentocompartido` (
 
 LOCK TABLES `documentocompartido` WRITE;
 /*!40000 ALTER TABLE `documentocompartido` DISABLE KEYS */;
-INSERT INTO `documentocompartido` VALUES (1,1,2,1,1),(2,1,NULL,34,0),(3,1,1,33,0),(4,1,1,34,1);
+INSERT INTO `documentocompartido` VALUES (11,1,2,79,0),(12,1,2,76,1);
 /*!40000 ALTER TABLE `documentocompartido` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,7 +171,7 @@ CREATE TABLE `solicituddocumento` (
   `solicitud` varchar(64) DEFAULT NULL,
   `edicion` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idSolicitud`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,4 +192,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-10 22:53:15
+-- Dump completed on 2018-12-11 22:23:09

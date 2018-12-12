@@ -9,7 +9,12 @@ $(document).ready(function (){
 			var url = $("#linkEliminar").attr("name") + id;
 			$(this).eliminar(id, url)
 		});
-		$("#urlVerDocumento").attr("href", $("#urlVerDocumento").attr("href")+id);
+		var rutaDocumento = $("#urlVerDocumento").attr("href");
+		rutaDocumento = rutaDocumento.split('/visualizar/')[0] + '/visualizar/'+id;
+		console.log(rutaDocumento);
+		$("#urlVerDocumento").attr("href", rutaDocumento);
+		$(this).mostrarPermisos();
+		$(this).esconderPermisos(documento);
 	});
 	$("#formularioCompartir").on("submit", function (event){
 		event.preventDefault();
@@ -18,6 +23,7 @@ $(document).ready(function (){
 		$(this).compartir(url, this);
 	});
 });
+
 $.fn.eliminar = function(id, url){
 	$.ajax({
 	    url:url,
@@ -59,4 +65,22 @@ $.fn.compartir = function(url, form){
 $.fn.borrar = function(id){
 	$("#modalOpcionesDocumento").modal("toggle");
 	$("#" + id).remove();
+}
+$.fn.esconderPermisos = function(documento){
+	if ($(documento).hasClass("ver")){
+		$("#opcionEditar").hide();
+		$("#opcionFirmar").hide();
+		$("#opcionCompartir").hide();
+		$("#opcionEliminar").hide();
+	}else if ($(documento).hasClass("editar")){
+		$("#opcionCompartir").hide();
+		$("#opcionEliminar").hide();
+	}
+}
+$.fn.mostrarPermisos = function(){
+	$("#opcionVer").show();
+	$("#opcionEditar").show();
+	$("#opcionFirmar").show();
+	$("#opcionCompartir").show();
+	$("#opcionEliminar").show();
 }
