@@ -23,6 +23,9 @@
                     if (array_key_exists('academico', $documento)){
                         $academico = 'De: ' . $documento['academico'];
                         echo "<div class='fuente emisor'>$academico</div>";
+                        $firma = $documento['firmado'] === True ? 'Firmado' : 'Sin firma';
+                        $class_firma = $documento['firmado'] === True ? 'firmaOk' : 'firmaErr';
+                        echo "<div class='fuente nombre $class_firma'>$firma</div>";
                     }
                     echo "</div>";
                 }
@@ -56,7 +59,7 @@
 		                	</div>
                 		</li>
                         <li id="opcionFirmar" name="opcionFirmar" class="linea">
-                            <div class="item">
+                            <div id="linkFirmar" class="item" name="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/firmar_documento/">
                                 <div class="center">
                                     <img src="<?php echo base_url(); ?>/recursos/signature.png" class='iconoItem'/>
                                 </div>

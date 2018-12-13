@@ -39,7 +39,7 @@ $.fn.enviar = function(formulario, nombre){
 	var data = new FormData(formulario);
 	data.append("ruta", nombre);
 	$.ajax({
-	    url:'http://localhost/CodeIgniter/index.php/repositorio_uv/Documento_Controller/subir_documento',
+	    url:'http://' + getDominioPagina() + '/CodeIgniter/index.php/repositorio_uv/Documento_Controller/subir_documento',
 	    type:"post",
 	    data:data,
 	    processData:false,

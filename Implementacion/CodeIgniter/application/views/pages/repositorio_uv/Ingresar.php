@@ -3,6 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
     <title>Confirmación</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link href="<?php echo base_url(); ?>css/estilos_repositorio.css" rel="stylesheet" type="text/css">
@@ -20,6 +21,9 @@
         </div>
         <div class="link">
             <a href="<?php echo base_url(); ?>index.php/repositorio_uv/Documento_Controller/vista/repositorio" class="fuente">Continuar a mi repositorio</a>
+        </div>
+        <div class="mensaje">
+            <label><?php echo $mensaje; ?></label>
         </div>
     </center>
 </body>

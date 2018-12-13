@@ -3,6 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0" />
     <title><?php  echo $titulo; ?></title>
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link href="<?php echo base_url() ?>css/estilos_general.css" rel="stylesheet" type="text/css">
@@ -16,6 +17,7 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>js/publicacionDocumento.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/functions_cryptography.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/menuDocumento.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/dominioPagina.js"></script>
 </head>
 <body class="body">
     <div id="menu" class="menu">

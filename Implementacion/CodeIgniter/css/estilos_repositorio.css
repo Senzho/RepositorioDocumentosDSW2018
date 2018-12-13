@@ -206,6 +206,12 @@
 	padding-right: 0.1875em;
 	word-wrap: break-word;
 }
+.firmaErr{
+	color: red;
+}
+.firmaOk{
+	color: green;
+}
 .emisor{
 	font-style: italic;
 	font-size: 0.6em;

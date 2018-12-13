@@ -91,7 +91,7 @@ body{
   	justify-content: center;
 	align-items: center;
 }
-@media screen and (max-width:  700px) {
+@media only screen and (min-device-width: 250px) and (max-device-width: 700px) and (orientation: portrait) {
     .lblEtiqueta{
     	display: none;
     }

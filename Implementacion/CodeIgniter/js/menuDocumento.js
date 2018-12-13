@@ -9,6 +9,10 @@ $(document).ready(function (){
 			var url = $("#linkEliminar").attr("name") + id;
 			$(this).eliminar(id, url)
 		});
+		$("#opcionFirmar").click(function (){
+			var url = $("#linkFirmar").attr("name") + id;
+			$(this).firmar(id, url)
+		});
 		var rutaDocumento = $("#urlVerDocumento").attr("href");
 		rutaDocumento = rutaDocumento.split('/visualizar/')[0] + '/visualizar/'+id;
 		console.log(rutaDocumento);
@@ -40,6 +44,24 @@ $.fn.eliminar = function(id, url){
 	    },
 	    error: function(data){
 	    	alert("Lo sentimos, ocurrió un error al eliminar tu documento");
+	    }
+	});
+}
+$.fn.firmar = function(id, url){
+	$.ajax({
+	    url:url,
+	    type:"post",
+	    processData:false,
+	    contentType:false,
+	    cache:false,
+	    async:true,
+	    success: function(data){
+	    	var json = JSON.parse(data);
+	    	var mensaje = json['firmado'] ? 'Documento firmado!' : 'El documento no pudo firmar';
+	    	alert(mensaje);
+	    },
+	    error: function(data){
+	    	alert("Lo sentimos, ocurrió un error al firmar tu documento");
 	    }
 	});
 }

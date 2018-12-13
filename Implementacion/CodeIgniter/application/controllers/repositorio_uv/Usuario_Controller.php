@@ -15,11 +15,16 @@ class Usuario_Controller extends CI_Controller
 	{
 		$this->load->view('pages/repositorio_uv/Registrar_usuario', array('nombre'=>$datos_usuario['nombre'],'correo'=>$datos_usuario['correo'],'nickname'=>$datos_usuario['nickname'],'mensaje'=>$datos_usuario['mensaje']));
 	}
-	private function mostrar_bienvenida()
+	private function mostrar_bienvenida($mensaje)
 	{
 		$id = $this->session->userdata('id');
 		$academico = $this->Usuario_Modelo->obtener_usuario($id);
-		$this->load->view('pages/repositorio_uv/Ingresar', array('nombre' => $academico['nombre']));
+		$this->load->view('pages/repositorio_uv/Ingresar', array('nombre' => $academico['nombre'], 'mensaje' => $mensaje));
+	}
+	private function generar_llaves($id_academico)
+	{
+		$this->load->model('repositorio_uv/Documento_Modelo');
+		return $this->Documento_Modelo->generar_llaves($id_academico);
 	}
 
 	public function __construct()
@@ -41,7 +46,7 @@ class Usuario_Controller extends CI_Controller
 			a la vista de 'login'.
 		'confirmacion': página de confirmación de registro.
 	*/
-	public function vista($pagina = 'login')
+	public function vista($pagina = 'login', $mensaje = '')
 	{
 		if ($pagina === 'login')
 		{
@@ -61,7 +66,7 @@ class Usuario_Controller extends CI_Controller
 			}
 		}else if ($pagina === 'ingresar'){
 			if ($this->session->userdata('id')){
-				$this->mostrar_bienvenida();
+				$this->mostrar_bienvenida($mensaje);
 			}else{
 				$this->mostrar_login('');
 			}
@@ -249,13 +254,14 @@ class Usuario_Controller extends CI_Controller
 			unset($academico['codigo']);
 			$registro = $this->Usuario_Modelo->registrar_usuario($academico);
 			if ($registro['resultado']){
+				$mensaje = $this->generar_llaves($registro['id']) ? '' : 'Ocurrió un error al generar tus llaves para firma'
 				$this->session->set_userdata('id', $registro['id']);
 				if(file_exists ('./usuarios/'.$academico['nickname'].'.jpg')){
 					rename ('./usuarios/'.$academico['nickname'].'.jpg', './usuarios/'.$registro['id'].'.jpg'); 
 				}
-				redirect('repositorio_uv/Usuario_Controller/vista/ingresar');
+				redirect('repositorio_uv/Usuario_Controller/vista/ingresar/' . $mensaje);
 			}else{
-				//Error de registro
+				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, ocurrió un error al registrarte'));
 			}
 		}else{
 			$this->session->keep_flashdata('idp');

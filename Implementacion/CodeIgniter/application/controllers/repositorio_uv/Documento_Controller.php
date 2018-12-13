@@ -131,7 +131,7 @@ class Documento_Controller extends CI_Controller
 	{
 		$id_fuente = $this->session->userdata('id');
 		if ($id_fuente){
-			if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+			if ($this->Documento_Modelo->documento_pertenece($id_fuente, $id_documento)){
 				$respuesta;
 				$correo = $this->input->post('correo');
 				$edicion = $this->input->post('edicion');
@@ -187,7 +187,19 @@ class Documento_Controller extends CI_Controller
 	*/
 	public function firmar_documento($id_documento)
 	{
-
+		$id_fuente = $this->session->userdata('id');
+		if ($id_fuente){
+			if($this->Documento_Modelo->documento_pertenece($id_fuente, $id_documento)){
+				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
+				$firmado = $this->Documento_Modelo->firmar_documento($id_fuente, $id_documento, $documento['extension']);
+				$respuesta['firmado'] = $firmado;
+				echo json_encode($respuesta);
+			}else{
+				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no tienes permiso para firmar el documento'));
+			}
+		}else{
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
+		}
 	}
 	/*Carga un documento en el servidor.
 		Recibe los datos de un documento por POST.
