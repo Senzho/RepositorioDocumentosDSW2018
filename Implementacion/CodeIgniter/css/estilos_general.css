@@ -91,7 +91,7 @@ body{
   	justify-content: center;
 	align-items: center;
 }
-@media only screen and (min-device-width: 250px) and (max-device-width: 700px) and (orientation: portrait) {
+@media only screen and (min-device-width: 250px) and (max-device-width: 700px) {
     .lblEtiqueta{
     	display: none;
     }
@@ -109,7 +109,7 @@ body{
 	    margin-bottom: 1em;
 	}
 	.header{
-		margin-left: 30px;
+		margin-left: 2.1875em;
 	}
 	.imgLogo{
 		width: 20%

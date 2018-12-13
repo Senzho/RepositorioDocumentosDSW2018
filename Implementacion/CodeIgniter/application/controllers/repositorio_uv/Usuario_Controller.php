@@ -254,10 +254,10 @@ class Usuario_Controller extends CI_Controller
 			unset($academico['codigo']);
 			$registro = $this->Usuario_Modelo->registrar_usuario($academico);
 			if ($registro['resultado']){
-				$mensaje = $this->generar_llaves($registro['id']) ? '' : 'Ocurrió un error al generar tus llaves para firma'
+				$mensaje = $this->generar_llaves($registro['id']) ? '' : 'Ocurrió un error al generar tus llaves para firma';
 				$this->session->set_userdata('id', $registro['id']);
-				if(file_exists ('./usuarios/'.$academico['nickname'].'.jpg')){
-					rename ('./usuarios/'.$academico['nickname'].'.jpg', './usuarios/'.$registro['id'].'.jpg'); 
+				if(file_exists('./usuarios/'.$academico['nickname'].'.jpg')){
+					rename('./usuarios/'.$academico['nickname'].'.jpg', './usuarios/'.$registro['id'].'.jpg');
 				}
 				redirect('repositorio_uv/Usuario_Controller/vista/ingresar/' . $mensaje);
 			}else{

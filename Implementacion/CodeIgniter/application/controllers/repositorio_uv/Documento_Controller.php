@@ -28,11 +28,11 @@ class Documento_Controller extends CI_Controller
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Documento'));
 		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => $documento['nombre'], 'nombre' => $academico['nombre'], 'id' =>$id_academico));
-		if(file_exists('./documentos/'.$id_documento.'.docx')){
+		if(file_exists(APPPATH . 'documentos/'.$id_documento.'.docx')){
 			$id_documento = $id_documento . '.docx';
-		}else if(file_exists('./documentos/'.$id_documento.'.xlsx')){
+		}else if(file_exists(APPPATH . 'documentos/'.$id_documento.'.xlsx')){
 			$id_documento = $id_documento . '.xlsx';
-		}else if (file_exists('./documentos/'.$id_documento.'.pdf')){
+		}else if (file_exists(APPPATH . 'documentos/'.$id_documento.'.pdf')){
 			$id_documento = $id_documento . '.pdf';
 		}
 		$this->load->view('pages/repositorio_uv/visualizar_documento', array('idDocumento' => $id_documento));
@@ -44,6 +44,18 @@ class Documento_Controller extends CI_Controller
 		$this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|max_length[50]|min_length[6]');
 		$this->form_validation->set_rules('archivo', 'Ruta', 'required');
 		return $this->form_Validation->run();
+	}
+	private function validar_visualizacion_descarga($id, $id_documento)
+	{
+		$valido = False;
+		if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+			$valido = True;
+		}else if($this->Documento_Modelo->documento_es_compartido($id, $id_documento)){
+			$valido = True;
+		}else{
+			$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para visualizar el documento'));
+		}
+		return $valido;
 	}
 
 	public function __construct()
@@ -74,12 +86,8 @@ class Documento_Controller extends CI_Controller
 			}else if($pagina === 'editar_usuario'){
 				$this->cargar_repositorio($id,False,True);
 			}else if($pagina === 'visualizar'){
-				if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+				if ($this->validar_visualizacion_descarga($id, $id_documento)){
 					$this->cargar_documento($id,$id_documento);
-				}else if($this->Documento_Modelo->documento_es_compartido($id, $id_documento)){
-					$this->cargar_documento($id,$id_documento);
-				}else{
-					$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para visualizar el documento'));
 				}
 			}
 		}else{
@@ -114,10 +122,10 @@ class Documento_Controller extends CI_Controller
 		$id = $this->session->userdata('id');
 		if ($id){
 			if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
 				$respuesta['eliminado'] = $this->Documento_Modelo->borrar_documento($id_documento);
 				if ($respuesta['eliminado']){
-					//No sirve (borrar archivo):
-					//unlink(base_url() . 'documentos/' . $id_documento);
+					unlink(APPPATH . 'documentos/' . $id_documento . '.' . $documento['extension']);
 				}
 				echo json_encode($respuesta);
 			}else{
@@ -138,13 +146,13 @@ class Documento_Controller extends CI_Controller
 				$objetivo = $this->Usuario_Modelo->obtener_usuario_correo($correo);
 				if ($objetivo['id'] > 0){
 					$this->load->library('repositorio_uv/util');
-					$fecha = date('Y-m-d-u');
+					$fecha = date('Y-m-d-B');
 					$solicitud = $this->util->obtener_solicitud($id_documento, $id_fuente, $objetivo['id'], $fecha);
 					$academico = $this->Usuario_Modelo->obtener_usuario($id_fuente);
 					if ($this->Documento_Modelo->registrar_solicitud_documento($id_documento, $solicitud, $edicion)){
 						$respuesta['compartido'] = True;
 						$this->load->helper('repositorio_uv/Correo_Helper');
-						enviar_solicitud_documento($academico, $objetivo, $id_documento, $fecha);
+						enviar_solicitud_documento($academico, $correo, $id_documento, $fecha);
 					}else{
 						$respuesta['compartido'] = False;
 					}	
@@ -159,15 +167,15 @@ class Documento_Controller extends CI_Controller
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
-	public function aceptar_solicitud($id_documento, $id_academico, $id_objetivo, $fecha)
+	public function aceptar_solicitud($id_documento, $id_academico, $fecha)
 	{
 		$id = $this->session->userdata('id');
 		if ($id){
 			$this->load->library('repositorio_uv/util');
-			$solicitud = $this->util->obtener_solicitud($id_documento, $id_academico, $id_objetivo, $fecha);
+			$solicitud = $this->util->obtener_solicitud($id_documento, $id_academico, $id, $fecha);
 			$documento_solicitud = $this->Documento_Modelo->obtener_documento_solicitud($solicitud);
 			if ($documento_solicitud['id'] === 1){
-				if ($this->Documento_Modelo->compartir_documento($id_documento, $id_academico, $id_objetivo, $documento_solicitud['edicion'])){
+				if ($this->Documento_Modelo->compartir_documento($id_documento, $id_academico, $id, $documento_solicitud['edicion'])){
 					$this->Documento_Modelo->borrar_documento_solicitud($solicitud);
 					redirect('repositorio_uv/Documento_Controller/vista/compartidos', 'location');
 				}else{
@@ -219,7 +227,7 @@ class Documento_Controller extends CI_Controller
 			$documento = array('idDocumento' => 0, 'nombre' => $nombre, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
 			$resultado = $this->Documento_Modelo->registrar_documento($documento);
 			if ($resultado['resultado']){
-				$config['upload_path'] = './documentos/';
+				$config['upload_path'] = APPPATH . 'documentos';
 	            $config['allowed_types'] = 'pdf|xlsx|docx|pptx';
 	            $config['file_name'] = $resultado['id'];
 	            $this->load->library('upload', $config);
@@ -239,10 +247,20 @@ class Documento_Controller extends CI_Controller
 		}
 	}
 	/*Ubica un documento y regresa la ruta.
-		Recibe el id de un documento por POST.
+		Recibe el id de un documento.
 	*/
-	public function descargar_documento()
+	public function descargar_documento($id_documento)
 	{
-
+		$id = $this->session->userdata('id');
+		if ($id){
+			if ($this->validar_visualizacion_descarga($id, $id_documento)){
+				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
+				$data = file_get_contents(APPPATH . 'documentos/' . $id_documento . '.' . $documento['extension']);
+				$this->load->helper('download');
+		       	force_download($id_documento . '.' . $documento['extension'], $data, True); 
+			}
+		}else{
+			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
+		}	
 	}
 }

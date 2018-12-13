@@ -13,12 +13,12 @@ function validar_correo($academico, $codigo)
   	$CI->email->to($academico['correo']);
   	return $CI->email->send();
 }
-function enviar_solicitud_documento($academico, $objetivo, $id_documento, $fecha){
+function enviar_solicitud_documento($academico, $correo, $id_documento, $fecha){
 	$CI =& get_instance();
 	$CI->load->library('email');
 	$CI->email->from('Repositorio UV');
   	$CI->email->subject('Notificación de solicitud de documento');
-  	$CI->email->message($academico['nombre'] . ' desea compartirte un documento, ingresa al siguiente enlace para acaptarlo: ' . base_url() . 'index.php/repositorio_uv/Documento_Controller/aceptar_solicitud/' . $id_documento . '/' . $academico['id'] . '/' . $objetivo['id'] . '/' . $fecha);
-  	$CI->email->to($objetivo['correo']);
+  	$CI->email->message($academico['nombre'] . ' desea compartirte un documento, ingresa al siguiente enlace para acaptarlo: ' . base_url() . 'index.php/repositorio_uv/Documento_Controller/aceptar_solicitud/' . $id_documento . '/' . $academico['id'] . '/' . $fecha);
+  	$CI->email->to($correo);
   	return $CI->email->send();
 }
