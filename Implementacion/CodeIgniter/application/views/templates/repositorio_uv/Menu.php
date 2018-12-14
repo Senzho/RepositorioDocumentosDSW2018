@@ -73,11 +73,15 @@
 			<div class="modal-content">
 				<div class="modal-body">
 					<ul class="lista" name="opcionesNuevoDocumento">
-						<li>
-							<div class="opcion">
-								<label class="fuente">Crear</label>
-							</div>
-						</li>
+
+    						<li>
+                                 <a href="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/vista/crear_documento">
+        							<div class="opcion">
+        								<label class="fuente">Crear</label>
+        							</div>
+                                </a>
+    						</li>
+
 						<li>
 							<div id="opcionSubir" class="opcion" data-toggle="modal" data-target="#modalFormularioSubir">
 								<label class="fuente">Subir</label>

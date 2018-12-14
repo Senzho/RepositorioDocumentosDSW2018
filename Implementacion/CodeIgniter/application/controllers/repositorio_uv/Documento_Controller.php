@@ -67,6 +67,7 @@ class Documento_Controller extends CI_Controller
         $this->load->library('repositorio_uv/util');
         $this->load->library('session');
         $this->load->library('form_validation');
+        $this->load->library('repositorio_uv/word');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
@@ -89,6 +90,8 @@ class Documento_Controller extends CI_Controller
 				if ($this->validar_visualizacion_descarga($id, $id_documento)){
 					$this->cargar_documento($id,$id_documento);
 				}
+			}else if($pagina === 'crear_documento'){
+				$this->crear_nuevo_documento($id);
 			}
 		}else{
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
@@ -99,8 +102,40 @@ class Documento_Controller extends CI_Controller
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
 		Regresa una cadena JSON indicando el resultado: ['registrado': True | False].
 	*/
+	public function crear_nuevo_documento($id_academico)
+	{
+		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
+		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Crear documento'));
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' =>$id_academico));
+		$this->load->view('pages/repositorio_uv/crear_documento');
+
+	}
 	public function crear_documento()
 	{
+		$documento = new \PhpOffice\PhpWord\PhpWord();
+		$seccion = $documento->addSection();
+		$variables = $this->input->post('texto');
+		$variables = explode(",", $variables);
+		$tamano = sizeof($variables);
+		for ($i=0; $i < $tamano; $i++) { 
+			if(strlen(strstr($variables[$i], 'h1'))){
+				$seccion->addText(
+						htmlspecialchars(
+							strip_tags(html_entity_decode(htmlentities($variables[$i])))
+						),
+						array('name' => 'Arial', 'size' => '20', 'bold' => 'true')
+				);
+			}else if(strlen(strstr($variables[$i], 'p'))){
+				$seccion->addText(
+					htmlspecialchars(
+				 		strip_tags(html_entity_decode(htmlentities($variables[$i])))
+					),
+					array('name' => 'Arial', 'size' => '12', 'bold' => 'false')
+				);	
+			}
+		}
+		$objWriter = PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
+		echo $objWriter->save('miDocumento.docx');
 
 	}
 	/*Actualiza un documento.
