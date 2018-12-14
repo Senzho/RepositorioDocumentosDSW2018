@@ -1,5 +1,8 @@
 <?php
-
+require APPPATH.'third_party/phpword/Autoloader.php';
+\PhpOffice\PhpWord\Autoloader::register();
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Style\Font;
 class Documento_Controller extends CI_Controller
 {
 	private function cargar_repositorio($id_academico, $propios, $editar = False)
@@ -67,7 +70,7 @@ class Documento_Controller extends CI_Controller
         $this->load->library('repositorio_uv/util');
         $this->load->library('session');
         $this->load->library('form_validation');
-        $this->load->library('repositorio_uv/word');
+        //$this->load->library('repositorio_uv/word');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
@@ -91,7 +94,7 @@ class Documento_Controller extends CI_Controller
 					$this->cargar_documento($id,$id_documento);
 				}
 			}else if($pagina === 'crear_documento'){
-				$this->crear_nuevo_documento($id);
+				$this->vista_nuevo_documento($id);
 			}
 		}else{
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
@@ -102,41 +105,68 @@ class Documento_Controller extends CI_Controller
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
 		Regresa una cadena JSON indicando el resultado: ['registrado': True | False].
 	*/
-	public function crear_nuevo_documento($id_academico)
+	public function vista_nuevo_documento($id_academico,$mensaje = '',$texto = '')
 	{
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Crear documento'));
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' =>$id_academico));
-		$this->load->view('pages/repositorio_uv/crear_documento');
-
+		$this->load->view('pages/repositorio_uv/crear_documento',array('mensaje'=>$mensaje,'texto'=>$texto));
 	}
-	public function crear_documento()
-	{
-		$documento = new \PhpOffice\PhpWord\PhpWord();
+	private function guardar_documento_docx($id_documento, $texto){
+		$documento = new PhpWord();
 		$seccion = $documento->addSection();
-		$variables = $this->input->post('texto');
-		$variables = explode(",", $variables);
-		$tamano = sizeof($variables);
+		$texto = explode("!--!", $texto);
+		$tamano = sizeof($texto);
 		for ($i=0; $i < $tamano; $i++) { 
-			if(strlen(strstr($variables[$i], 'h1'))){
+			if(strlen(strstr($texto[$i], 'h1'))){
 				$seccion->addText(
 						htmlspecialchars(
-							strip_tags(html_entity_decode(htmlentities($variables[$i])))
+							strip_tags(html_entity_decode($texto[$i]))
 						),
 						array('name' => 'Arial', 'size' => '20', 'bold' => 'true')
 				);
-			}else if(strlen(strstr($variables[$i], 'p'))){
+			}else if(strlen(strstr($texto[$i], 'p'))){
 				$seccion->addText(
 					htmlspecialchars(
-				 		strip_tags(html_entity_decode(htmlentities($variables[$i])))
+				 		strip_tags(html_entity_decode($texto[$i]))
 					),
 					array('name' => 'Arial', 'size' => '12', 'bold' => 'false')
 				);	
 			}
 		}
-		$objWriter = PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
-		echo $objWriter->save('miDocumento.docx');
-
+		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
+		$objWriter->save(APPPATH.'documentos'.'/'.$id_documento.'.docx');
+		$documento_guardado = False;
+		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.docx')){
+			$documento_guardado = True;
+		}
+		return $documento_guardado;
+	}
+	public function crear_documento()
+	{
+		$id = $this->session->userdata('id');
+		if($id){
+			$nombre_documento = $this->input->post('nombre');
+			$texto = $this->input->post('texto');
+			if(isset($nombre_documento) && isset($texto)){
+				$extension = $this->input->post('extension');
+				$fecha_registro = date('Y-m-d');
+				$documento = array('idDocumento' => 0, 'nombre' => $nombre_documento, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
+				$resultado = $this->Documento_Modelo->registrar_documento($documento);
+				if($resultado['resultado']){
+					if($this->guardar_documento_docx($resultado['id'],$texto)===True){
+						redirect('repositorio_uv/Documento_Controller/vista', 'location');
+					}else{
+						$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
+					}
+				}
+			}
+			else{
+			   vista_nuevo_documento($id,'Su documento no tiene contenido');
+			}
+		}else{
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
+		}
 	}
 	/*Actualiza un documento.
 		Recibe los datos de un Documento por PUT.
