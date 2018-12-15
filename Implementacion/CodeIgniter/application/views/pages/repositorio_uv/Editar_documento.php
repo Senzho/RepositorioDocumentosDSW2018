@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo base_url(); ?>js/crear_documento.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>js/editar_documento.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/ckeditor/samples/js/sample.js"></script>
 <div id="main">
@@ -12,14 +12,16 @@
 	</div>	
 </div>
 <div class="center">
-		<label><?php echo $mensaje ?></label>
+  <input type="hidden" id="texto_documento" value="<?php echo $texto_documento; ?>">
+		<label></label>
 </div>
+
 <div class="modal fade" id="modalCrearDocumento" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-           <?php echo form_open('repositorio_uv/Documento_Controller/crear_documento', array('id' => 'crear_documento')); ?>
+           <?php echo form_open('repositorio_uv/Documento_Controller/modificar_documento/'.$id_documento, array('id' => 'modificar_documento')); ?>
                 <div class="modal-body">
-                    <input id="nombreDocumentoCrear" type="text" name="nombre" placeholder="Nombre del documento" class="campoTexto campoTextoMed"/>
+                    <input id="nombreDocumentoCrear" type="text" name="nombre" placeholder="Nombre del documento" value ='<?php echo $nombre; ?>'class="campoTexto campoTextoMed"/>
                    <label>Extensión</label>
                    <select id="opcionesDocumento" name="extension">
                    	<option value="docx" name="docx" selected="selected">.docx</option>

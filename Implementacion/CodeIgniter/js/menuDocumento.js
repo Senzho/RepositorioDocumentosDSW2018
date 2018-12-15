@@ -17,6 +17,9 @@ $(document).ready(function (){
 		rutaDocumento = rutaDocumento.split('/visualizar/')[0] + '/visualizar/'+id;
 		console.log(rutaDocumento);
 		$("#urlVerDocumento").attr("href", rutaDocumento);
+		rutaDocumento = $("#urlEditarDocumento").attr("href");
+		rutaDocumento = rutaDocumento.split('/editar/')[0] + '/editar/'+id;
+		$("#urlEditarDocumento").attr("href", rutaDocumento);
 		$(this).mostrarPermisos();
 		$(this).esconderPermisos(documento);
 	});

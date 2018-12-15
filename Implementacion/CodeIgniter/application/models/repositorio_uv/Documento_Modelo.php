@@ -69,7 +69,11 @@ class Documento_Modelo extends CI_Model
 	*/
 	public function modificar_documento($documento)
 	{
-
+		$data = array(
+			'nombre' =>  $documento['nombre']);
+			$this->db->where('idDocumento', $documento['idDocumento']);
+		$resultado = $this->db->update('documento',$data);
+		return $resultado;
 	}
 	/*Obtiene los documentos compartidos que tiene un académico.
 		Recibe el is del academico.
@@ -162,7 +166,12 @@ class Documento_Modelo extends CI_Model
 		$this->db->where('dc.idDocumento', $id_documento);
 		$this->db->where('dc.idAcademicoReceptor', $id_academico);
 		$consulta = $this->db->get();
-		return $consulta->num_rows() > 0;
+		$editable = false;
+		if($consulta->num_rows()> 0){
+			$fila = $consulta->row();
+			$editable = $fila->edicion;
+		}
+		return array('compartido'=>$consulta->num_rows() > 0, 'edicion'=>$editable);
 	}
 	public function firmar_documento($id_academico, $id_documento, $extension){
 		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);

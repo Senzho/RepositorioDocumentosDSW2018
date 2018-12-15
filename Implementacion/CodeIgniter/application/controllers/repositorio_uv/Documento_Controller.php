@@ -1,5 +1,6 @@
 <?php
 require APPPATH.'third_party/phpword/Autoloader.php';
+require APPPATH.'third_party/Doc2Txt.php';
 \PhpOffice\PhpWord\Autoloader::register();
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Style\Font;
@@ -53,7 +54,7 @@ class Documento_Controller extends CI_Controller
 		$valido = False;
 		if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
 			$valido = True;
-		}else if($this->Documento_Modelo->documento_es_compartido($id, $id_documento)){
+		}else if($this->Documento_Modelo->documento_es_compartido($id, $id_documento)['compartido']){
 			$valido = True;
 		}else{
 			log_message('info', 'Intento de acceso a visualización/descarga de documento no permitido con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id . '.');
@@ -96,6 +97,10 @@ class Documento_Controller extends CI_Controller
 				}
 			}else if($pagina === 'crear_documento'){
 				$this->vista_nuevo_documento($id);
+			}else if($pagina === 'editar'){
+				if ($this->validar_edicion_documento($id, $id_documento)){
+					$this->editar_documento($id,$id_documento);
+				}
 			}else{
 				show_404();
 			}
@@ -103,6 +108,32 @@ class Documento_Controller extends CI_Controller
 			log_message('info', 'Intento de acceso a página: ' . $pagina . ' por usuario no autenticado.');
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
 		}	
+	}
+	public function validar_edicion_documento($id,$id_documento){
+		$valido = False;
+		$documento_es_compartido = $this->Documento_Modelo->documento_es_compartido($id, $id_documento);
+		if ($this->Documento_Modelo->documento_pertenece($id, $id_documento)){
+			$valido = True;
+		}else if($documento_es_compartido['compartido']){
+			if($documento_es_compartido['edicion']){
+				$valido= true;
+			}else{
+				log_message('info', 'Intento de acceso a edicion de documento no permitido con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id . '.');
+			}
+		}else{
+			log_message('info', 'Intento de acceso a edicion de documento no permitido con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id . '.');
+			$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para editar el documento'));
+		}
+		return $valido;
+	}
+	public function editar_documento($id_academico,$id_documento){
+		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
+		$objetoDocumento = new Doc2Txt(APPPATH . 'documentos/' . $id_documento . '.' . $documento['extension']);
+		$texto = $objetoDocumento->convertToText();
+		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
+		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Crear documento'));
+		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' =>$id_academico));
+		$this->load->view('pages/repositorio_uv/Editar_documento',array('nombre'=> $documento['nombre'],'texto_documento'=>$texto, 'id_documento'=>$id_documento));
 	}
 	/*Crea un nuevo documento.
 		Recibe los datos de un Documento por POST.
@@ -114,9 +145,9 @@ class Documento_Controller extends CI_Controller
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Crear documento'));
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' =>$id_academico));
-		$this->load->view('pages/repositorio_uv/crear_documento',array('mensaje'=>$mensaje,'texto'=>$texto));
+		$this->load->view('pages/repositorio_uv/crear_documento',array('mensaje'=>$mensaje));
 	}
-	private function guardar_documento_docx($id_documento, $texto){
+	private function guardar_documento_docx($id_documento, $texto, $editar = false){
 		$documento = new PhpWord();
 		$seccion = $documento->addSection();
 		$texto = explode("!--!", $texto);
@@ -127,7 +158,7 @@ class Documento_Controller extends CI_Controller
 						htmlspecialchars(
 							strip_tags(html_entity_decode($texto[$i]))
 						),
-						array('name' => 'Arial', 'size' => '20', 'bold' => 'true')
+						array('name' => 'Arial', 'size' => '22', 'bold' => 'true')
 				);
 			}else if(strlen(strstr($texto[$i], 'p'))){
 				$seccion->addText(
@@ -139,6 +170,9 @@ class Documento_Controller extends CI_Controller
 			}
 		}
 		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
+		if($editar === True){
+			unlink(APPPATH.'documentos'.'/'.$id_documento.'.docx');
+		}
 		$objWriter->save(APPPATH.'documentos'.'/'.$id_documento.'.docx');
 		$documento_guardado = False;
 		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.docx')){
@@ -179,9 +213,36 @@ class Documento_Controller extends CI_Controller
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
 		Redirecciona a la vista de 'repositorio'.
 	*/
-	public function modificar_documento()
+	public function modificar_documento($id_documento)
 	{
-		
+		$id = $this->session->userdata('id');
+		if($id){
+			if($this->validar_edicion_documento($id,$id_documento)){
+				$nombre_documento = $this->input->post('nombre');
+				$texto = $this->input->post('texto');
+				if(isset($nombre_documento) && isset($texto)){
+					$extension = $this->input->post('extension');
+					$fecha_registro = date('Y-m-d');
+					$documento = array('idDocumento' => $id_documento, 'nombre' => $nombre_documento, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
+					$resultado = $this->Documento_Modelo->modificar_documento($documento);
+					if($resultado){
+						if($this->guardar_documento_docx($id_documento,$texto,True)===True){
+							redirect('repositorio_uv/Documento_Controller/vista', 'location');
+						}else{
+							$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido editar tu documento'));
+						}
+					}
+				}else{
+				   vista_nuevo_documento($id,'Su documento no tiene contenido');
+				}
+			}else{
+				og_message('info', 'Intento de edicion de documento por parte de usuario '.$id.' documento '.$id_documento.'.docx');
+				redirect('repositorio_uv/Documento_Controller/vista', 'location');
+			}
+		}else{
+			log_message('info', 'Intento de edicion de documento por parte de usuario no autenticado.');
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
+		}
 	}
 	/*Elimina un documento.
 		Recibe el id del documento.
