@@ -1,7 +1,7 @@
  async function obtenerArchivo(){
     var documento = $("#loaded-layout").attr("name");
     var extension = documento.split(".")[1];
-    let response = await fetch('http://'+getDominioPagina() +'/proyectoFinalWeb/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + documento.split(".")[0]);
+    let response = await fetch('http://'+getDominioPagina() +'/CodeIgniter/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + documento.split(".")[0]);
     let data = await response.blob();
     var metadata = "";
     if(extension === "docx"){
@@ -16,7 +16,7 @@
     return new File([data], documento, metadata);
 }
 function mostrarPdf(nombreArchivo){
-    var ruta = 'http://'+getDominioPagina() +'/proyectoFinalWeb/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + nombreArchivo;
+    var ruta = 'http://'+getDominioPagina() +'/CodeIgniter/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + nombreArchivo;
     $("#loaded-layout").append("<embed src="+ruta+" style='width:100%;height:100%;'></embed>");
 }
 $(document).ready(function(){

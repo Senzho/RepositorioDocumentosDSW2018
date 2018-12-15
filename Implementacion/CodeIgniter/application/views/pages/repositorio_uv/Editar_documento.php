@@ -1,21 +1,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>js/editar_documento.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/ckeditor/samples/js/sample.js"></script>
-<div id="main">
-	<div class="panelScroll">
-		<div class="grid-width-100">
-			<div id="editor"></div>
-		</div>
-		<div>
-            <button type="button" class="boton botonOk" id="crear">Crear archivo</button> 
-        </div>	
-	</div>	
-</div>
-<div class="center">
-  <input type="hidden" id="texto_documento" value="<?php echo $texto_documento; ?>">
-		<label></label>
-</div>
-
+<input type="hidden" id="texto_documento" value="<?php echo $texto_documento; ?>">
 <div class="modal fade" id="modalCrearDocumento" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -24,7 +10,7 @@
                     <input id="nombreDocumentoCrear" type="text" name="nombre" placeholder="Nombre del documento" value ='<?php echo $nombre; ?>'class="campoTexto campoTextoMed"/>
                    <label>Extensión</label>
                    <select id="opcionesDocumento" name="extension">
-                   	<option value="docx" name="docx" selected="selected">.docx</option>
+                    <option value="docx" name="docx" selected="selected">.docx</option>
                    </select>
                    <input type="hidden" name="texto" id="texto">
                 </div>
@@ -35,4 +21,13 @@
         </div>
     </div>
 </div>
-<script>initSample();</script>
+<div class="vistaPrincipal">
+  <div id="main" class="edicion scrollVertical">
+  	<div class="grid-width-100">
+  		<div id="editor"></div>
+  	</div>
+  	<div>
+        <button type="button" class="boton botonOk" id="crear">Crear archivo</button> 
+    </div>	
+  </div>
+  <script>initSample();</script>

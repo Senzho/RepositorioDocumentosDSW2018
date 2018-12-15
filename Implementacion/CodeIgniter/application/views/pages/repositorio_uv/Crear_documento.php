@@ -2,13 +2,13 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>js/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/ckeditor/samples/js/sample.js"></script>
 <div id="main">
-	<div class="panelScroll">
+	<div class="vistaPrincipal scrollVertical">
 		<div class="grid-width-100">
 			<div id="editor"></div>
 		</div>
 		<div>
-            <button type="button" class="boton botonOk" id="crear">Crear archivo</button> 
-        </div>	
+        <button type="button" class="boton botonOk" id="crear">Crear archivo</button> 
+    </div>	
 	</div>	
 </div>
 <div class="center">

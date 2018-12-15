@@ -40,6 +40,7 @@ class Documento_Controller extends CI_Controller
 			$id_documento = $id_documento . '.pdf';
 		}
 		$this->load->view('pages/repositorio_uv/visualizar_documento', array('idDocumento' => $id_documento));
+		$this->load->view('templates/repositorio_uv/chat', array('usuarioChat' => $id_academico . '.' . $academico['nickname'], 'documentoChat' => $id_documento));
 	}
 
 	/*aqui empieza la visualizacion del documento*/
@@ -126,7 +127,7 @@ class Documento_Controller extends CI_Controller
 		}
 		return $valido;
 	}
-	public function editar_documento($id_academico,$id_documento){
+	private function editar_documento($id_academico,$id_documento){
 		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
 		$objetoDocumento = new Doc2Txt(APPPATH . 'documentos/' . $id_documento . '.' . $documento['extension']);
 		$texto = $objetoDocumento->convertToText();
@@ -134,6 +135,7 @@ class Documento_Controller extends CI_Controller
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Crear documento'));
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' =>$id_academico));
 		$this->load->view('pages/repositorio_uv/Editar_documento',array('nombre'=> $documento['nombre'],'texto_documento'=>$texto, 'id_documento'=>$id_documento));
+		$this->load->view('templates/repositorio_uv/chat', array('usuarioChat' => $id_academico . '.' . $academico['nickname'], 'documentoChat' => $id_documento));
 	}
 	/*Crea un nuevo documento.
 		Recibe los datos de un Documento por POST.

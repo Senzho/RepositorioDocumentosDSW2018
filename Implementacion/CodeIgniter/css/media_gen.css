@@ -3,7 +3,21 @@
         margin: 0 auto 0 auto;
         text-align: center;
     }
-    .panelScroll{
+    .chat{
+    	display: none;
+    }
+    .edicion{
+    	bottom: 0px;
+    	left: 2.1875em;
+    	right: 0px;
+    }
+    .enviar{
+    	display: none;
+    }
+    .mensajes{
+    	display: none;
+    }
+    .vistaPrincipal{
         left: 2.1875em;
     }
 }

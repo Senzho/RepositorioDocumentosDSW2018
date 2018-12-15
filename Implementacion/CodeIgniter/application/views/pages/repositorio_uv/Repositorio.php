@@ -1,4 +1,4 @@
-    <div id="panel" class="panelScroll">
+    <div id="panel" class="vistaPrincipal scrollVertical">
     	<div id="contenedor" class="contenedor">
             <?php
                 for ($i = 0; $i < count($documentos); $i ++){

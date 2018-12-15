@@ -63,6 +63,9 @@
 .uv{
 	max-height: 3.75em;
 }
+.scrollVertical{
+	overflow-y: scroll;
+}
 
 /*Login*/
 
@@ -116,15 +119,15 @@
 	bottom: 0.625em;
 	position: fixed;
 	right: 0px;
-	text-align: right;
+	text-align: left;
 	width: 12.5em;
 }
 .mensajes{
 	bottom: 3.125em;
 	position: fixed;
-	right: 0.625em;
+	right: 0px;
 	top: 6.25em;
-	width: 11.875em;
+	width: 12.5em;
 }
 .panel{
 	float: right;
@@ -253,11 +256,10 @@
 	padding-right: 0.1875em;
 	word-wrap: break-word;
 }
-.panelScroll{
+.vistaPrincipal{
 	bottom: 0px;
 	float: right;
 	left: 13em;
-	overflow-y: scroll;
 	position: fixed;
 	right: 0px;
 	top: 6.25em;
