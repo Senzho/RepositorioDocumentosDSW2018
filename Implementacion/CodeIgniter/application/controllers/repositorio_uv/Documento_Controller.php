@@ -56,6 +56,7 @@ class Documento_Controller extends CI_Controller
 		}else if($this->Documento_Modelo->documento_es_compartido($id, $id_documento)){
 			$valido = True;
 		}else{
+			log_message('info', 'Intento de acceso a visualización/descarga de documento no permitido con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id . '.');
 			$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para visualizar el documento'));
 		}
 		return $valido;
@@ -95,8 +96,11 @@ class Documento_Controller extends CI_Controller
 				}
 			}else if($pagina === 'crear_documento'){
 				$this->vista_nuevo_documento($id);
+			}else{
+				show_404();
 			}
 		}else{
+			log_message('info', 'Intento de acceso a página: ' . $pagina . ' por usuario no autenticado.');
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
 		}	
 	}
@@ -139,6 +143,8 @@ class Documento_Controller extends CI_Controller
 		$documento_guardado = False;
 		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.docx')){
 			$documento_guardado = True;
+		}else{
+			log_message('error', 'La comprobación de escritura de documento (.docx) con Id: ' . $id_documento . ' resultó negativa.');
 		}
 		return $documento_guardado;
 	}
@@ -160,11 +166,11 @@ class Documento_Controller extends CI_Controller
 						$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
 					}
 				}
-			}
-			else{
+			}else{
 			   vista_nuevo_documento($id,'Su documento no tiene contenido');
 			}
 		}else{
+			log_message('info', 'Intento de creación de documento por parte de usuario no autenticado.');
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
@@ -194,9 +200,11 @@ class Documento_Controller extends CI_Controller
 				}
 				echo json_encode($respuesta);
 			}else{
+				log_message('info', 'Intento de eliminación de documento con Id: ' . $id_documento . ' por parte de usuario con Id: ' . $id . ', el cual no tiene permiso para eliminar el documento.');
 				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para eliminar el documento'));
 			}
 		}else{
+			log_message('info', 'Intento de eliminación de documento con Id: ' . $id_documento . ' por parte de usuario no autenticado.');
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
@@ -219,16 +227,20 @@ class Documento_Controller extends CI_Controller
 						$this->load->helper('repositorio_uv/Correo_Helper');
 						enviar_solicitud_documento($academico, $correo, $id_documento, $fecha);
 					}else{
+						log_message('error', 'No se pudo registrar la solicitud de compartición del documento con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id_fuente . ' hacia el usuario con Id: ' . $objetivo['id'] . '.');
 						$respuesta['compartido'] = False;
 					}	
 				}else{
+					log_message('info', 'No se pudo encontrar al usuario con correo: ' . $correo . ' para compartir el documento con Id: ' . $id_documento . '.');
 					$respuesta['compartido'] = False;
 				}
 				echo json_encode($respuesta);
 			}else{
+				log_message('info', 'Intento de solicitar compartición de documento con Id: ' . $id_documento . ' por parte de usuario con Id: ' . $id_fuente . ', el cual no es propietario del documento.');
 				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, No tienes permiso para compartir el documento'));
 			}
 		}else{
+			log_message('info', 'Intento de solicitar compartición de documento con Id: ' . $id_documento . ' por parte de usuario no autenticado.');
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
@@ -244,12 +256,15 @@ class Documento_Controller extends CI_Controller
 					$this->Documento_Modelo->borrar_documento_solicitud($solicitud);
 					redirect('repositorio_uv/Documento_Controller/vista/compartidos', 'location');
 				}else{
+					log_message('error', 'No se pudo compartir el documento con Id: ' . $id_documento . ' de parte del usuario con Id: ' . $id_academico . ' hacia el usuario con Id: ' . $id . '.');
 					$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se pudo compartir el documento contigo'));
 				}
 			}else{
+				log_message('info', 'El usuario con Id: ' . $id . ' intentó aceptar la solicitud del documento compartido con Id: ' . $id_documento . ' de parte del usuario con Id: ' . $id_academico . '.');
 				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, la solicitud no es para ti'));
 			}
 		}else{
+			log_message('info', 'Un usuario no autenticado intentó aceptar la solicitud del documento compartido con Id: ' .$id_documento  . ' del usuario con Id: ' . $id_academico . '.');
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
@@ -266,11 +281,16 @@ class Documento_Controller extends CI_Controller
 				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
 				$firmado = $this->Documento_Modelo->firmar_documento($id_fuente, $id_documento, $documento['extension']);
 				$respuesta['firmado'] = $firmado;
+				if (!$firmado){
+					log_message('error', 'No se pudo firmar el documento con Id: ' . $id_documento . ' del usuario con Id: ' . $id_fuente . '.');
+				}
 				echo json_encode($respuesta);
 			}else{
+				log_message('info', 'El usuario con Id: ' . $id_fuente . ' intentó firmar el documento con Id: ' . $id_documento . ', que no le pertenece.');
 				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no tienes permiso para firmar el documento'));
 			}
 		}else{
+			log_message('info', 'Un usuario no autenticado intentó firmar el documento con Id: ' . $id_documento . '.');
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
@@ -293,7 +313,7 @@ class Documento_Controller extends CI_Controller
 			$resultado = $this->Documento_Modelo->registrar_documento($documento);
 			if ($resultado['resultado']){
 				$config['upload_path'] = APPPATH . 'documentos';
-	            $config['allowed_types'] = 'pdf|xlsx|docx|pptx';
+	            $config['allowed_types'] = 'pdf|xlsx|docx';
 	            $config['file_name'] = $resultado['id'];
 	            $this->load->library('upload', $config);
 	            if ($this->upload->do_upload('archivo')){
@@ -301,13 +321,16 @@ class Documento_Controller extends CI_Controller
 	            	$documento['idDocumento'] = $resultado['id'];
 	            	$respuesta['documento'] = $documento;
 	            }else{
+	            	log_message('error', 'No se pudo almacenar el documento subido con nombre: ' . $nombre . '.' . $extension . ' para el usuario con Id: ' . $id . '.');
 	            	$respuesta['creado'] = False;
 	            }
 			}else{
+				log_message('error', 'No se pudo registrar el documento subido con nombre: ' . $nombre . '.' . $extension . ' para el usuario con Id: ' . $id . '.');
 				$respuesta['creado'] = False;
 			}
 			echo json_encode($respuesta);
 		}else{
+			log_message('info' . 'Un usuario no autenticado intentó subir un documento.');
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
 		}
 	}
@@ -325,6 +348,7 @@ class Documento_Controller extends CI_Controller
 		       	force_download($id_documento . '.' . $documento['extension'], $data, True); 
 			}
 		}else{
+			log_message('info', 'Un usuario no autenticado intentó descargar/visualizar el documento con Id: ' . $id_documento . '.');
 			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
 		}	
 	}

@@ -34,7 +34,7 @@ class Usuario_Modelo extends CI_Model
 		$query = $this->db->get_where('academicoProceso', array('idAcademico' => $id_usuario));
 		if ($query->num_rows() > 0){
 			$fila = $query->row();
-			$academico = array('idAcademico' => $fila->idAcademico,
+			$academico = array('idAcademico' => 0,
 				'nombre' => $fila->nombre,
 				'nickname' => $fila->nickname,
 				'contrasena' => $fila->contrasena,

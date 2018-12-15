@@ -14,11 +14,11 @@
         <img src="<?php echo base_url(); ?>recursos/logouv.png" class="uv" />
         <img src="<?php echo base_url(); ?>recursos/Imagen1.png" class="logo" />
     </div>
-    <center>
+    <div class="center">
         <h1 class="fuente h"><?php echo $mensaje;?></h1>
         <div class="link">
             <a href="<?php echo base_url(); ?>index.php/repositorio_uv/Documento_Controller/vista/repositorio" class="fuente">Regresar a mi repositorio</a>
         </div>
-    </center>
+    </div>
 </body>
 </html>

@@ -24,11 +24,11 @@
 .botonOk{
 	background-color: cadetblue;
 }
-.botonOk:hover{
-	background-color: cornflowerblue;
-}
 .botonOk:active{
 	background-color: deepskyblue;
+}
+.botonOk:hover{
+	background-color: cornflowerblue;
 }
 .botonReg{
 	width: 14.0625em;
@@ -82,6 +82,13 @@
 
 /*Edición*/
 
+.areaDocumento{
+	bottom: 3.125em;
+	left: 13em;
+	position: fixed;
+	right: 13.125em;
+	top: 6.25em;
+}
 .botones{
 	bottom: 0.625em;
     position: fixed;
@@ -95,12 +102,8 @@
 	top: 6.25em;
 	width: 12.5em;
 }
-.areaDocumento{
-	bottom: 3.125em;
-	left: 13em;
-	position: fixed;
-	right: 13.125em;
-	top: 6.25em;
+.chatid{
+	font-weight: bold;
 }
 .edicion{
 	bottom: 0px;
@@ -164,11 +167,11 @@
     padding-right: 0.625em;
     padding-top: 0.3125em;
 }
-.opcion:hover{
-    background-color: gainsboro;
-}
 .opcion:active{
     background-color: lightGray;
+}
+.opcion:hover{
+    background-color: gainsboro;
 }
 .opciones{
     margin-top: 20%;

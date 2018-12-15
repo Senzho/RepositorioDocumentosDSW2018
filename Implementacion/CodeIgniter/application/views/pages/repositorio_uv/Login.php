@@ -17,7 +17,7 @@
         <img src="<?php echo base_url(); ?>recursos/logouv.png" class="uv" />
         <img src="<?php echo base_url(); ?>recursos/Imagen1.png" class="logo" />
     </div>
-    <center>
+    <div class="center">
     	<h1 class="fuente h">Iniciar sesión</h1>
 	    <div id="formulario">
             <?php echo form_open('repositorio_uv/Usuario_Controller/iniciar_sesion', array('id' => 'login')); ?>
@@ -37,6 +37,6 @@
 	    <div class="mensaje">
 	    	<label><?php echo $mensaje; ?></label>
 	    </div>
-    </center>
+    </div>
 </body>
 </html>

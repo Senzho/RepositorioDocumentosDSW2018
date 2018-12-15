@@ -1,11 +1,54 @@
 body{
 	font-family: sans-serif;
 }
-.imgLogo{
-	width: 10%
+.cancelar{
+	background-color:rgb(244,177,131);
+    border-radius: 0.3125em;
+    border-style: none;
+    height: 1.875em;
+    width: 14.0625em;
 }
-.imgLogo2{
-	width: 5%;
+.cancelar:active{
+	background-color: rgb(207,95,19);
+}
+.cancelar:hover{
+	background-color:rgb(237,129,55);
+}
+.campoTexto {
+    font-size: 1.2em;
+    width: 35em;
+}
+.datoUsuario{
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0.3125em;
+	margin-top: 0.3125em;
+}
+#divGeneral{
+	margin: auto;
+	width: 100%;
+}
+#divLinea{
+	border-bottom: 0.1875em solid rgb(0,176,240);
+	clear: both;
+}
+#divTituloArchivo{
+	float: left;
+}
+#divSalir{
+	float: left;
+}
+#divSalir > div{
+	align-items: center;
+	display: flex;
+  	justify-content: center;
+}
+#file_input{
+	display:none;
+}
+.header{
+	margin-left: 13em;
 }
 #imgFotoUsuario{
 	width: 14%;
@@ -13,100 +56,48 @@ body{
 #imgLapiz{
 	width: 3%;
 }
-#imgLapiz:hover{
-	background-color:rgb(214, 219, 223);
-}
 #imgLapiz:active{
 	background-color: rgb(171, 178, 185);
 }
-#divGeneral{
-	width: 100%;
-	margin: auto;
+#imgLapiz:hover{
+	background-color:rgb(214, 219, 223);
 }
-#file_input{
-	display:none;
+.imgLogo{
+	width: 10%
 }
-.header{
-	margin-left: 208px;
+.imgLogo2{
+	width: 5%;
 }
 #imagenUsuario{
-	width: 5em;
 	height: 5em;
-}
-#divTituloArchivo{
-	float: left;
-}
-#divLinea{
-	clear: both;
-	border-bottom: 3px solid rgb(0,176,240);
-}
-.registrar{
-    border-radius: 5px;
-    border-style: none;
-    background-color: cadetblue;
-    width: 225px;
-    height: 30px;
-}
-.registrar:hover{
-	background-color:rgb(120,199,231);
-}
-.registrar:active{
-	background-color: rgb(60,75,216);
-}
-.cancelar{
-    border-radius: 5px;
-    border-style: none;
-    background-color:rgb(244,177,131);
-    width: 225px;
-    height: 30px;
-}
-.cancelar:hover{
-	background-color:rgb(237,129,55);
-}
-.cancelar:active{
-	background-color: rgb(207,95,19);
-}
-.campoTexto {
-    font-size: 1.2em;
-    width: 35em;
+	width: 5em;
 }
 .lblEtiqueta{
 	display: block;
 	float: left;
-	width: 6em;
 	font-size: 1.2em;
+	width: 6em;
 }
-.datoUsuario{
-	margin-top: 5px;
-	margin-bottom: 5px;
-	display: flex;
-  	justify-content: center;
-  	align-items: center;
+.registrar{
+	background-color: cadetblue;
+    border-radius: 0.3125em;
+    border-style: none;
+    height: 1.875em;
+    width: 14.0625em;
 }
-#divSalir{
-	float: left;
+.registrar:active{
+	background-color: rgb(60,75,216);
 }
-#divSalir > div{
-	display: flex;
-  	justify-content: center;
-	align-items: center;
+.registrar:hover{
+	background-color:rgb(120,199,231);
 }
 @media only screen and (min-device-width: 250px) and (max-device-width: 700px) {
-    .lblEtiqueta{
-    	display: none;
-    }
-    .registrar{
-	    display: block;
-	    margin-top: 10px;
-	    padding: 10px;
+    .cancelar{
+    	display: block;
+    	margin-bottom: 1em;
+		margin-top: 0.3125em;
+	    padding: 0.625em;
 	    width: 100%;
-	}
-	.cancelar{
-		margin-top: 5px;
-	   display: block;  
-	    padding: 10px;
-	    width: 100%;
-	    margin-bottom: 1em;
 	}
 	.header{
 		margin-left: 2.1875em;
@@ -123,34 +114,41 @@ body{
 	#imgLapiz{
 		width: 6%;
 	}
+	.lblEtiqueta{
+    	display: none;
+    }
+	.registrar{
+	    display: block;
+	    margin-top: 0.625em;
+	    padding: 0.625em;
+	    width: 100%;
+	}
 }
+
 /*header*/
-#divGeneral{
-	width: 100%;
-	margin: auto;	
-}
-#imagenUsuario{
-	width: 5em;
-	height: 5em;
-}
+
 #divDatosUsuario{
-	float: right;
-	display: flex;
-	justify-content: center;
 	align-items: center;
+	display: flex;
+	float: right;
+	justify-content: center;
+}
+#divLinea{
+	clear: both;
+	border-bottom: 0.1875em solid rgb(0,176,240);
 }
 #divNombreUsuario > div> label {
+	font-size: 1.6em;	
 	justify-content: center;
-	font-size: 1.6em;					
 }
 #divTituloArchivo{
 	float: left;
 }
-#divLinea{
-	clear: both;
-	border-bottom: 3px solid rgb(0,176,240);
+#imagenUsuario{
+	height: 5em;
+	width: 5em;
 }
-@media screen and (max-width:  700px) {
+@media only screen and (min-device-width: 250px) and (max-device-width: 700px) {
 	#divNombreUsuario > div> label{
     	display: none;
     }

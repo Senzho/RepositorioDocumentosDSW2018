@@ -14,7 +14,7 @@
         <img src="<?php echo base_url(); ?>recursos/logouv.png" class="uv" />
         <img src="<?php echo base_url(); ?>recursos/Imagen1.png" class="logo" />
     </div>
-    <center>
+    <div class="center">
         <h1 class="fuente h">Listo!</h1>
         <div>
             <h2 class="fuente"><?php echo 'Has confirmado tu registro ' . $nombre . ', continúa en el enlace' ?></h2>
@@ -25,6 +25,6 @@
         <div class="mensaje">
             <label><?php echo $mensaje; ?></label>
         </div>
-    </center>
+    </div>
 </body>
 </html>

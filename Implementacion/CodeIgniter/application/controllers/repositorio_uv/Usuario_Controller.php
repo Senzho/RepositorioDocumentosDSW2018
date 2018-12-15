@@ -48,15 +48,20 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function vista($pagina = 'login', $mensaje = '')
 	{
+		$id = $this->session->userdata('id');
 		if ($pagina === 'login')
 		{
-			if ($this->session->userdata('id')){
+			if ($id){
 				redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 			}else{
 				$this->mostrar_login('');
 			}
 		}else if($pagina === 'registrar_usuario'){
-			$this->mostrar_registro_usuario(array('nombre'=>'','correo'=>'','nickname'=>'','mensaje'=>''));
+			if ($id){
+				redirect('repositorio_uv/Documento_Controller/vista/repositorio');
+			}else{
+				$this->mostrar_registro_usuario(array('nombre'=>'','correo'=>'','nickname'=>'','mensaje'=>''));
+			}
 		}else if ($pagina === 'confirmacion'){
 			if ($this->session->flashdata('idp')){
 				$this->session->keep_flashdata('idp');
@@ -70,6 +75,9 @@ class Usuario_Controller extends CI_Controller
 			}else{
 				$this->mostrar_login('');
 			}
+		}else{
+			log_message('info', 'Intento de acceso a página (' . $pagina . ') no existente.');
+			show_404();
 		}
 	}
 	/*Crea la sesión del usuario.
@@ -88,6 +96,7 @@ class Usuario_Controller extends CI_Controller
 			$this->session->set_userdata('id', $id);
 			redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 		}else{
+			log_message('info', 'Intento de login fallido con nombre de usuario: ' . $usuario . ' y contraseña: ' . $contraseña . '.');
 			$this->mostrar_login('Los sentimos, no podemos encontrar tu usuario, verifica que tus datos sean correctos');
 		}
 	}
@@ -159,7 +168,7 @@ class Usuario_Controller extends CI_Controller
         if(!$this->upload->do_upload('userfile'))
         {
         	$error = array('error' => $this->upload->display_errors());
-        	echo $error['error'];
+        	log_message('error', 'No se pudo guardar la foto de perfil al usuario con ID: ' . $id . '. Errores: ' . $error['error']);
         }else{
         	$foto_subida = true;
         }
@@ -193,6 +202,7 @@ class Usuario_Controller extends CI_Controller
 					$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'No pudo registrarse la foto'));
 				}
 			}else{
+				log_message('error', 'No se pudo registrar al usuario con nombre: ' . $nombre . ', correo: ' . $correo . ' y nickname: ' . $nickname . '.');
 				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> "No pudo registrarse el usuario"));
 			}
 		}else{
@@ -226,6 +236,7 @@ class Usuario_Controller extends CI_Controller
 					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
 					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'Usuario editado exitosamente'));
 				}else{
+					log_message('error', 'No se pudo actualizar al usuario con Id: ' . $id . '. Datos a actualizar - nombre: ' . $nombre . ', nickname: ' . $nickname . ', correo: ' . $correo . ', contraseña: ' . $contraseña . ' y confirmación: ' . $confirmar . '.');
 					$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
 					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
 					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'El usuario o ha podido editarse, verificar datos ingresados'));
@@ -234,7 +245,6 @@ class Usuario_Controller extends CI_Controller
 				$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
 					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
 				$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'los datos del usuario no son validos'));
-				//echo "uno o mas datos son invalidos, favor de verificar";
 			}
 		}else{
 			redirect('repositorio_uv/Usuario_Controller/vista');
@@ -246,26 +256,33 @@ class Usuario_Controller extends CI_Controller
 	*/
 	public function confirmar_registro()
 	{
-		$codigo = $this->input->post('codigo');
 		$id = $this->session->flashdata('idp');
-		$academico = $this->Usuario_Modelo->obtener_usuario_proceso($id);
-		if ($academico['codigo'] === $codigo){
-			$this->Usuario_Modelo->eliminar_usuario_proceso($id);
-			unset($academico['codigo']);
-			$registro = $this->Usuario_Modelo->registrar_usuario($academico);
-			if ($registro['resultado']){
-				$mensaje = $this->generar_llaves($registro['id']) ? '' : 'Ocurrió un error al generar tus llaves para firma';
-				$this->session->set_userdata('id', $registro['id']);
-				if(file_exists('./usuarios/'.$academico['nickname'].'.jpg')){
-					rename('./usuarios/'.$academico['nickname'].'.jpg', './usuarios/'.$registro['id'].'.jpg');
+		if ($id){
+			$codigo = $this->input->post('codigo');
+			$academico = $this->Usuario_Modelo->obtener_usuario_proceso($id);
+			if ($academico['codigo'] === $codigo){
+				$this->Usuario_Modelo->eliminar_usuario_proceso($id);
+				unset($academico['codigo']);
+				$registro = $this->Usuario_Modelo->registrar_usuario($academico);
+				if ($registro['resultado']){
+					$mensaje = $this->generar_llaves($registro['id']) ? '' : 'Ocurrió un error al generar tus llaves para firma';
+					$this->session->set_userdata('id', $registro['id']);
+					if(file_exists('./usuarios/'.$academico['nickname'].'.jpg')){
+						rename('./usuarios/'.$academico['nickname'].'.jpg', './usuarios/'.$registro['id'].'.jpg');
+					}
+					redirect('repositorio_uv/Usuario_Controller/vista/ingresar/' . $mensaje);
+				}else{
+					log_message('error', 'No se pudo guardar el registro oficial del usuario en proceso con nombre: ' . $academico['nombre'] . ', nickname: ' . $academico['nickname'] . ', correo: ' . $academico['correo'] . ', contraseña: ' . $academico['contraseña'] . ' y código de registro: ' . $academico['codigo'] . '.');
+					$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, ocurrió un error al registrarte'));
 				}
-				redirect('repositorio_uv/Usuario_Controller/vista/ingresar/' . $mensaje);
 			}else{
-				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, ocurrió un error al registrarte'));
+				log_message('info', 'Intento de confirmación de registro fallido con Id de proceso: ' . $id . ' y código de intento: ' . $codigo . '.');
+				$this->session->keep_flashdata('idp');
+				$this->mostrar_confirmacion('Lo sentimos, el código es incorrecto');
 			}
 		}else{
-			$this->session->keep_flashdata('idp');
-			$this->mostrar_confirmacion('Lo sentimos, el código es incorrecto');
+			log_message('info', 'Intento de acceso a página de confirmación de registro cuando no existe flashdata de usuario en proceso de registro');
+			redirect('repositorio_uv/Documento_Controller/vista/repositorio');
 		}
 	}
 	public function enviar_correo()

@@ -14,10 +14,10 @@
         <img src="<?php echo base_url(); ?>recursos/logouv.png" class="uv" />
         <img src="<?php echo base_url(); ?>recursos/Imagen1.png" class="logo" />
     </div>
-    <center>
+    <div class="center">
     	<h1 class="fuente h">Confirmación de registro</h1>
         <div>
-            <h2 class="fuente"><?php echo 'Hemos enviado un correo a' . $correo . 'con tu código de confirmación, ingresalo para confirmar tu registro' ?></h2>
+            <h2 class="fuente"><?php echo 'Hemos enviado un correo a ' . $correo . ' con tu código de confirmación, ingresalo para confirmar tu registro' ?></h2>
             <h3 class="fuente">¿No lo has recibido? no te desesperes, podemos <a href="<?php echo base_url(); ?>index.php/repositorio_uv/Usuario_Controller/enviar_correo">enviartelo de nuevo</a></h3>
         </div>
 	    <div id="formulario">
@@ -31,6 +31,6 @@
 	    <div class="mensaje">
 	    	<label><?php echo $mensaje; ?></label>
 	    </div>
-    </center>
+    </div>
 </body>
 </html>

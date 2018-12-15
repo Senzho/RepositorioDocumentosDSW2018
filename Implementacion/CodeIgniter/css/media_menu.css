@@ -1,15 +1,12 @@
 @import url("estilos_repositorio.css");
 
 @media only screen and (min-device-width: 250px) and (max-device-width: 700px) {
-    .uv{
-        display: none;
+    .cabeceraMenu{
+        margin-left: 0px;
     }
     .logo{
-        max-width: 2.1875em;
         max-height: 2.1875em;
-    }
-    .textoOpcion{
-        display: none;
+        max-width: 2.1875em;
     }
     .menu{
         width: 2.1875em;
@@ -17,7 +14,10 @@
     .opcion{
         padding-left: 0.3125em;
     }
-    .cabeceraMenu{
-        margin-left: 0px;
+    .textoOpcion{
+        display: none;
+    }
+    .uv{
+        display: none;
     }
 }
