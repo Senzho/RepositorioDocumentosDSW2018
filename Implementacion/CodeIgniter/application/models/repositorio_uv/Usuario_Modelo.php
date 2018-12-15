@@ -100,19 +100,31 @@ class Usuario_Modelo extends CI_Model
 		$respuesta = array('resultado' => $resultado, 'id' => $id);
 		return $respuesta;
 	}
-	private function verificar_correo($correo, $registrar = False){
+	public function correo_valido($correo, $id = 0){
 		$correo_disponible = True;
 		$query = $this->db->get_where('academico', array('correo' => $correo));
-		if ($query->num_rows() > 1){
-			$correo_disponible = False;
+		if ($query->num_rows() > 0 && $id === 0){
+			$correo_disponible = false;
+		}else if ($query->num_rows() > 0 && $id != 0){
+			$academico = $query->row();
+			$idAcademico = $academico->idAcademico;
+			if($idAcademico != $id){
+				$correo_disponible = false;
+			}
 		}
 		return $correo_disponible;
 	}
-	private function verificar_nickname($nickname,  $registrar = False){
-		$nickname_disponible = False;
+	public function nickname_valido($nickname, $id = 0){
+		$nickname_disponible = true;
 		$query = $this->db->get_where('academico', array('nickname' => $nickname));
-		if ($query->num_rows() > 1){
-			$nickname_disponible = True;
+		if ($query->num_rows() > 0 && $id === 0){
+			$nickname_disponible = false;
+		}else if ($query->num_rows() > 0 && $id != 0){
+			$academico = $query->row();
+			$idAcademico = $academico->idAcademico;
+			if($idAcademico != $id){
+				$nickname_disponible = false;
+			}
 		}
 		return $nickname_disponible;
 	}

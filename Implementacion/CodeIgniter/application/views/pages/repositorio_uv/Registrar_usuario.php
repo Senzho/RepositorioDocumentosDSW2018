@@ -25,24 +25,24 @@
 			<div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Nombre:</label>
-					<input type="input" name="nombre" class="campoTexto" placeholder="Nombre" value="<?php echo $nombre; ?>">
+					<input type="input" name="nombre" class="campoTexto datoRegistro" placeholder="Nombre" value="<?php echo $nombre; ?>">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Correo:</label>
-					<input type="email" name="correo" class="campoTexto" placeholder="Correo" value="<?php echo $correo; ?>">
+					<input type="email" name="correo" class="campoTexto datoRegistro" placeholder="Correo" value="<?php echo $correo; ?>">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Nickname:</label>
-					<input type="input" name="nickname" class="campoTexto" placeholder="Nickname" value="<?php echo $nickname; ?>">
+					<input type="input" name="nickname" class="campoTexto datoRegistro" placeholder="Nickname" value="<?php echo $nickname; ?>">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Contraseña:</label>
-					<input type="password" id="contrasenaUsuario" name="contrasenaUsuario" class="campoTexto" placeholder="Contraseña">
+					<input type="password" id="contrasenaUsuario" name="contrasenaUsuario" class="campoTexto datoRegistro" placeholder="Contraseña">
 					<input type="hidden" id="contrasena" name="contrasena">
 				</div>
 				<div class="datoUsuario">
 					<label class="lblEtiqueta">Confirmar:</label>
-					<input type="password" id="confirmarUsuario" name="confirmarUsuario" class="campoTexto" placeholder="Confirmar">
+					<input type="password" id="confirmarUsuario" name="confirmarUsuario" class="campoTexto datoRegistro" placeholder="Confirmar">
 					<input type="hidden" id="confirmar" name="confirmar">
 				</div>
 			</div>

@@ -187,23 +187,31 @@ class Usuario_Controller extends CI_Controller
 		$contrasena = $this->input->post('contrasena');
 		$confirmar = $this->input->post('confirmar');
 		if ($this->validar_datos_usuario()) {
-			$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$confirmar);
-			$this->load->library('repositorio_uv/util');
-			$codigo = $this->util->obtener_codigo($academico);
-			$academico['codigo'] = $codigo;
-			$usuario_registrado = $this->Usuario_Modelo->registrar_usuario_proceso($academico);
-			if($usuario_registrado['resultado']){
-				$this->session->set_flashdata('idp', $usuario_registrado['id']);
-				if($this->subir_foto($nickname)){
-					$this->load->helper('repositorio_uv/Correo_Helper');
-					validar_correo($academico, $codigo);
-					redirect('repositorio_uv/Usuario_Controller/vista/confirmacion');
+			if($this->Usuario_Modelo->correo_valido($correo)){
+				if($this->Usuario_Modelo->nickname_valido($nickname)){
+					$academico = array('idAcademico'=>0,'nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'contrasena'=>$confirmar);
+					$this->load->library('repositorio_uv/util');
+					$codigo = $this->util->obtener_codigo($academico);
+					$academico['codigo'] = $codigo;
+					$usuario_registrado = $this->Usuario_Modelo->registrar_usuario_proceso($academico);
+					if($usuario_registrado['resultado']){
+						$this->session->set_flashdata('idp', $usuario_registrado['id']);
+						if($this->subir_foto($nickname)){
+							$this->load->helper('repositorio_uv/Correo_Helper');
+							validar_correo($academico, $codigo);
+							redirect('repositorio_uv/Usuario_Controller/vista/confirmacion');
+						}else{
+							$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'No pudo registrarse la foto'));
+						}
+					}else{
+						log_message('error', 'No se pudo registrar al usuario con nombre: ' . $nombre . ', correo: ' . $correo . ' y nickname: ' . $nickname . '.');
+						$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> "No pudo registrarse el usuario"));
+					}
 				}else{
-					$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'No pudo registrarse la foto'));
+					$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'El nickname ingresado existe dentro de otra cuenta'));
 				}
 			}else{
-				log_message('error', 'No se pudo registrar al usuario con nombre: ' . $nombre . ', correo: ' . $correo . ' y nickname: ' . $nickname . '.');
-				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> "No pudo registrarse el usuario"));
+				$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'El correo ingresado existe dentro de otra cuenta'));
 			}
 		}else{
 			$this->mostrar_registro_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname, 'mensaje'=> 'Faltan datos para registrar'));
@@ -226,20 +234,32 @@ class Usuario_Controller extends CI_Controller
 			$correo = $this->input->post('correo');
 			$contrasena = $this->input->post('contrasena');
 			$confirmar = $this->input->post('confirmar');	
+			$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
 			if($this->validar_datos_usuario()){
-				$academico = array('idAcademico'=> $id,'nombre'=>$nombre,'correo'=>$correo,'nickname' =>$nickname,'contrasena'=>$contrasena);
-				if($this->Usuario_Modelo->editar_usuario($academico) === true){
-					if(isset($_FILES) && @$_FILES['userfile']['error'] == '0'){
-				    	$this->subir_foto($id);  
-				    }
-				    $this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
-					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
-					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'Usuario editado exitosamente'));
+				if($this->Usuario_Modelo->nickname_valido($nickname,$id)){
+					if($this->Usuario_Modelo->correo_valido($correo,$id)){
+						if($this->Usuario_Modelo->editar_usuario($academico) === true){
+							if(isset($_FILES) && @$_FILES['userfile']['error'] == '0'){
+						    	$this->subir_foto($id);  
+						    }
+						    $this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
+							$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+							$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'Usuario editado exitosamente'));
+						}else{
+							log_message('error', 'No se pudo actualizar al usuario con Id: ' . $id . '. Datos a actualizar - nombre: ' . $nombre . ', nickname: ' . $nickname . ', correo: ' . $correo . ', contraseña: ' . $contraseña . ' y confirmación: ' . $confirmar . '.');
+							$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
+							$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+							$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'El usuario o ha podido editarse, verificar datos ingresados'));
+						}
+					}else{
+						$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
+						$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'El correo ingresado es ocupado por otra cuenta'));
+					}
 				}else{
-					log_message('error', 'No se pudo actualizar al usuario con Id: ' . $id . '. Datos a actualizar - nombre: ' . $nombre . ', nickname: ' . $nickname . ', correo: ' . $correo . ', contraseña: ' . $contraseña . ' y confirmación: ' . $confirmar . '.');
 					$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
-					$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
-					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'El usuario o ha podido editarse, verificar datos ingresados'));
+						$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id'=>$id));
+					$this->mostrar_edicion_usuario(array('nombre'=>$nombre,'correo'=>$correo,'nickname'=>$nickname,'mensaje'=>'El nickname ingresado es ocupado por otra cuenta'));
 				}
 			}else{
 				$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Usuario editado'));
