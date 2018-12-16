@@ -1,5 +1,6 @@
 <?php
 require APPPATH.'third_party/phpword/Autoloader.php';
+require APPPATH.'third_party/tcpdf/tcpdf.php';
 require APPPATH.'third_party/Doc2Txt.php';
 \PhpOffice\PhpWord\Autoloader::register();
 use PhpOffice\PhpWord\PhpWord;
@@ -174,6 +175,7 @@ class Documento_Controller extends CI_Controller
 		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
 		if($editar === True){
 			unlink(APPPATH.'documentos'.'/'.$id_documento.'.docx');
+			$this->guardar_documento_pdf($id_documento,$texto);
 		}
 		$objWriter->save(APPPATH.'documentos'.'/'.$id_documento.'.docx');
 		$documento_guardado = False;
@@ -181,6 +183,43 @@ class Documento_Controller extends CI_Controller
 			$documento_guardado = True;
 		}else{
 			log_message('error', 'La comprobación de escritura de documento (.docx) con Id: ' . $id_documento . ' resultó negativa.');
+		}
+		return $documento_guardado;
+	}
+	public function guardar_documento_pdf($id_documento,$texto,$editar = false){
+		$documento_guardado = false;
+		header('Content-type: application/pdf');
+		$obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$obj_pdf->SetCreator(PDF_CREATOR);
+		$obj_pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
+		$obj_pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		$obj_pdf->SetDefaultMonospacedFont('helvetica');
+		$obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		$obj_pdf->SetMargins(PDF_MARGIN_LEFT, '5', PDF_MARGIN_RIGHT);
+		$obj_pdf->setPrintHeader(false);
+		$obj_pdf->setPrintFooter(false);
+		$obj_pdf->SetAutoPageBreak(TRUE, 10);
+		$obj_pdf->SetFont('helvetica', '', 12);
+		$obj_pdf->AddPage();
+		$texto = explode("!--!", $texto);
+		$tamano = sizeof($texto);
+		$texto_documento='';
+		for($i = 0; $i < $tamano; $i++){
+			$texto_documento = $texto_documento . $texto[$i];
+		}
+		$obj_pdf->writeHTML($texto_documento);
+		//$obj_pdf->Output($id_documento.'.pdf', 'D');
+		if($editar){
+			if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.pdf')){
+				unlink(APPPATH.'documentos'.'/'.$id_documento.'.pdf');
+			}
+		}
+		$obj_pdf->Output(APPPATH.'documentos'.'/'.$id_documento.'.pdf', 'F'); 
+		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.pdf')){
+			$documento_guardado = True;
+		}else{
+			log_message('error', 'La comprobación de escritura de documento (.pdf) con Id: ' . $id_documento . ' resultó negativa.');
 		}
 		return $documento_guardado;
 	}
@@ -196,14 +235,24 @@ class Documento_Controller extends CI_Controller
 				$documento = array('idDocumento' => 0, 'nombre' => $nombre_documento, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
 				$resultado = $this->Documento_Modelo->registrar_documento($documento);
 				if($resultado['resultado']){
-					if($this->guardar_documento_docx($resultado['id'],$texto)===True){
-						redirect('repositorio_uv/Documento_Controller/vista', 'location');
+					if($extension ==='docx'){//respaldo
+						if($this->guardar_documento_docx($resultado['id'],$texto)===True){
+							$this->guardar_documento_pdf($resultado['id'],$texto,true);
+							redirect('repositorio_uv/Documento_Controller/vista', 'location');
+						}else{
+							$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
+						}
 					}else{
-						$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
+						if($this->guardar_documento_pdf($resultado['id'],$texto)===True){
+							//$this->guardar_documento_docx($resultado['id'],$texto);
+							redirect('repositorio_uv/Documento_Controller/vista', 'location');
+						}else{
+							$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
+						}
 					}
 				}
 			}else{
-			   vista_nuevo_documento($id,'Su documento no tiene contenido');
+			   $this->vista_nuevo_documento($id,'Su documento no tiene contenido');
 			}
 		}else{
 			log_message('info', 'Intento de creación de documento por parte de usuario no autenticado.');
@@ -235,7 +284,7 @@ class Documento_Controller extends CI_Controller
 						}
 					}
 				}else{
-				   vista_nuevo_documento($id,'Su documento no tiene contenido');
+				   $this->vista_nuevo_documento($id,'Su documento no tiene contenido');
 				}
 			}else{
 				og_message('info', 'Intento de edicion de documento por parte de usuario '.$id.' documento '.$id_documento.'.docx');

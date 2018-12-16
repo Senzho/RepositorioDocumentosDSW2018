@@ -23,6 +23,7 @@
                    <label>Extensión</label>
                    <select id="opcionesDocumento" name="extension">
                    	<option value="docx" name="docx" selected="selected">.docx</option>
+                      <option value="pdf" name="pdf">.pdf</option>
                    </select>
                    <input type="hidden" name="texto" id="texto">
                 </div>
