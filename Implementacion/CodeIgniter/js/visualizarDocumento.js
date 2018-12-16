@@ -16,8 +16,9 @@
     return new File([data], documento, metadata);
 }
 function mostrarPdf(nombreArchivo){
-    var ruta = 'http://'+getDominioPagina() +'/proyectoFinalWeb/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + nombreArchivo;
-    $("#loaded-layout").append("<embed src="+ruta+" style='width:100%;height:100%;'></embed>");
+    var ruta = 'http://'+getDominioPagina() +'/proyectoFinalWeb/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + nombreArchivo+"/pdf";
+    console.log(ruta);
+    $("#loaded-layout").append("<iframe src=pdfjsweb/viewer.html?file="+ruta+" style='width:100%;height:100%;'></iframe>");
 }
 $(document).ready(function(){
     var documento = $("#loaded-layout").attr("name");
