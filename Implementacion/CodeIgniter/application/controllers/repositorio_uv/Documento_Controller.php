@@ -27,15 +27,13 @@ class Documento_Controller extends CI_Controller
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Documento'));
 		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => $documento['nombre'], 'nombre' => $academico['nombre'], 'id' =>$id_academico));
-		if(file_exists(APPPATH . 'documentos/'.$id_documento.'.docx')){
-			$id_documento = $id_documento . '.docx';
-		}else if(file_exists(APPPATH . 'documentos/'.$id_documento.'.xlsx')){
-			$id_documento = $id_documento . '.xlsx';
-		}else if (file_exists(APPPATH . 'documentos/'.$id_documento.'.pdf')){
-			$id_documento = $id_documento . '.pdf';
+		if(file_exists(APPPATH . 'documentos/'.$id_documento.'.'.$documento['extension'])){
+			$id_documento = $id_documento . '.' . $documento['extension'];
+			$this->load->view('pages/repositorio_uv/visualizar_documento', array('idDocumento' => $id_documento));
+			$this->load->view('templates/repositorio_uv/chat', array('usuarioChat' => $id_academico . '.' . $academico['nickname'], 'documentoChat' => $id_documento));
+		}else{
+			$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, parece que el documento seleccionado ya no existe'));
 		}
-		$this->load->view('pages/repositorio_uv/visualizar_documento', array('idDocumento' => $id_documento));
-		$this->load->view('templates/repositorio_uv/chat', array('usuarioChat' => $id_academico . '.' . $academico['nickname'], 'documentoChat' => $id_documento));
 	}
 
 	/*aqui empieza la visualizacion del documento*/
