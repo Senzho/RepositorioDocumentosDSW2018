@@ -12,25 +12,30 @@
         metadata = {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         };
+    }else if(extension === "pdf"){
+        metadata = {
+            type: 'application/pdf'
+        };
     }
     return new File([data], documento, metadata);
 }
-function mostrarPdf(nombreArchivo){
-    var ruta = 'http://'+getDominioPagina() +'/proyectoFinalWeb/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + nombreArchivo+"/pdf";
-    console.log(ruta);
-    $("#loaded-layout").append("<iframe src=pdfjsweb/viewer.html?file="+ruta+" style='width:100%;height:100%;'></iframe>");
-}
+//function mostrarPdf(nombreArchivo){
+ //   var ruta = 'http://'+getDominioPagina() +'/proyectoFinalWeb/index.php/repositorio_uv/Documento_Controller/descargar_documento/' + nombreArchivo + "/pdf";
+ //   console.log(ruta);
+//    PDFObject.embed(ruta, "#loaded-layout");
+    //$("#loaded-layout").append("<iframe src=pdfjsweb/viewer.html?file="+ruta+" style='width:100%;height:100%;'></iframe>");
+//}
 $(document).ready(function(){
-    var documento = $("#loaded-layout").attr("name");
-    var extension = documento.split(".")[1];
-    if(extension === "pdf"){
-        mostrarPdf(documento.split(".")[0]);
-    }else{
+   // var documento = $("#loaded-layout").attr("name");
+    //var extension = documento.split(".")[1];
+    //if(extension === "pdf"){
+      //  mostrarPdf(documento.split(".")[0]);
+    //}else{
         obtenerArchivo().then(function(archivo){
             console.log(archivo);
             mostrarArchivo(archivo);
         });
-    }
+    //}
 });
 function mostrarArchivo(archivo){
     var documento = $("#loaded-layout").attr("name");
@@ -67,5 +72,12 @@ function mostrarArchivo(archivo){
                 console.log("Error!", e);
             }
         );
+    }else if(extension === "pdf"){
+
+
+
+        PDFObject.embed(URL.createObjectURL(archivo), "#loaded-layout");
+        //var fileURL = URL.createObjectURL(archivo);
+        //$('#loaded-layout').append("<iframe src ="+fileURL+ " class=edicion></iframe>");
     }
 }
