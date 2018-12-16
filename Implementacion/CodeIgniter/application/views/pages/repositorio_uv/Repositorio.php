@@ -14,7 +14,7 @@
                     }else{
                         $permiso = ' todo';
                     }
-                    echo "<div class='documento" . $permiso . "' id=$id data-toggle='modal' data-target='#modalOpcionesDocumento'>
+                    echo "<div class='documento" . $permiso . " $icono'" . "' id=$id data-toggle='modal' data-target='#modalOpcionesDocumento'>
                             <div class='center'>
                                 <img src=$recurso class='icono'/>
                             </div>
@@ -50,7 +50,6 @@
                                 </div>         
                             </a>
                 		</li>
-
                 		<li id="opcionEditar" name="opcionEditar" class="linea">
                 			<a id="urlEditarDocumento"  href="<?php echo base_url().'index.php/repositorio_uv/Documento_Controller/vista/editar/'?>">
                                 <div class="item">
@@ -61,7 +60,6 @@
                                 </div>        
                             </a>
                 		</li>
-
                         <li id="opcionFirmar" name="opcionFirmar" class="linea">
                             <div id="linkFirmar" class="item" name="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/firmar_documento/">
                                 <div class="center">
@@ -78,6 +76,14 @@
 		                		<div class="fuente nombre center">Compartir</div>
 		                	</div>
                 		</li>
+                        <li id="opcionExportar" name="opcionExportar" class="linea" data-toggle="modal" data-target='#modalExportar'>
+                            <div class="item">
+                                <div class="center">
+                                    <img src="<?php echo base_url(); ?>/recursos/download.png" class='iconoItem'/>
+                                </div>
+                                <div class="fuente nombre center">Exportar</div>
+                            </div>
+                        </li>
                 		<li id="opcionEliminar" name="opcionEliminar" class="linea">
                 			<div id="linkEliminar" class="item" name="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/eliminar_documento/">
 		                		<div class="center">
@@ -106,7 +112,28 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" value="Compartir" class="boton botonOk botonReg" />
+                        <input id="botonCompartir" type="submit" value="Compartir" class="boton botonOk botonReg" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalExportar" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="fuente h3">Exportar</h3>
+                </div>
+                <form id="formularioExportar" action="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/descargar_documento/">
+                    <div class="modal-body center">
+                        <select id="selectExtension" name="extension">
+                            <option value="docx" selected="selected">.docx</option>
+                            <option value="pdf">.pdf</option>
+                            <option value="xlsx">.xlsx</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="botonExportar" type="submit" value="Exportar" class="boton botonOk botonReg" />
                     </div>
                 </form>
             </div>

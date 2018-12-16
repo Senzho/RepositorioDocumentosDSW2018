@@ -1,10 +1,4 @@
 <?php
-require APPPATH.'third_party/phpword/Autoloader.php';
-require APPPATH.'third_party/tcpdf/tcpdf.php';
-require APPPATH.'third_party/Doc2Txt.php';
-\PhpOffice\PhpWord\Autoloader::register();
-use PhpOffice\PhpWord\PhpWord;
-use PhpOffice\PhpWord\Style\Font;
 class Documento_Controller extends CI_Controller
 {
 	private function cargar_repositorio($id_academico, $propios, $editar = False)
@@ -28,7 +22,7 @@ class Documento_Controller extends CI_Controller
 		}
 	}
 	/*aqui empieza la visualizacion del documento*/
-	public function cargar_documento($id_academico, $id_documento){
+	private function cargar_documento($id_academico, $id_documento){
 		$academico = $this->Usuario_Modelo->obtener_usuario($id_academico);
 		$this->load->view('templates/repositorio_uv/menu', array('titulo' => 'Documento'));
 		$documento = $this->Documento_Modelo->obtener_documento($id_documento);
@@ -45,12 +39,6 @@ class Documento_Controller extends CI_Controller
 	}
 
 	/*aqui empieza la visualizacion del documento*/
-	private function validar_documento()
-	{
-		$this->form_validation->set_rules('nombre', 'Nombre', 'trim|required|max_length[50]|min_length[6]');
-		$this->form_validation->set_rules('archivo', 'Ruta', 'required');
-		return $this->form_Validation->run();
-	}
 	private function validar_visualizacion_descarga($id, $id_documento)
 	{
 		$valido = False;
@@ -74,7 +62,6 @@ class Documento_Controller extends CI_Controller
         $this->load->library('repositorio_uv/util');
         $this->load->library('session');
         $this->load->library('form_validation');
-        //$this->load->library('repositorio_uv/word');
     }
 	/*Carga la vista dependiendo de la página y verificando su existencia:
 		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
@@ -150,79 +137,6 @@ class Documento_Controller extends CI_Controller
 		$this->load->view('templates/repositorio_uv/header', array('titulo' => '', 'nombre' => $academico['nombre'], 'id' =>$id_academico));
 		$this->load->view('pages/repositorio_uv/crear_documento',array('mensaje'=>$mensaje));
 	}
-	private function guardar_documento_docx($id_documento, $texto, $editar = false){
-		$documento = new PhpWord();
-		$seccion = $documento->addSection();
-		$texto = explode("!--!", $texto);
-		$tamano = sizeof($texto);
-		for ($i=0; $i < $tamano; $i++) { 
-			if(strlen(strstr($texto[$i], 'h1'))){
-				$seccion->addText(
-						htmlspecialchars(
-							strip_tags(html_entity_decode($texto[$i]))
-						),
-						array('name' => 'Arial', 'size' => '22', 'bold' => 'true')
-				);
-			}else if(strlen(strstr($texto[$i], 'p'))){
-				$seccion->addText(
-					htmlspecialchars(
-				 		strip_tags(html_entity_decode($texto[$i]))
-					),
-					array('name' => 'Arial', 'size' => '12', 'bold' => 'false')
-				);	
-			}
-		}
-		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
-		if($editar === True){
-			unlink(APPPATH.'documentos'.'/'.$id_documento.'.docx');
-			$this->guardar_documento_pdf($id_documento,$texto);
-		}
-		$objWriter->save(APPPATH.'documentos'.'/'.$id_documento.'.docx');
-		$documento_guardado = False;
-		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.docx')){
-			$documento_guardado = True;
-		}else{
-			log_message('error', 'La comprobación de escritura de documento (.docx) con Id: ' . $id_documento . ' resultó negativa.');
-		}
-		return $documento_guardado;
-	}
-	public function guardar_documento_pdf($id_documento,$texto,$editar = false){
-		$documento_guardado = false;
-		header('Content-type: application/pdf');
-		$obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$obj_pdf->SetCreator(PDF_CREATOR);
-		$obj_pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
-		$obj_pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		$obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-		$obj_pdf->SetDefaultMonospacedFont('helvetica');
-		$obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-		$obj_pdf->SetMargins(PDF_MARGIN_LEFT, '5', PDF_MARGIN_RIGHT);
-		$obj_pdf->setPrintHeader(false);
-		$obj_pdf->setPrintFooter(false);
-		$obj_pdf->SetAutoPageBreak(TRUE, 10);
-		$obj_pdf->SetFont('helvetica', '', 12);
-		$obj_pdf->AddPage();
-		$texto = explode("!--!", $texto);
-		$tamano = sizeof($texto);
-		$texto_documento='';
-		for($i = 0; $i < $tamano; $i++){
-			$texto_documento = $texto_documento . $texto[$i];
-		}
-		$obj_pdf->writeHTML($texto_documento);
-		//$obj_pdf->Output($id_documento.'.pdf', 'D');
-		if($editar){
-			if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.pdf')){
-				unlink(APPPATH.'documentos'.'/'.$id_documento.'.pdf');
-			}
-		}
-		$obj_pdf->Output(APPPATH.'documentos'.'/'.$id_documento.'.pdf', 'F'); 
-		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.pdf')){
-			$documento_guardado = True;
-		}else{
-			log_message('error', 'La comprobación de escritura de documento (.pdf) con Id: ' . $id_documento . ' resultó negativa.');
-		}
-		return $documento_guardado;
-	}
 	public function crear_documento()
 	{
 		$id = $this->session->userdata('id');
@@ -235,16 +149,16 @@ class Documento_Controller extends CI_Controller
 				$documento = array('idDocumento' => 0, 'nombre' => $nombre_documento, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
 				$resultado = $this->Documento_Modelo->registrar_documento($documento);
 				if($resultado['resultado']){
-					if($extension ==='docx'){//respaldo
-						if($this->guardar_documento_docx($resultado['id'],$texto)===True){
-							$this->guardar_documento_pdf($resultado['id'],$texto,true);
+					if($extension ==='docx'){
+						if($this->Documento_Modelo->guardar_documento_docx($resultado['id'],$texto)===True){
+							$this->Documento_Modelo->guardar_documento_pdf($resultado['id'],$texto,true);
 							redirect('repositorio_uv/Documento_Controller/vista', 'location');
 						}else{
 							$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
 						}
 					}else{
-						if($this->guardar_documento_pdf($resultado['id'],$texto)===True){
-							//$this->guardar_documento_docx($resultado['id'],$texto);
+						if($this->Documento_Modelo->guardar_documento_pdf($resultado['id'],$texto)===True){
+							$this->Documento_Modelo->guardar_documento_docx($resultado['id'],$texto);
 							redirect('repositorio_uv/Documento_Controller/vista', 'location');
 						}else{
 							$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido guardar tu documento'));
@@ -277,7 +191,8 @@ class Documento_Controller extends CI_Controller
 					$documento = array('idDocumento' => $id_documento, 'nombre' => $nombre_documento, 'fechaRegistro' => $fecha_registro, 'idAcademico' => $id, 'habilitado' => True, 'extension' => $extension);
 					$resultado = $this->Documento_Modelo->modificar_documento($documento);
 					if($resultado){
-						if($this->guardar_documento_docx($id_documento,$texto,True)===True){
+						if($this->Documento_Modelo->guardar_documento_docx($id_documento,$texto,True)===True){
+							$this->Documento_Modelo->guardar_documento_pdf($id_documento,$texto,true);
 							redirect('repositorio_uv/Documento_Controller/vista', 'location');
 						}else{
 							$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no se ha podido editar tu documento'));
@@ -287,7 +202,7 @@ class Documento_Controller extends CI_Controller
 				   $this->vista_nuevo_documento($id,'Su documento no tiene contenido');
 				}
 			}else{
-				og_message('info', 'Intento de edicion de documento por parte de usuario '.$id.' documento '.$id_documento.'.docx');
+				log_message('info', 'Intento de edicion de documento por parte de usuario '.$id.' documento '.$id_documento.'.docx');
 				redirect('repositorio_uv/Documento_Controller/vista', 'location');
 			}
 		}else{
@@ -327,23 +242,27 @@ class Documento_Controller extends CI_Controller
 			if ($this->Documento_Modelo->documento_pertenece($id_fuente, $id_documento)){
 				$respuesta;
 				$correo = $this->input->post('correo');
-				$edicion = $this->input->post('edicion');
-				$objetivo = $this->Usuario_Modelo->obtener_usuario_correo($correo);
-				if ($objetivo['id'] > 0){
-					$this->load->library('repositorio_uv/util');
-					$fecha = date('Y-m-d-B');
-					$solicitud = $this->util->obtener_solicitud($id_documento, $id_fuente, $objetivo['id'], $fecha);
-					$academico = $this->Usuario_Modelo->obtener_usuario($id_fuente);
-					if ($this->Documento_Modelo->registrar_solicitud_documento($id_documento, $solicitud, $edicion)){
-						$respuesta['compartido'] = True;
-						$this->load->helper('repositorio_uv/Correo_Helper');
-						enviar_solicitud_documento($academico, $correo, $id_documento, $fecha);
+				if (isset($correo)){
+					$edicion = $this->input->post('edicion');
+					$objetivo = $this->Usuario_Modelo->obtener_usuario_correo($correo);
+					if ($objetivo['id'] > 0){
+						$this->load->library('repositorio_uv/util');
+						$fecha = date('Y-m-d-B');
+						$solicitud = $this->util->obtener_solicitud($id_documento, $id_fuente, $objetivo['id'], $fecha);
+						$academico = $this->Usuario_Modelo->obtener_usuario($id_fuente);
+						if ($this->Documento_Modelo->registrar_solicitud_documento($id_documento, $solicitud, $edicion)){
+							$respuesta['compartido'] = True;
+							$this->load->helper('repositorio_uv/Correo_Helper');
+							enviar_solicitud_documento($academico, $correo, $id_documento, $fecha);
+						}else{
+							log_message('error', 'No se pudo registrar la solicitud de compartición del documento con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id_fuente . ' hacia el usuario con Id: ' . $objetivo['id'] . '.');
+							$respuesta['compartido'] = False;
+						}	
 					}else{
-						log_message('error', 'No se pudo registrar la solicitud de compartición del documento con Id: ' . $id_documento . ' por parte del usuario con Id: ' . $id_fuente . ' hacia el usuario con Id: ' . $objetivo['id'] . '.');
+						log_message('info', 'No se pudo encontrar al usuario con correo: ' . $correo . ' para compartir el documento con Id: ' . $id_documento . '.');
 						$respuesta['compartido'] = False;
-					}	
+					}
 				}else{
-					log_message('info', 'No se pudo encontrar al usuario con correo: ' . $correo . ' para compartir el documento con Id: ' . $id_documento . '.');
 					$respuesta['compartido'] = False;
 				}
 				echo json_encode($respuesta);
@@ -449,19 +368,34 @@ class Documento_Controller extends CI_Controller
 	/*Ubica un documento y regresa la ruta.
 		Recibe el id de un documento.
 	*/
-	public function descargar_documento($id_documento)
+	public function descargar_documento($id_documento, $extension = 'null')
 	{
 		$id = $this->session->userdata('id');
 		if ($id){
-			if ($this->validar_visualizacion_descarga($id, $id_documento)){
-				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
-				$data = file_get_contents(APPPATH . 'documentos/' . $id_documento . '.' . $documento['extension']);
-				$this->load->helper('download');
-		       	force_download($id_documento . '.' . $documento['extension'], $data, True); 
+			if ($extension === 'docx' || $extension === 'pdf' || $extension === 'xlsx' || $extension === 'null'){
+				if ($this->validar_visualizacion_descarga($id, $id_documento)){
+					$extension_documento;
+					if ($extension != 'null'){
+						$extension_documento = $extension;
+					}else{
+						$documento = $this->Documento_Modelo->obtener_documento($id_documento);
+						$extension_documento = $documento['extension'];
+					}
+					$ruta = APPPATH . 'documentos/' . $id_documento . '.' . $extension_documento;
+					if (file_exists($ruta)){
+						$data = file_get_contents($ruta);
+						$this->load->helper('download');
+				       	force_download($id_documento . '.' . $extension_documento, $data, True); 
+					}else{
+						$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, el formato solicitado no está disponible para descarga'));
+					}
+				}
+			}else{
+				redirect('repositorio_uv/Documento_Controller/vista', 'location');
 			}
 		}else{
 			log_message('info', 'Un usuario no autenticado intentó descargar/visualizar el documento con Id: ' . $id_documento . '.');
-			redirect('repositorio_uv/Usuario_Controller/vista', 'location');
+			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}	
 	}
 }

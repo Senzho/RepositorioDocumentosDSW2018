@@ -73,15 +73,13 @@
 			<div class="modal-content">
 				<div class="modal-body">
 					<ul class="lista" name="opcionesNuevoDocumento">
-
-    						<li>
-                                 <a href="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/vista/crear_documento">
-        							<div class="opcion">
-        								<label class="fuente">Crear</label>
-        							</div>
-                                </a>
-    						</li>
-
+						<li>
+                             <a href="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/vista/crear_documento">
+    							<div class="opcion">
+    								<label class="fuente">Crear</label>
+    							</div>
+                            </a>
+						</li>
 						<li>
 							<div id="opcionSubir" class="opcion" data-toggle="modal" data-target="#modalFormularioSubir">
 								<label class="fuente">Subir</label>
@@ -101,7 +99,7 @@
                         <input id="archivo" type="file" name="archivo" class="campoTexto campoTextoMed" value="<?php echo set_value('nombre'); ?>" />
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" value="Subir" class="boton botonOk botonReg" />
+                        <input id="botonSubirDocumento" type="submit" value="Subir" class="boton botonOk botonReg" />
                     </div>
                 </form>
             </div>

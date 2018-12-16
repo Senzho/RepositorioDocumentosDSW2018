@@ -1,4 +1,11 @@
 <?php
+require APPPATH.'third_party/phpword/Autoloader.php';
+require APPPATH.'third_party/tcpdf/tcpdf.php';
+require APPPATH.'third_party/Doc2Txt.php';
+\PhpOffice\PhpWord\Autoloader::register();
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Style\Font;
+
 require APPPATH . 'vendor/autoload.php';
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
@@ -188,5 +195,78 @@ class Documento_Modelo extends CI_Model
 		$json = json_decode($respuesta->getBody());
 		$firma = $json->generadas;
 		return $firma;
+	}
+	public function guardar_documento_docx($id_documento, $texto, $editar = false){
+		$documento = new PhpWord();
+		$seccion = $documento->addSection();
+		$texto = explode("!--!", $texto);
+		$tamano = sizeof($texto);
+		for ($i=0; $i < $tamano; $i++) { 
+			if(strlen(strstr($texto[$i], 'h1'))){
+				$seccion->addText(
+						htmlspecialchars(
+							strip_tags(html_entity_decode($texto[$i]))
+						),
+						array('name' => 'Arial', 'size' => '22', 'bold' => 'true')
+				);
+			}else if(strlen(strstr($texto[$i], 'p'))){
+				$seccion->addText(
+					htmlspecialchars(
+				 		strip_tags(html_entity_decode($texto[$i]))
+					),
+					array('name' => 'Arial', 'size' => '12', 'bold' => 'false')
+				);	
+			}
+		}
+		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($documento, 'Word2007');
+		if($editar === True){
+			unlink(APPPATH.'documentos'.'/'.$id_documento.'.docx');
+			$this->guardar_documento_pdf($id_documento,$texto);
+		}
+		$objWriter->save(APPPATH.'documentos'.'/'.$id_documento.'.docx');
+		$documento_guardado = False;
+		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.docx')){
+			$documento_guardado = True;
+		}else{
+			log_message('error', 'La comprobación de escritura de documento (.docx) con Id: ' . $id_documento . ' resultó negativa.');
+		}
+		return $documento_guardado;
+	}
+	public function guardar_documento_pdf($id_documento,$texto,$editar = false){
+		$documento_guardado = false;
+		header('Content-type: application/pdf');
+		$obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+		$obj_pdf->SetCreator(PDF_CREATOR);
+		$obj_pdf->SetHeaderData('', '', PDF_HEADER_TITLE, PDF_HEADER_STRING);
+		$obj_pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+		$obj_pdf->SetDefaultMonospacedFont('helvetica');
+		$obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		$obj_pdf->SetMargins(PDF_MARGIN_LEFT, '5', PDF_MARGIN_RIGHT);
+		$obj_pdf->setPrintHeader(false);
+		$obj_pdf->setPrintFooter(false);
+		$obj_pdf->SetAutoPageBreak(TRUE, 10);
+		$obj_pdf->SetFont('helvetica', '', 12);
+		$obj_pdf->AddPage();
+		$texto = explode("!--!", $texto);
+		$tamano = sizeof($texto);
+		$texto_documento='';
+		for($i = 0; $i < $tamano; $i++){
+			$texto_documento = $texto_documento . $texto[$i];
+		}
+		$obj_pdf->writeHTML($texto_documento);
+		//$obj_pdf->Output($id_documento.'.pdf', 'D');
+		if($editar){
+			if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.pdf')){
+				unlink(APPPATH.'documentos'.'/'.$id_documento.'.pdf');
+			}
+		}
+		$obj_pdf->Output(APPPATH.'documentos'.'/'.$id_documento.'.pdf', 'F'); 
+		if(file_exists(APPPATH.'documentos'.'/'.$id_documento.'.pdf')){
+			$documento_guardado = True;
+		}else{
+			log_message('error', 'La comprobación de escritura de documento (.pdf) con Id: ' . $id_documento . ' resultó negativa.');
+		}
+		return $documento_guardado;
 	}
 }

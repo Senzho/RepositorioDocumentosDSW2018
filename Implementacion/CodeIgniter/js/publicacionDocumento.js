@@ -3,6 +3,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		valido = $(this).valido();
 		if (valido === "OK"){
+			$("#botonSubirDocumento").attr("disabled", true);
 			var nombre = $("#archivo").val().trim();
 			$(this).enviar(this, nombre);
 		}else{
@@ -56,9 +57,12 @@ $.fn.enviar = function(formulario, nombre){
 	        	mensaje = "Lo sentimos, el documento no pudo registrarse"
 	        }
 	        alert(mensaje);
+	        $("#botonSubirDocumento").attr("disabled", false);
+	        restablecerModalSubir();
 	    },
 	    error: function(data){
 	    	alert("Lo sentimos, ocurrió un error al subir tu documento");
+	    	$("#botonSubirDocumento").attr("disabled", false);
 	    }
 	});
 }
@@ -80,4 +84,9 @@ function validarExtensionDocumento(nombre){
 		valido = true;
 	}
 	return valido;
+}
+function restablecerModalSubir(){
+	$("#nombreDocumentoSubir").val("");
+	$("#archivo").val("");
+	$("#modalFormularioSubir").modal("toggle");
 }
