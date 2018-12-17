@@ -23,8 +23,8 @@ class Usuario_Controller extends CI_Controller
 	}
 	private function generar_llaves($id_academico)
 	{
-		$this->load->model('repositorio_uv/Documento_Modelo');
-		return $this->Documento_Modelo->generar_llaves($id_academico);
+		$this->load->model('repositorio_uv/Firma_Modelo');
+		return $this->Firma_Modelo->generar_llaves($id_academico);
 	}
 
 	public function __construct()

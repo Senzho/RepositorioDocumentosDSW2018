@@ -31,6 +31,10 @@ $(document).ready(function (){
 		if ($(documento).hasClass("pdf") || $(documento).hasClass("xlsx")){
 			$("#opcionEditar").hide();
 		}
+		var action = $("#linkVerFirmas").attr("name");
+		var url = action + id;
+		$("#cuerpoModalFirmas").empty();
+		$(this).mostrarFirmas(url);
 	});
 	$("#formularioCompartir").on("submit", function (event){
 		event.preventDefault();
@@ -118,6 +122,36 @@ $.fn.compartir = function(url, form){
 	    }
 	});
 }
+$.fn.mostrarFirmas = function(url){
+	$.ajax({
+	    url:url,
+	    type:"get",
+	    processData:false,
+	    contentType:false,
+	    cache:false,
+	    async:true,
+	    success: function(data){
+	    	var json = JSON.parse(data);
+	    	if(json['permiso'] == true){
+	    		var cuenta = json['cuenta'];
+	    		if (cuenta > 0){
+	    			var cuerpo = $("#cuerpoModalFirmas");
+	    			var firmas = json['firmas'];
+	    			for (var i = 0; i < cuenta; i ++){
+	    				var firma = firmas[i];
+	    				var mensaje = "             " + (firma['firmado'] ? (firma['firma_valida'] ? 'Firmado' : 'Firma no válida') : "Sin firmar");
+	    				$(cuerpo).append("<div><label class='chatid fuente'>" + firma['nickname'] + "</label><label class='fuente'> " + mensaje + "</label></div>");
+	    			}
+	    		}
+	    	}else{
+	    		alert("Lo sentimos, no tienes permiso para obtener las firmas del documento");
+	    	}
+	    },
+	    error: function(data){
+	    	alert("Lo sentimos, ocurrió un error al obtener las firmas de tu documento");
+	    }
+	});
+}
 $.fn.borrar = function(id){
 	$("#modalOpcionesDocumento").modal("toggle");
 	$("#" + id).remove();
@@ -137,6 +171,7 @@ $.fn.mostrarPermisos = function(){
 	$("#opcionVer").show();
 	$("#opcionEditar").show();
 	$("#opcionFirmar").show();
+	$("#opcionVerFirmas").show();
 	$("#opcionCompartir").show();
 	$("#opcionExportar").show();
 	$("#opcionEliminar").show();

@@ -297,32 +297,6 @@ class Documento_Controller extends CI_Controller
 			redirect('repositorio_uv/Documento_Controller/vista', 'location');
 		}
 	}
-	/*Firma un documento.
-		Recibe el id del documento.
-		Consulta id de usuario en caché, si no se encuentra, redirije a la vista de 'login'.
-		Regresa un cadena JSON indicando el resultado: ['firmado': True | False].
-	*/
-	public function firmar_documento($id_documento)
-	{
-		$id_fuente = $this->session->userdata('id');
-		if ($id_fuente){
-			if($this->Documento_Modelo->documento_pertenece($id_fuente, $id_documento)){
-				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
-				$firmado = $this->Documento_Modelo->firmar_documento($id_fuente, $id_documento, $documento['extension']);
-				$respuesta['firmado'] = $firmado;
-				if (!$firmado){
-					log_message('error', 'No se pudo firmar el documento con Id: ' . $id_documento . ' del usuario con Id: ' . $id_fuente . '.');
-				}
-				echo json_encode($respuesta);
-			}else{
-				log_message('info', 'El usuario con Id: ' . $id_fuente . ' intentó firmar el documento con Id: ' . $id_documento . ', que no le pertenece.');
-				$this->load->view('pages/repositorio_uv/error', array('mensaje' => 'Lo sentimos, no tienes permiso para firmar el documento'));
-			}
-		}else{
-			log_message('info', 'Un usuario no autenticado intentó firmar el documento con Id: ' . $id_documento . '.');
-			redirect('repositorio_uv/Documento_Controller/vista', 'location');
-		}
-	}
 	/*Carga un documento en el servidor.
 		Recibe los datos de un documento por POST.
 		Recibe un archivo.

@@ -23,9 +23,6 @@
                     if (array_key_exists('academico', $documento)){
                         $academico = 'De: ' . $documento['academico'];
                         echo "<div class='fuente emisor'>$academico</div>";
-                        $firma = $documento['firmado'] === True ? 'Firmado' : 'Sin firma';
-                        $class_firma = $documento['firmado'] === True ? 'firmaOk' : 'firmaErr';
-                        echo "<div class='fuente nombre $class_firma'>$firma</div>";
                     }
                     echo "</div>";
                 }
@@ -61,11 +58,19 @@
                             </a>
                 		</li>
                         <li id="opcionFirmar" name="opcionFirmar" class="linea">
-                            <div id="linkFirmar" class="item" name="<?php echo base_url()?>index.php/repositorio_uv/Documento_Controller/firmar_documento/">
+                            <div id="linkFirmar" class="item" name="<?php echo base_url()?>index.php/repositorio_uv/Firma_Controller/firmar_documento/">
                                 <div class="center">
                                     <img src="<?php echo base_url(); ?>/recursos/signature.png" class='iconoItem'/>
                                 </div>
                                 <div class="fuente nombre center">Firmar</div>
+                            </div>
+                        </li>
+                        <li id="opcionVerFirmas" name="opcionVerFirmas" class="linea" data-toggle="modal" data-target='#modalFirmas'>
+                            <div id="linkVerFirmas" class="item" name="<?php echo base_url()?>index.php/repositorio_uv/Firma_Controller/obtener_firmas/">
+                                <div class="center">
+                                    <img src="<?php echo base_url(); ?>/recursos/signature.png" class='iconoItem'/>
+                                </div>
+                                <div class="fuente nombre center">Ver firmas</div>
                             </div>
                         </li>
                 		<li id="opcionCompartir" name="opcionCompartir" class="linea" data-toggle="modal" data-target='#modalCompartir'>
@@ -136,6 +141,16 @@
                         <input id="botonExportar" type="submit" value="Exportar" class="boton botonOk botonReg" />
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalFirmas" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="fuente h3">Firmas</h3>
+                </div>
+                <div id="cuerpoModalFirmas" class="modal-body scrollVertical"></div>
             </div>
         </div>
     </div>

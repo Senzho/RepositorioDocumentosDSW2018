@@ -5,22 +5,8 @@ require APPPATH.'third_party/Doc2Txt.php';
 \PhpOffice\PhpWord\Autoloader::register();
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\Style\Font;
-
-require APPPATH . 'vendor/autoload.php';
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Client;
 class Documento_Modelo extends CI_Model
 {
-	private function documento_firmado($id_academico, $id_documento, $extension)
-	{
-		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);
-		$peticion = new Request('GET', 'Firma/verificar_firma', [], json_encode(array('id_academico' => $id_academico, 'id_documento' => $id_documento, 'extension' => $extension)));
-		$respuesta = $cliente->send($peticion, []);
-		$json = json_decode($respuesta->getBody());
-		$verificacion = $json->verificado;
-		return $verificacion;
-	}
-
 	public function __construct(){
 		$this->load->database('repositorio_uv');
 		$this->load->model('repositorio_uv/Usuario_Modelo');
@@ -105,8 +91,7 @@ class Documento_Modelo extends CI_Model
 				'fecha_registro' => $fila->fechaRegistro,
 				'academico' => $academico['nombre'],
 				'extension' => $fila->extension,
-				'edicion' => $fila->edicion,
-				'firmado' => $this->documento_firmado($academico['id'], $fila->idDocumento, $fila->extension)
+				'edicion' => $fila->edicion
 			);
 			$documentos[$i] = $documento;
 		}
@@ -179,22 +164,6 @@ class Documento_Modelo extends CI_Model
 			$editable = $fila->edicion;
 		}
 		return array('compartido'=>$consulta->num_rows() > 0, 'edicion'=>$editable);
-	}
-	public function firmar_documento($id_academico, $id_documento, $extension){
-		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);
-		$peticion = new Request('POST', 'Firma/firmar', [], json_encode(array('id_academico' => $id_academico, 'id_documento' => $id_documento, 'extension' => $extension)));
-		$respuesta = $cliente->send($peticion, []);
-		$json = json_decode($respuesta->getBody());
-		$firma = $json->firmado;
-		return $firma;
-	}
-	public function generar_llaves($id_academico){
-		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);
-		$peticion = new Request('POST', 'Firma/generar_claves', [], json_encode(array('id_academico' => $id_academico)));
-		$respuesta = $cliente->send($peticion, []);
-		$json = json_decode($respuesta->getBody());
-		$firma = $json->generadas;
-		return $firma;
 	}
 	public function guardar_documento_docx($id_documento, $texto, $editar = false){
 		$documento = new PhpWord();
