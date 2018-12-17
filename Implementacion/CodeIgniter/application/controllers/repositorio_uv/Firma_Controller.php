@@ -27,7 +27,7 @@ class Firma_Controller extends CI_Controller
 			}
 			if($this->Documento_Modelo->documento_pertenece($id_fuente, $id_documento) || $compartido){
 				$documento = $this->Documento_Modelo->obtener_documento($id_documento);
-				$firmado = $this->Documento_Modelo->firmar_documento($id_fuente, $id_documento, $documento['extension']);
+				$firmado = $this->Firma_Modelo->firmar_documento($id_fuente, $id_documento, $documento['extension']);
 				$respuesta['firmado'] = $firmado;
 				if (!$firmado){
 					log_message('error', 'No se pudo firmar el documento con Id: ' . $id_documento . ' del usuario con Id: ' . $id_fuente . '.');

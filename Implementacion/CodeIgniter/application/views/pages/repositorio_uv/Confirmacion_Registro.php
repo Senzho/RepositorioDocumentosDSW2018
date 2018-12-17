@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link href="<?php echo base_url(); ?>css/estilos_repositorio.css" rel="stylesheet" type="text/css">
     <link href="<?php echo base_url(); ?>css/media_gen.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/confirmacionRegistro.js"></script>
 </head>
 <body>
     <div id="cabecera" class="cabecera">
@@ -20,12 +22,12 @@
             <h2 class="fuente"><?php echo 'Hemos enviado un correo a ' . $correo . ' con tu código de confirmación, ingresalo para confirmar tu registro' ?></h2>
             <h3 class="fuente">¿No lo has recibido? no te desesperes, podemos <a href="<?php echo base_url(); ?>index.php/repositorio_uv/Usuario_Controller/enviar_correo">enviartelo de nuevo</a></h3>
         </div>
-	    <div id="formulario">
+	    <div id="formularioCodigo">
             <?php echo form_open('repositorio_uv/Usuario_Controller/confirmar_registro', array('id' => 'confirmacionRegistro')); ?>
                 <div class="divTexto">
                     <input id="codigo" name="codigo" type="text" placeholder="Código" class="fuente campoTexto campoTextoMed" />
                 </div>
-                <input type="submit" value="Confirmar" class="fuente boton botonOk botonReg" />
+                <input id="botonEnviarCodigo" type="submit" value="Confirmar" class="fuente boton botonOk botonReg" />
             </form>
 	    </div>
 	    <div class="mensaje">

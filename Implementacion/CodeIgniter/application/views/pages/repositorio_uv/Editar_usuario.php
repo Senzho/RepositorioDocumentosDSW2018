@@ -42,7 +42,7 @@
 			</div>
 		</div>
 		<div class="center">
-			<input type="submit" name="" class="registrar" value="Registrar">
+			<input type="submit" name="" class="registrar" value="Registrar" id="submitRegistrar">
 			<a href="<?php echo base_url()?>index.php/repositorio_uv/Usuario_Controller/vista"><button type="button" name="cancelar" value="Cancelar" class="cancelar">Cancelar</button></a>
 		</div>
 	</form>

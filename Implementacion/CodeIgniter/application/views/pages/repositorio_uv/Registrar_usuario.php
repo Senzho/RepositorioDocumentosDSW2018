@@ -47,7 +47,7 @@
 				</div>
 			</div>
 			<center>
-				<input type="submit" name="" class="registrar" value="Registrar" id='registrar'>
+				<input type="submit" name="" class="registrar" value="Registrar" id="submitRegistrar">
 				<a href="<?php echo base_url()?>index.php/repositorio_uv/Usuario_Controller/vista"><button type="button" name="cancelar" value="Cancelar" class="cancelar">Cancelar</button></a>
 			</center>
 	</form>
@@ -55,12 +55,6 @@
     	<center><label id="mensaje_usuario"><?php echo $mensaje; ?></label></center>
     	<center><label id=""><?php echo validation_errors(); ?></label></center>
     </div>
-	<div id="divSalir">
-		<div>
-			<img src="<?php echo base_url(); ?>recursos/logoSalir.png">
-			<div><label>Salir</label></div>
-		</div>
-	</div>
 	<script type="text/javascript" src="<?php echo base_url(); ?>js/validacionRegistroUsuario.js"></script>
 </body>
 </html>

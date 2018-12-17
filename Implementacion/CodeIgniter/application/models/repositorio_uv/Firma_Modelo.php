@@ -9,12 +9,12 @@ class Firma_Modelo extends CI_Model
 	}
 
 	public function documento_firmado($id_academico, $id_documento){
-		return file_exists($id_academico . 'signature' . $id_documento . '.sign');
+		return file_exists(APPPATH . "firmas/" . $id_academico . 'signature' . $id_documento . '.sign');
 	}
 	public function firma_valida($id_academico, $id_documento, $extension)
 	{
 		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);
-		$peticion = new Request('GET', 'Firma/verificar_firma', [], json_encode(array('id_academico' => $id_academico, 'id_documento' => $id_documento, 'extension' => $extension)));
+		$peticion = new Request('GET', 'Firma/verificar_firma/id_academico/' . $id_academico . '/id_documento/' . $id_documento . '/extension/' . $extension, []);
 		$respuesta = $cliente->send($peticion, []);
 		$json = json_decode($respuesta->getBody());
 		$verificacion = $json->verificado;
@@ -22,7 +22,7 @@ class Firma_Modelo extends CI_Model
 	}
 	public function firmar_documento($id_academico, $id_documento, $extension){
 		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);
-		$peticion = new Request('POST', 'Firma/firmar', [], json_encode(array('id_academico' => $id_academico, 'id_documento' => $id_documento, 'extension' => $extension)));
+		$peticion = new Request('POST', 'Firma/firmar/id_academico/' . $id_academico . "/id_documento/" . $id_documento . "/extension/" . $extension, []);
 		$respuesta = $cliente->send($peticion, []);
 		$json = json_decode($respuesta->getBody());
 		$firma = $json->firmado;
@@ -30,7 +30,7 @@ class Firma_Modelo extends CI_Model
 	}
 	public function generar_llaves($id_academico){
 		$cliente = new Client(['base_uri' => base_url() . '/index.php/firma_digital/']);
-		$peticion = new Request('POST', 'Firma/generar_claves', [], json_encode(array('id_academico' => $id_academico)));
+		$peticion = new Request('POST', 'Firma/generar_claves/id_academico/' . $id_academico, []);
 		$respuesta = $cliente->send($peticion, []);
 		$json = json_decode($respuesta->getBody());
 		$firma = $json->generadas;

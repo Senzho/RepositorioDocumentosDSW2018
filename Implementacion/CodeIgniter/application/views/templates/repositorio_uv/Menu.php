@@ -14,9 +14,9 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/menu.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>js/menuDocumento.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/publicacionDocumento.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/functions_cryptography.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>js/menuDocumento.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>js/dominioPagina.js"></script>
 </head>
 <body class="body">

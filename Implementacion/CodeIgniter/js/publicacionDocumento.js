@@ -75,6 +75,9 @@ $.fn.actualizar = function (documento, nombre){
 		+ "</div><div class='fuente fecha'>" 
 		+ documento['fechaRegistro'] 
 		+ "</div></div>");
+	$("#" + documento['idDocumento']).click(function(){
+		$(this).documentoClick();
+	});
 	$("#modalFormularioSubir").modal("toggle");
 }
 function validarExtensionDocumento(nombre){

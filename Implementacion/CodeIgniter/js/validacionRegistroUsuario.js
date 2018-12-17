@@ -1,30 +1,38 @@
 $(document).ready(function(){
 	buscar_imagen();
 	$('#registrar_usuario').on('submit',function(event){
+		$("#submitRegistrar").attr("disabled", true);
 		if(!validar_datos_usuario()){
 			event.preventDefault();
 			$('#mensaje_usuario').html("Faltan datos para registrar");
+			$("#submitRegistrar").attr("disabled", false);
 		}else if(!validar_contrasenas()){
 			event.preventDefault();
 			$('#mensaje_usuario').html("Las contraseñas no coinciden. Intentelo de nuevo");
+			$("#submitRegistrar").attr("disabled", false);
 		}else if ($("#file_input").val()==""){
 			event.preventDefault();
 			alert("debe elegir una imagen");
+			$("#submitRegistrar").attr("disabled", false);
 		}
 	});
 	$('#editar_usuario').on('submit', function(event){
+		$("#submitRegistrar").attr("disabled", true);
 		if(!validar_datos_usuario()){
 			event.preventDefault();
 			console.log($("#imgFotoUsuario").attr('src').split('usuarios/')[1]);
 			console.log($("#imgFotoUsuario").attr('src').split('recursos/')[1]);
 			$('#mensaje_usuario').html('faltan datos para registrar');
+			$("#submitRegistrar").attr("disabled", false);
 		}else if(!validar_contrasenas()){
 			console.log('validacion de contraseñas');
 			event.preventDefault();
 			$('#mensaje_usuario').html('Las contraseñas no coinciden. Intentelo de nuevo');
+			$("#submitRegistrar").attr("disabled", false);
 		}else if($("#imgFotoUsuario").attr('src').split('recursos/')[1] =='usuario.png'){
 			event.preventDefault();
 			alert("debe elegir una imagen");
+			$("#submitRegistrar").attr("disabled", false);
 		}
 	});
 });

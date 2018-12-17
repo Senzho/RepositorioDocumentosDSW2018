@@ -1,40 +1,43 @@
+$.fn.documentoClick = function(){
+	var documento = event.currentTarget;
+	id = $(documento).attr("id");
+	var nombre = $(documento).find(".nombre").html();
+	$("#nombreDocumento").html(nombre);
+	$("#opcionEliminar").click(function(){
+		if (!$("#opcionEliminar").attr("disabled")){
+			$("#opcionEliminar").attr("disabled", true);
+			var url = $("#linkEliminar").attr("name") + id;
+			$(this).eliminar(id, url);
+		}	
+	});
+	$("#opcionFirmar").click(function (){
+		if (!$("#opcionFirmar").attr("disabled")){
+			$("#opcionFirmar").attr("disabled", true);
+			var url = $("#linkFirmar").attr("name") + id;
+			$(this).firmar(id, url);
+		}
+	});
+	var rutaDocumento = $("#urlVerDocumento").attr("href");
+	rutaDocumento = rutaDocumento.split('/visualizar/')[0] + '/visualizar/'+id;
+	console.log(rutaDocumento);
+	$("#urlVerDocumento").attr("href", rutaDocumento);
+	rutaDocumento = $("#urlEditarDocumento").attr("href");
+	rutaDocumento = rutaDocumento.split('/editar/')[0] + '/editar/'+id;
+	$("#urlEditarDocumento").attr("href", rutaDocumento);
+	$(this).mostrarPermisos();
+	$(this).esconderPermisos(documento);
+	if ($(documento).hasClass("pdf") || $(documento).hasClass("xlsx")){
+		$("#opcionEditar").hide();
+	}
+	var action = $("#linkVerFirmas").attr("name");
+	var url = action + id;
+	$("#cuerpoModalFirmas").empty();
+	$(this).mostrarFirmas(url);
+}
 $(document).ready(function (){
 	var id;
 	$(".documento").click(function(event) {
-		var documento = event.currentTarget;
-		id = $(documento).attr("id");
-		var nombre = $(documento).find(".nombre").html();
-		$("#nombreDocumento").html(nombre);
-		$("#opcionEliminar").click(function(){
-			if (!$("#opcionEliminar").attr("disabled")){
-				$("#opcionEliminar").attr("disabled", true);
-				var url = $("#linkEliminar").attr("name") + id;
-				$(this).eliminar(id, url);
-			}	
-		});
-		$("#opcionFirmar").click(function (){
-			if (!$("#opcionFirmar").attr("disabled")){
-				$("#opcionFirmar").attr("disabled", true);
-				var url = $("#linkFirmar").attr("name") + id;
-				$(this).firmar(id, url);
-			}
-		});
-		var rutaDocumento = $("#urlVerDocumento").attr("href");
-		rutaDocumento = rutaDocumento.split('/visualizar/')[0] + '/visualizar/'+id;
-		console.log(rutaDocumento);
-		$("#urlVerDocumento").attr("href", rutaDocumento);
-		rutaDocumento = $("#urlEditarDocumento").attr("href");
-		rutaDocumento = rutaDocumento.split('/editar/')[0] + '/editar/'+id;
-		$("#urlEditarDocumento").attr("href", rutaDocumento);
-		$(this).mostrarPermisos();
-		$(this).esconderPermisos(documento);
-		if ($(documento).hasClass("pdf") || $(documento).hasClass("xlsx")){
-			$("#opcionEditar").hide();
-		}
-		var action = $("#linkVerFirmas").attr("name");
-		var url = action + id;
-		$("#cuerpoModalFirmas").empty();
-		$(this).mostrarFirmas(url);
+		$(this).documentoClick();
 	});
 	$("#formularioCompartir").on("submit", function (event){
 		event.preventDefault();
@@ -139,8 +142,9 @@ $.fn.mostrarFirmas = function(url){
 	    			var firmas = json['firmas'];
 	    			for (var i = 0; i < cuenta; i ++){
 	    				var firma = firmas[i];
-	    				var mensaje = "             " + (firma['firmado'] ? (firma['firma_valida'] ? 'Firmado' : 'Firma no válida') : "Sin firmar");
-	    				$(cuerpo).append("<div><label class='chatid fuente'>" + firma['nickname'] + "</label><label class='fuente'> " + mensaje + "</label></div>");
+	    				var propietario = firma['propietario'] ? "(Propietario) " : "";
+	    				var mensaje = firma['firmado'] ? (firma['firma_valida'] ? " Firmado" : " Firma no válida") : " Sin firmar";
+	    				$(cuerpo).append("<div><label class='chatid fuente'>" + propietario + firma['nickname'] + "</label><label class='fuente'>" + mensaje + "</label></div>");
 	    			}
 	    		}
 	    	}else{
@@ -157,9 +161,10 @@ $.fn.borrar = function(id){
 	$("#" + id).remove();
 }
 $.fn.esconderPermisos = function(documento){
-	if ($(documento).hasClass("ver")){
+	if ($(documento).hasClass("ver") || $(documento).hasClass("pdf") || $(documento).hasClass("xlsx")){
 		$("#opcionEditar").hide();
 		$("#opcionFirmar").hide();
+		$("#opcionVerFirmas").hide();
 		$("#opcionCompartir").hide();
 		$("#opcionEliminar").hide();
 	}else if ($(documento).hasClass("editar")){

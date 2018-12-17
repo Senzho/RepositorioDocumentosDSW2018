@@ -21,16 +21,16 @@ class Firma extends REST_Controller
 	}
 	public function generar_claves_post()
 	{
-		$id_academico = $this->post('id_academico');
+		$id_academico = $this->get('id_academico');
 		$generacion = $this->openssl->generar_claves($id_academico);
 		$respuesta['generadas'] = $generacion;
 		$this->response($respuesta, 200);
 	}
 	public function firmar_post()
 	{
-		$id_academico = $this->post('id_academico');
-		$id_documento = $this->post('id_documento');
-		$extension = $this->post('extension');
+		$id_academico = $this->get('id_academico');
+		$id_documento = $this->get('id_documento');
+		$extension = $this->get('extension');
 		$firma = $this->openssl->firmar($id_academico, $id_documento, $extension);
 		$respuesta['firmado'] = $firma;
 		$this->response($respuesta, 200);
